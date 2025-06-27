@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      width: 400px;
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: block;
+      color: #444;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: #667eea;
+    }
+    .form-errors {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background-color: #667eea;
+      color: white;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #5a67d8;
+    }
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .login-link a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Register</h2>
+    <form method="post" id="signupForm">
+      {% csrf_token %}
+
+      <!-- Render all form fields except ward and tole and role -->
+      {% for field in form %}
+        {% if field.name != 'ward' and field.name != 'tole' and field.name != 'role' %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}
+              <div class="form-errors">{{ field.errors|striptags }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Role dropdown -->
+      <div class="form-group">
+        {{ form.role.label_tag }}
+        {{ form.role }}
+        {% if form.role.errors %}
+          <div class="form-errors">{{ form.role.errors|striptags }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Address dropdown with only Beni Municipality -->
+      <div class="form-group">
+        <label for="address">Address</label>
+        <select id="address" name="address" required>
+          <option value="">-- Select Address --</option>
+          <option value="Beni Municipality">Beni Municipality</option>
+        </select>
+      </div>
+
+      <!-- Ward dropdown (initially hidden) -->
+      <div class="form-group" id="wardDiv" style="display:none;">
+        <label for="ward">Ward</label>
+        <select id="ward" name="ward" required>
+          <option value="">-- Select Ward --</option>
+          <option value="Ward 1 – Ratnechaur">Ward 1 – रत्नेचौर </option>
+          <option value="Ward 2 – Jyamrukot">Ward 2 – ज्यामरुकोट</option>
+          <option value="Ward 3 – Bhakimli">Ward 3 – भकिम्ली</option>
+          <option value="Ward 4 – Mangale">Ward 4 – सिंगा </option>
+          <option value="Ward 5 – Naku">Ward 5 – पुलाचौर</option>
+          <option value="Ward 6 – Arthunge">Ward 6 – अर्थुंगे </option>
+          <option value="Ward 7 – Purnagaun">Ward 7 – बेनी </option>
+          <option value="Ward 8 – Banethok Deurali">Ward 8 – बेनी </option>
+          <option value="Ward 9 – Thakle">Ward 9 – घतान </option>
+          <option value="Ward 10 – Patlekhet">Ward 10 – पात्लेखेत</option>
+        </select>
+      </div>
+
+      <!-- Tole input (initially hidden) -->
+      <div class="form-group" id="toleDiv" style="display:none;">
+        <label for="tole">Tole</label>
+        <input type="text" id="tole" name="tole" placeholder="Enter your Tole" required>
+      </div>
+
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </div>
+  </div>
+
+  <script>
+    const addressSelect = document.getElementById('address');
+    const wardDiv = document.getElementById('wardDiv');
+    const wardSelect = document.getElementById('ward');
+    const toleDiv = document.getElementById('toleDiv');
+
+    addressSelect.addEventListener('change', function() {
+      if (this.value === 'Beni Municipality') {
+        wardDiv.style.display = 'block';
+      } else {
+        wardDiv.style.display = 'none';
+        toleDiv.style.display = 'none';
+        wardSelect.value = '';
+      }
+    });
+
+    wardSelect.addEventListener('change', function() {
+      if (this.value !== '') {
+        toleDiv.style.display = 'block';
+      } else {
+        toleDiv.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
