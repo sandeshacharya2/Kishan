@@ -1,0 +1,20 @@
+<!-- templates/accounts/customer_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Customer Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, Customer {{ user.username }}!</h1>
+    <p>This is your dashboard.</p>
+
+    <nav>
+<form method="post" action="{% url 'logout' %}">
+  {% csrf_token %}
+  <button type="submit" style="background: none; border: none; color: #007bff; cursor: pointer; text-decoration: underline;">
+    Logout
+  </button>
+</form>    </nav>
+</body>
+</html>

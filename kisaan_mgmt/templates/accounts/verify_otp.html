@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verify OTP</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      width: 360px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    p {
+      font-size: 1rem;
+      margin: 10px 0 15px;
+      color: #555;
+    }
+    .error-message {
+      color: #d32f2f;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #444;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1.5px solid #ccc;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border-color: #667eea;
+    }
+    button {
+      width: 100%;
+      background-color: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 0;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #5a67d8;
+    }
+    .timer, .resend-container {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #667eea;
+      margin-top: 10px;
+    }
+    .resend-form {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Verify OTP</h2>
+    <p>OTP sent to <strong>{{ email }}</strong></p>
+
+    {% if error %}
+      <p class="error-message">{{ error }}</p>
+    {% endif %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="error-message">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'verify-otp' %}">
+      {% csrf_token %}
+      <label for="otp">Enter OTP</label>
+      <input type="text" id="otp" name="otp" placeholder="6-digit OTP" maxlength="6" required autofocus />
+      <button type="submit">Verify OTP</button>
+    </form>
+
+    <div id="timer-container" class="timer">
+      {% if seconds_left > 0 %}
+        Resend OTP available in <span id="timer">{{ seconds_left }}</span> seconds.
+      {% endif %}
+    </div>
+
+    <div id="resend-container" class="resend-container" style="display: none;">
+      <form method="post" class="resend-form">
+        {% csrf_token %}
+        <button type="submit" name="resend_otp">Resend OTP</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let timeLeft = parseInt("{{ seconds_left|default:'0' }}");
+    const timerElement = document.getElementById('timer');
+    const timerContainer = document.getElementById('timer-container');
+    const resendContainer = document.getElementById('resend-container');
+
+    const countdown = setInterval(() => {
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        if (timerContainer) timerContainer.style.display = 'none';
+        if (resendContainer) resendContainer.style.display = 'block';
+      } else {
+        if (timerElement) timerElement.textContent = timeLeft;
+        timeLeft--;
+      }
+    }, 1000);
+  </script>
+
+  {% if success %}
+    <script>
+      alert("Registration successful!");
+      window.location.href = "{% url 'login' %}";
+    </script>
+  {% endif %}
+</body>
+</html>
