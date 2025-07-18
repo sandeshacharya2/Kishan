@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>हाम्रोबारे - किसान</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+    {% include 'landingpage/header.html' %}
+
+
+  <!-- About Content -->
+  <main class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 my-10">
+    <h2 class="team-title text-center text-[#2e4600] text-4xl font-extrabold mb-12 drop-shadow-md">हाम्रो बारेमा</h2>
+
+    <img 
+      src="{% static 'accounts/images/about.jpg' %}" 
+      alt="About Kisaan" 
+      class="w-full max-h-[400px] object-cover rounded-lg mb-6"
+    />
+
+    <p class="mb-4 leading-relaxed text-base">
+      <strong>किसान</strong> एक सरल र उपयोगी वेब एप्लिकेसन हो, जसले नेपाली किसान र ग्राहकहरूलाई सिधा जोड्ने काम गर्छ। अब किसानहरूले आफ्ना तरकारी, फलफूल वा अन्य कृषि सामग्रीहरू मोबाइल वा कम्प्युटरबाटै सजिलै अनलाइन राख्न सक्छन्। ग्राहकहरूले पनि नजिकैका किसानहरूबाट सिधा उत्पादन हेरेर किनमेल गर्न सक्छन्।
+    </p>
+
+    <p class="mb-4 leading-relaxed text-base">
+      हाम्रो एपमा किसानका लागि विशेष ड्यासबोर्ड छ, जहाँ उनीहरूले आफ्ना उत्पादनहरू पोस्ट गर्न, मासिक वा वार्षिक आम्दानी हेर्न, अनि ग्राहकहरूसँग सिधा संवाद गर्न सक्छन्।
+    </p>
+
+    <p class="mb-4 leading-relaxed text-base">
+      हामी चाहन्छौं कि किसानले राम्रो मूल्य पाऊन्, ग्राहकले ताजा उत्पादन पाऊन्, र दुबैको बीचमा विश्वासको सम्बन्ध बनोस्। एपमा स्थानको आधारमा पनि खोजी गर्न सकिने सुविधा छ, जसले गर्दा ग्राहकले नजिकैको किसान रोज्न सक्नेछन्।
+    </p>
+
+    <p class="mb-4 leading-relaxed text-base">
+      हामी प्रविधिको माध्यमबाट गाउँ–शहरबीचको दूरी घटाउन, कृषि कारोबारलाई सजिलो बनाउन र किसानको आय बढाउन सहयोग गर्न चाहन्छौं।
+    </p>
+
+    <p class="mb-8 text-lg font-semibold">“किसानसँगै भविष्य सुरक्षित बनाऔं।”</p>
+
+    <!-- Team Section -->
+    <h2 class="team-title text-center text-[#2e4600] text-4xl font-extrabold mb-12 drop-shadow-md">हाम्रो टिम</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <!-- Team member -->
+      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
+        <img src="{% static 'accounts/images/Sandesh s.jpg' %}" alt="Sandesh" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
+        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Sandesh Acharya</h4>
+        <p class="text-gray-600 mb-3">Developer</p>
+        <div class="social-icons flex justify-center gap-3">
+          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+        </div>
+      </div>
+
+      <!-- Repeat for other members -->
+      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
+        <img src="{% static 'accounts/images/deepa.jpg' %}" alt="Dipa" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
+        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Dipa Paudel</h4>
+        <p class="text-gray-600 mb-3">Developer</p>
+        <div class="social-icons flex justify-center gap-3">
+          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+        </div>
+      </div>
+
+      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
+        <img src="{% static 'accounts/images/Sila.jpg' %}" alt="Sila" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
+        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Sila GC</h4>
+        <p class="text-gray-600 mb-3">Developer</p>
+        <div class="social-icons flex justify-center gap-3">
+          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+        </div>
+      </div>
+
+      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
+        <img src="{% static 'accounts/images/bibek.png' %}" alt="Bibek" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
+        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Bibek Sapkota</h4>
+        <p class="text-gray-600 mb-3">Developer</p>
+        <div class="social-icons flex justify-center gap-3">
+          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  
+  {% include 'landingpage/footer.html' %}
+
+</body>
+</html>

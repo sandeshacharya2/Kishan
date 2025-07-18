@@ -1,0 +1,232 @@
+<!-- {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>किसान</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-image: url("{% static 'accounts/images/sunny-meadow-landscape.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+
+    .navbar {
+      background-color: #2e4600;
+      padding: 15px 35px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      min-width: 40px;  /* Ensure container does not collapse */
+      min-height: 40px;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+      transition: transform 0.3s ease;
+      margin-right: 10px;
+
+      display: block;    /* Added to ensure visibility */
+      max-width: 100%;   /* Responsive width */
+      height: auto;      /* Keep aspect ratio */
+    }
+
+    .logo img:hover {
+      transform: scale(1.1);
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: #f5f5dc;
+      white-space: nowrap;
+    }
+
+    .navbar-center {
+      display: flex;
+      gap: 50px;
+    }
+
+    .navbar-center a,
+    .navbar-right a {
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+      line-height: 50px;
+    }
+
+    .navbar-center a:hover,
+    .navbar-right a:hover {
+      border-bottom: 2px solid #f4c058;
+      padding-bottom: 2px;
+    }
+
+    .navbar-right a {
+      padding-left: 15px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 20px;
+      }
+
+      .navbar-left {
+        margin-bottom: 10px;
+      }
+
+      .navbar-center {
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .navbar-center a,
+      .navbar-right a {
+        font-size: 14px;
+        line-height: normal;
+        padding: 8px 0;
+      }
+
+      .navbar-right {
+        margin-top: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .navbar-right a {
+        padding-left: 0;
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar-center {
+        gap: 20px;
+      }
+
+      .logo img {
+        width: 40px;
+        height: 40px;
+        margin-right: 8px;
+      }
+
+      .logo-text {
+        font-size: 20px;
+      }
+
+      .navbar-center a,
+      .navbar-right a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-left">
+      <div class="logo">
+        <img src="{% static 'accounts/images/download.jpg' %}" alt="किसान लोगो" />
+        <span class="logo-text">किसान</span>
+      </div>
+    </div>
+
+    <nav class="navbar-center">
+      <a href="{% url 'landing' %}">गृहपृष्ठ</a>
+      <a href="{% url 'about' %}">हाम्रोबारे</a>
+      <a href="{% url 'contact' %}">सम्पर्क गर्नुहोस्</a>
+    </nav>
+
+    <div class="navbar-right">
+      <a href="{% url 'login' %}">लगइन</a>
+    </div>
+  </header>
+
+</body>
+</html> -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>किसान</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#edf6e5] via-[#f7ffe5] to-[#e2f3d8] min-h-screen font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-gradient-to-r from-[#3b6e22] via-[#4f8a10] to-[#6aa84f] px-6 py-4 shadow-lg">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between">
+
+      <!-- Logo + Title -->
+      <div class="flex items-center gap-4">
+        <img
+          src="{% static 'accounts/images/download.jpg' %}"
+          alt="किसान लोगो"
+          class="w-14 h-14 rounded-full border-2 border-white shadow-lg object-cover transition-transform duration-300 hover:scale-110"
+        />
+        <div>
+          <h1 class="text-[#fdf6e3] text-2xl font-extrabold">किसान</h1>
+          <p class="text-[#e9e5d6] text-sm italic">हामी किसानको साथमा छौं</p>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-6 text-sm sm:text-base mt-4 sm:mt-0">
+        <a href="{% url 'landing' %}" class="text-white hover:text-yellow-200 hover:underline">गृहपृष्ठ</a>
+        <a href="{% url 'about' %}" class="text-white hover:text-yellow-200 hover:underline">हाम्रोबारे</a>
+        <a href="{% url 'contact' %}" class="text-white hover:text-yellow-200 hover:underline">सम्पर्क गर्नुहोस्</a>
+      </nav>
+
+      <!-- Login -->
+      <div class="mt-4 sm:mt-0">
+        <a href="{% url 'login' %}" class="bg-yellow-300 text-green-900 font-semibold py-2 px-4 rounded hover:bg-yellow-400 shadow-md transition">लगइन</a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <!-- <section class="text-center py-16 px-4 bg-gradient-to-r from-[#f4ffea] to-[#e2ffd8]">
+    <h2 class="text-3xl md:text-4xl font-bold text-[#2e4600] mb-4 animate-pulse">स्वागत छ किसान प्लेटफर्ममा!</h2>
+    <p class="text-lg text-[#4a7c24] mb-6">जहाँ किसानले आफ्ना उत्पादन बेच्न सक्छन् र ग्राहकले ताजा उत्पादन किन्न सक्छन्।</p>
+<a href="{% url 'signup' %}" class="inline-block bg-green-700 text-white font-semibold py-2 px-6 rounded-full hover:bg-green-800 transition duration-300 shadow-lg">
+  अहिल्यै सुरु गर्नुहोस्
+</a>  </section> -->
+
+  <!-- Optional Footer -->
+  <!-- <footer class="bg-[#3b6e22] text-white py-6 mt-12 text-center">
+    <p class="text-sm">&copy; 2025 किसान | सबै अधिकार सुरक्षित</p>
+    <p class="text-xs mt-1">Developed with ❤️ for नेपाली कृषकहरू</p>
+  </footer> -->
+
+</body>
+</html>

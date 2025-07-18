@@ -8,12 +8,17 @@ class RoleBasedBackend(ModelBackend):
     """
 
     def authenticate(self, request, username=None, password=None, role=None, **kwargs):
+        if username is None or password is None or role is None:
+            return None
         try:
             user = User.objects.get(username=username)
-            if user.check_password(password):
-                if hasattr(user, 'profile') and user.profile.role == role:
-                    return user
-                # If roles don't match, authentication fails
-                return None
+            if user.check_password(password) and hasattr(user, 'profile') and user.profile.role == role:
+                return user
+        except User.DoesNotExist:
+            return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None

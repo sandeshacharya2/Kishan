@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Confirm Delete</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 text-green-900 min-h-screen flex items-center justify-center p-4">
+
+  <div class="max-w-md w-full bg-white rounded shadow p-6 text-center">
+    <h2 class="text-2xl font-bold mb-6 text-red-600">Confirm Delete</h2>
+    <p class="mb-6 text-lg">Are you sure you want to delete the product <strong>{{ product.name }}</strong>?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded font-semibold mr-4">Yes, Delete</button>
+      <a href="{% url 'farmer-dashboard' %}" class="px-5 py-2 text-green-700 hover:underline">Cancel</a>
+    </form>
+  </div>
+
+</body>
+</html>
