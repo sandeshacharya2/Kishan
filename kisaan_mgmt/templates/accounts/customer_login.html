@@ -1,71 +1,157 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ne">
 <head>
-    <title>Login</title>
-    <style>
-        body { font-family: Arial; background-color: #f4f4f4; }
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        input[type=text], input[type=password], input[type=email] {
-            width: 100%; padding: 10px; margin: 10px 0;
-            border: 1px solid #ccc; border-radius: 5px;
-        }
-        button {
-            width: 100%; padding: 10px; background-color: #007bff; color: white;
-            border: none; border-radius: 5px;
-        }
-        .extra-links {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .extra-links a {
-            color: #007bff;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>ग्राहक लगइन - Customer Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Mukta', sans-serif;
+      background: linear-gradient(to right, #e6ffe6, #ccffcc);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-area h2 {
+      text-align: center;
+      color: #2e7d32;
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 16px;
+      font-size: 16px;
+      background: #f9f9f9;
+    }
+
+    input:focus {
+      border-color: #2e7d32;
+      background: white;
+      outline: none;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .message {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: green;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #2e7d32;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #256328;
+    }
+
+    .note {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .note a {
+      color: #2e7d32;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .note a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2> Customer Login</h2>
 
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: green;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
+  <div class="login-container">
+    <div class="form-area">
+      <h2>ग्राहक लगइन</h2>
 
-        {% if form.errors %}
-            <p style="color: red;">Invalid username or password</p>
-        {% endif %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="message">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
 
-        <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-                <div>
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.errors %}
-                        <p style="color: red;">{{ field.errors }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
+      {% if form.errors %}
+        <p class="error">तपाईंको प्रयोगकर्ता नाम वा पासवर्ड मिलेन। कृपया फेरि प्रयास गर्नुहोस्।</p>
+      {% endif %}
 
-            <button type="submit">Login</button>
-            <div class="extra-links">
-          <p><a href="{% url 'password_reset' %}">Forgot password?</a></p>
-         <p>Don't have an account? <a href="{% url 'signup' %}">Register here</a></p>
-         <p>Are you a farmer? <a href="{% url 'farmer-login' %}">Login as Farmer</a></p>
+      <form method="post" novalidate autocomplete="off">
+        {% csrf_token %}
+        {% for field in form %}
+          {% if field.name == 'username' %}
+            <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम</label>
+          {% elif field.name == 'password' %}
+            <label for="{{ field.id_for_label }}">पासवर्ड</label>
+          {% endif %}
+          {{ field }}
 
+          {% if field.errors %}
+            <p class="error">कृपया सबै विवरणहरू सही रूपमा भर्नुहोस्।</p>
+          {% endif %}
+        {% endfor %}
+
+        <button type="submit">लगइन गर्नुहोस्</button>
+
+        <div class="note">
+          <p><a href="{% url 'password_reset' %}">पासवर्ड बिर्सनुभयो?</a></p>
+          <p>खाता छैन? <a href="{% url 'signup' %}">दर्ता गर्नुहोस्</a></p>
+          <p>किसान हुनुहुन्छ? <a href="{% url 'switch_to_farmer' %}">किसानको रूपमा लगइन गर्नुहोस्</a></p>
+          <p><a href="{% url 'landing' %}">← गृहपृष्ठ फर्कनुहोस्</a></p>
         </div>
-
-        </div>
-        </form>
+      </form>
     </div>
+  </div>
+
 </body>
 </html>

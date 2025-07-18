@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>बजार - ग्राहकको लागि</title>
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 text-green-900">
+
+  <header class="bg-white shadow-md p-4 flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-green-800">🛒 किसान बजार</h1>
+    <a href="{% url 'customer-dashboard' %}" class="text-green-600 hover:underline">⏪ ड्यासबोर्ड फर्कनुहोस्</a>
+  </header>
+
+  <main class="p-6">
+    <h2 class="text-xl font-semibold mb-4">उपलब्ध उत्पादनहरू</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% if products %}
+        {% for product in products %}
+          <div class="bg-white rounded-xl shadow-md border border-green-300">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover rounded-t-xl">
+            {% else %}
+              <img src="{% static 'default_product.jpg' %}" alt="Default Image" class="w-full h-48 object-cover rounded-t-xl">
+            {% endif %}
+            <div class="p-4">
+              <h3 class="text-lg font-bold text-green-800">{{ product.sub_category }}</h3>
+              <p>प्रकार: {{ product.main_category }}</p>
+              <p>मात्रा: {{ product.quantity }} {{ product.unit }}</p>
+              <p>प्रति इकाइ मूल्य: रु {{ product.price }}</p>
+              <p>कुल मूल्य: रु {{ product.quantity|floatformat:2|add:"0"|floatformat:"g"|floatformat:2|floatformat }} × {{ product.price }} = रु {{ product.quantity|floatformat:2|add:"0"|floatformat:"g"|floatformat:2|floatformat|add:"0"|add:product.price }}</p>
+              <p class="text-sm text-green-600 mt-2">📅 पोस्ट गरिएको: {{ product.date_posted|date:"Y-m-d" }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-center col-span-full text-green-600">हाल कुनै उत्पादन उपलब्ध छैन।</p>
+      {% endif %}
+    </div>
+  </main>
+</body>
+</html>

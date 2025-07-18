@@ -1,70 +1,262 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ne">
 <head>
-    <title>Login</title>
-    <style>
-        body { font-family: Arial; background-color: #f4f4f4; }
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        input[type=text], input[type=password], input[type=email] {
-            width: 100%; padding: 10px; margin: 10px 0;
-            border: 1px solid #ccc; border-radius: 5px;
-        }
-        button {
-            width: 100%; padding: 10px; background-color: #007bff; color: white;
-            border: none; border-radius: 5px;
-        }
-        .extra-links {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .extra-links a {
-            color: #007bff;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Farmer Login - किसान</title>
+  <style>
+    /* Reset and base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      background: url("{% static 'accounts/images/pexels-chi-n-ba-3626645-28778308.jpg' %}") no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #333;
+    }
+
+    /* Container */
+    .login-container {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.2);
+      display: flex;
+      overflow: hidden;
+      min-height: 480px;
+    }
+
+    /* Sidebar with image */
+    .sidebar {
+      width: 40%;
+      background: url("{% static 'accounts/images/desktop fam.jpg' %}") no-repeat center center/cover;
+    }
+
+    /* Form area */
+    .form-area {
+      width: 60%;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Header with logo and text */
+    .header-logo-text {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 40px;
+      user-select: none;
+    }
+    .logo-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #4E944F, #367433);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 14px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+    .logo-circle img {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+      background: white;
+      border-radius: 50%;
+      padding: 6px;
+    }
+    .logo-circle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+    .header-logo-text h2 {
+      font-family: 'Mukta', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #4E944F;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Form */
+    form {
+      width: 100%;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #2e2e2e;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.8px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="email"]:focus {
+      border-color: #4E944F;
+      box-shadow: 0 0 8px rgba(78, 148, 79, 0.4);
+      outline: none;
+    }
+    .form-field {
+      margin-bottom: 22px;
+    }
+
+    /* Buttons */
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #4E944F;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(78, 148, 79, 0.4);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    button:hover,
+    button:focus {
+      background-color: #3c7e3d;
+    }
+
+    /* Messages */
+    .message {
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      text-align: center;
+      user-select: none;
+    }
+    .message.success {
+      color: #2e7d32;
+      font-weight: 600;
+    }
+    .message.error {
+      color: #d32f2f;
+      font-weight: 600;
+    }
+
+    /* Links under form */
+    .note {
+      margin-top: 24px;
+      font-size: 0.95rem;
+      text-align: center;
+      color: #555;
+      user-select: none;
+      line-height: 1.5;
+    }
+    .note a {
+      color: #4E944F;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .note a:hover,
+    .note a:focus {
+      text-decoration: underline;
+      color: #3c7e3d;
+    }
+
+    /* Responsive */
+    @media (max-width: 720px) {
+      .login-container {
+        flex-direction: column;
+        min-height: auto;
+        width: 100%;
+      }
+      .sidebar {
+        width: 100%;
+        height: 200px;
+      }
+      .form-area {
+        width: 100%;
+        padding: 30px 25px;
+      }
+      .header-logo-text h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Farmer Login</h2>
 
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: green;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-
-        {% if form.errors %}
-            <p style="color: red;">Invalid username or password</p>
-        {% endif %}
-
-        <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-                <div>
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.errors %}
-                        <p style="color: red;">{{ field.errors }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
-
-            <button type="submit">Login</button>
-            <div class="extra-links">
-         <p><a href="{% url 'password_reset' %}">Forgot password?</a></p>
-         <p>Don't have an account? <a href="{% url 'signup' %}">Register here</a></p>
-         <p>Are you a customer? <a href="{% url 'customer-login' %}">Login as Customer</a></p>
-
+  <div class="login-container" role="main" aria-label="Farmer login form">
+    <div class="sidebar" aria-hidden="true"></div>
+    <div class="form-area">
+      <div class="header-logo-text">
+        <div class="logo-circle">
+          <img src="{% static 'accounts/images/download.jpg' %}" alt="किसान लोगो" />
         </div>
+        <h2>किसान</h2>
+      </div>
 
-        </form>
+      {% if messages %}
+        {% for message in messages %}
+          <p class="message success" role="alert">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
+      {% if form.errors %}
+        <p class="message error" role="alert">तपाइको प्रयोगकर्ता नाम र पासवर्ड मिलेन</p>
+      {% endif %}
+
+      <form method="post" novalidate autocomplete="off" aria-describedby="loginInstructions">
+        {% csrf_token %}
+
+        {% for field in form %}
+          {% if field.name == 'username' %}
+            <div class="form-field">
+              <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम (username)</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="message error" role="alert">{{ field.errors|striptags }}</p>
+              {% endif %}
+            </div>
+          {% elif field.name == 'password' %}
+            <div class="form-field">
+              <label for="{{ field.id_for_label }}">पासवर्ड (password)</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="message error" role="alert">{{ field.errors|striptags }}</p>
+              {% endif %}
+            </div>
+          {% else %}
+            {{ field }}
+          {% endif %}
+        {% endfor %}
+
+        <button type="submit" aria-label="Login to किसान portal">लगइन गर्नुहोस् (login)</button>
+      </form>
+
+      <div class="note" id="loginInstructions">
+        <p><a href="{% url 'password_reset' %}">पासवर्ड बिर्सनुभयो?</a></p>
+        <p>खाता छैन? <a href="{% url 'signup' %}">दर्ता गर्नुहोस्</a></p>
+        <p>ग्राहक हुनुहुन्छ? <a href="{% url 'switch_to_customer' %}">ग्राहकको रूपमा लगइन गर्नुहोस्</a></p>
+        <p><a href="{% url 'landing' %}">← गृहपृष्ठ फर्कनुहोस्</a></p>
+      </div>
     </div>
+  </div>
+
 </body>
 </html>

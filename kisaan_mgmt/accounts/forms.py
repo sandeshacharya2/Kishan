@@ -1,43 +1,146 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, FarmerProfile, CustomerProfile
 
 WARD_CHOICES = [
     ('Ward 1 – Ratnechaur', 'Ward 1 – Ratnechaur'),
     ('Ward 2 – Jyamrukot', 'Ward 2 – Jyamrukot'),
     ('Ward 3 – Bhakimli', 'Ward 3 – Bhakimli'),
-    ('Ward 4 – Mangale', 'Ward 4 – Mangale'),
-    ('Ward 5 – Naku', 'Ward 5 – Naku'),
+    ('Ward 4 – Singa', 'Ward 4 – Singa'),
+    ('Ward 5 – Pulachaur', 'Ward 5 – Pulachaur'),
     ('Ward 6 – Arthunge', 'Ward 6 – Arthunge'),
-    ('Ward 7 – Purnagaun', 'Ward 7 – Purnagaun'),
-    ('Ward 8 – Banethok Deurali', 'Ward 8 – Banethok Deurali'),
-    ('Ward 9 – Thakle', 'Ward 9 – Thakle'),
+    ('Ward 7 – Beni', 'Ward 7 – Beni'),
+    ('Ward 8 – Beni', 'Ward 8 – Beni'),
+    ('Ward 9 – Ghatan', 'Ward 9 – Ghatan'),
     ('Ward 10 – Patlekhet', 'Ward 10 – Patlekhet'),
 ]
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    phonenumber = forms.CharField(required=True, max_length=20)
-    ward = forms.ChoiceField(choices=WARD_CHOICES, required=True)
-    tole = forms.CharField(required=True, max_length=100, label="Tole (Neighborhood)")
-    role = forms.ChoiceField(choices=Profile.ROLE_CHOICES, required=True)
+    email = forms.EmailField(
+        required=True,
+        error_messages={'required': 'कृपया इमेल अनिवार्य रूपमा भर्नुहोस्।'}
+    )
+    phonenumber = forms.CharField(
+        required=True,
+        max_length=20,
+        error_messages={'required': 'कृपया फोन नम्बर अनिवार्य रूपमा भर्नुहोस्।'}
+    )
+    ward = forms.ChoiceField(
+        choices=WARD_CHOICES,
+        required=True,
+        error_messages={'required': 'कृपया वडा छान्नुहोस्।'}
+    )
+    tole = forms.CharField(
+        required=True,
+        max_length=100,
+        label="Tole (Neighborhood)",
+        error_messages={'required': 'कृपया टोल अनिवार्य रूपमा लेख्नुहोस्।'}
+    )
+    role = forms.ChoiceField(
+        choices=Profile.ROLE_CHOICES,
+        required=True,
+        error_messages={'required': 'कृपया भूमिका छान्नुहोस्।'}
+    )
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput,
+        error_messages={'required': 'पासवर्ड आवश्यक छ'}
+    )
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput,
+        error_messages={'required': 'पासवर्ड पुन दोहोर्याउनु होस् '}
+    )
 
     class Meta:
         model = User
         fields = ('username', 'email', 'phonenumber', 'ward', 'tole', 'role', 'password1', 'password2')
+        error_messages = {
+            'username': {
+                'required': 'कृपया प्रयोगकर्ता नाम लेख्नुहोस्।'
+            },
+            'password1': {
+                'required': 'कृपया पासवर्ड लेख्नुहोस्।'
+            },
+            'password2': {
+                'required': 'कृपया पासवर्ड दोहोर्याउनुहोस्।'
+            },
+        }
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email is already taken. Please use a different one.")
+            raise forms.ValidationError("यो इमेल पहिले नै प्रयोग भैसकेको छ, कृपया नया इमेल प्रयोग गर्नुहोस्।")
         return email
 
     def clean_phonenumber(self):
         phonenumber = self.cleaned_data.get('phonenumber')
         if not phonenumber.isdigit():
-            raise forms.ValidationError("Please enter digits only for the phone number.")
+            raise forms.ValidationError("फोन नम्बर अंकमा मात्र लेख्नुहोस्।")
         if len(phonenumber) < 8:
-            raise forms.ValidationError("Phone number must be at least 8 digits.")
+            raise forms.ValidationError("फोन नम्बर कम्तीमा ८ अंकको हुनु पर्छ।")
         if Profile.objects.filter(phonenumber=phonenumber).exists():
-            raise forms.ValidationError("Phone number is already taken. Please use a different one.")
+            raise forms.ValidationError("यो फोन नम्बर पहिले नै प्रयोग भैसकेको छ। कृपया अर्को प्रयोग गर्नुहोस्।")
         return phonenumber
+
+
+class FarmerProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FarmerProfileForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
+    class Meta:
+        model = FarmerProfile
+        fields = ['first_name', 'last_name', 'profile_picture']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(FarmerProfileForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
+    class Meta:
+        model = FarmerProfile
+        fields = ['first_name', 'last_name', 'profile_picture']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+
+class CustomerProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomerProfileForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
+    class Meta:
+        model = CustomerProfile
+        fields = ['first_name', 'last_name', 'profile_picture']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(CustomerProfileForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
+    class Meta:
+        model = CustomerProfile
+        fields = ['first_name', 'last_name', 'profile_picture']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+

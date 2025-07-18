@@ -1,177 +1,676 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ne">
 <head>
+  <meta charset="UTF-8" />
   <title>Register</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    /* Basic styles and layout */
+    * {
+      box-sizing: border-box;
+    }
     body {
-      background: linear-gradient(to right, #667eea, #764ba2);
+      margin: 0;
+      min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      padding: 20px;
     }
     .form-container {
-      background-color: white;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-      width: 400px;
+      background: #fff;
+      max-width: 1100px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      display: flex;
+      overflow: hidden;
     }
-    .form-container h2 {
+    .form-left {
+      flex: 1;
+      background: linear-gradient(135deg, #4a56e2, #3c409f);
+      color: #fff;
+      padding: 45px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
       text-align: center;
-      margin-bottom: 20px;
-      color: #333;
     }
-    .form-group {
-      margin-bottom: 15px;
+    .form-left img {
+      max-width: 280px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      margin-bottom: 30px;
+      height: auto;
+      max-height: 60vh;
+      width: auto;
+      object-fit: contain;
+    }
+    .form-left p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      opacity: 0.9;
+      max-width: 230px;
+      user-select: none;
+    }
+    .form-right {
+      flex: 3.2;
+      padding: 40px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    form {
+      width: 100%;
+    }
+    .form-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .form-row.full-width {
+      flex-direction: column;
+    }
+    .form-row > div {
+      flex: 1 1 48%;
+    }
+    .form-row.full-width > div {
+      flex: 1 1 100%;
     }
     label {
       font-weight: 600;
-      margin-bottom: 5px;
-      display: block;
       color: #444;
+      margin-bottom: 6px;
+      display: block;
+      font-size: 0.9rem;
     }
     input[type="text"],
     input[type="email"],
     input[type="password"],
     select {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      outline: none;
-      transition: border-color 0.3s;
+      padding: 14px 16px;
+      border: 1.8px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+      min-height: 44px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
-    input:focus, select:focus {
-      border-color: #667eea;
+    input:focus,
+    select:focus {
+      border-color: #4a56e2;
+      box-shadow: 0 0 6px rgba(74, 86, 226, 0.5);
+      outline: none;
+    }
+    input:hover,
+    select:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     .form-errors {
-      color: red;
-      font-size: 0.9em;
-      margin-bottom: 10px;
+      color: #d32f2f;
+      font-size: 0.85rem;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+    .form-success {
+      color: #388e3c;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .note {
+      background: rgba(255, 255, 255, 0.4);
+      color:red;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border-left: 4px solid #4a56e2;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-style: italic;
     }
     button {
+      margin-top: 10px;
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       border: none;
-      background-color: #667eea;
+      background-color: #4a56e2;
       color: white;
-      font-weight: 600;
-      border-radius: 6px;
+      font-weight: 700;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(74, 86, 226, 0.3);
     }
     button:hover {
-      background-color: #5a67d8;
+      background-color: #3c409f;
     }
     .login-link {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 25px;
+      font-size: 0.95rem;
+      color: #555;
     }
     .login-link a {
-      color: #667eea;
+      color: #4a56e2;
       text-decoration: none;
+      font-weight: 600;
     }
     .login-link a:hover {
       text-decoration: underline;
+    }
+
+    /* Modal styles */
+    /* Modal styles */
+#mapModal {
+  display: none; /* Keeps it hidden on load */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 600px;
+  height: 70vh;
+  max-height: 500px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  overflow: hidden;
+  flex-direction: column; /* ✅ You can keep this */
+}
+
+    #mapModal .modal-header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 8px 12px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+    }
+    #mapModal .modal-close-btn {
+      background-color: #667eea;
+      border: none;
+      color: white;
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #mapModal .modal-close-btn:hover {
+      background-color: #556cd6;
+    }
+    #map {
+      flex-grow: 1;
+      width: 100%;
+    }
+
+    @media (max-width: 880px) {
+      .form-container {
+        flex-direction: column;
+        max-width: 450px;
+      }
+      .form-left {
+        border-radius: 12px 12px 0 0;
+        padding: 30px 30px;
+      }
+      .form-left img {
+        max-width: 200px;
+      }
+      .form-right {
+        padding: 30px 30px;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .form-row > div {
+        flex: 1 1 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <h2>Register</h2>
-    <form method="post" id="signupForm">
-      {% csrf_token %}
 
-      <!-- Render all form fields except ward and tole and role -->
-      {% for field in form %}
-        {% if field.name != 'ward' and field.name != 'tole' and field.name != 'role' %}
-          <div class="form-group">
+    <div class="form-left">
+      <h2 style="margin-bottom: 20px; font-size: 1.4rem;">Welcome to <br><span style="font-size:1.7rem;">किसान</span> Portal</h2>
+
+      <img src="{% static 'accounts/images/register.jpg' %}" alt="Register Image" />
+    </div>
+
+    <div class="form-right">
+      <div>   
+        <p class="note">Note: Please write your username in English</p>
+      </div>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="{% if message.tags %}form-{{ message.tags }}{% endif %} form-success">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+    <!-- Everything above remains the same -->
+<form method="post" id="signupForm" novalidate autocomplete="off">
+  {% csrf_token %}
+  <div class="form-row">
+    {% for field in form %}
+      {% if field.name not in 'ward tole role' %}
+        <div>
+          {% if field.name == 'username' %}
+            <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम (username)</label>
+          {% elif field.name == 'email' %}
+            <label for="{{ field.id_for_label }}">इमेल (email)</label>
+          {% elif field.name == 'phonenumber' %}
+            <label for="{{ field.id_for_label }}">फोन नम्बर (phone number)</label>
+          {% elif field.name == 'password1' %}
+            <label for="{{ field.id_for_label }}">पासवर्ड (password)</label>
+          {% elif field.name == 'password2' %}
+            <label for="{{ field.id_for_label }}">पासवर्ड दोहोराउनुहोस् (confirm password)</label>
+          {% else %}
             {{ field.label_tag }}
-            {{ field }}
-            {% if field.errors %}
-              <div class="form-errors">{{ field.errors|striptags }}</div>
-            {% endif %}
-          </div>
+          {% endif %}
+          {{ field }}
+          {% if field.errors %}
+            <div class="form-errors" role="alert" aria-live="assertive">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+        {% if forloop.counter|divisibleby:"2" %}
+          </div><div class="form-row">
         {% endif %}
-      {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
 
-      <!-- Role dropdown -->
-      <div class="form-group">
-        {{ form.role.label_tag }}
-        {{ form.role }}
-        {% if form.role.errors %}
-          <div class="form-errors">{{ form.role.errors|striptags }}</div>
-        {% endif %}
-      </div>
-
-      <!-- Address dropdown with only Beni Municipality -->
-      <div class="form-group">
-        <label for="address">Address</label>
-        <select id="address" name="address" required>
-          <option value="">-- Select Address --</option>
-          <option value="Beni Municipality">Beni Municipality</option>
-        </select>
-      </div>
-
-      <!-- Ward dropdown (initially hidden) -->
-      <div class="form-group" id="wardDiv" style="display:none;">
-        <label for="ward">Ward</label>
-        <select id="ward" name="ward" required>
-          <option value="">-- Select Ward --</option>
-          <option value="Ward 1 – Ratnechaur">Ward 1 – रत्नेचौर </option>
-          <option value="Ward 2 – Jyamrukot">Ward 2 – ज्यामरुकोट</option>
-          <option value="Ward 3 – Bhakimli">Ward 3 – भकिम्ली</option>
-          <option value="Ward 4 – Mangale">Ward 4 – सिंगा </option>
-          <option value="Ward 5 – Naku">Ward 5 – पुलाचौर</option>
-          <option value="Ward 6 – Arthunge">Ward 6 – अर्थुंगे </option>
-          <option value="Ward 7 – Purnagaun">Ward 7 – बेनी </option>
-          <option value="Ward 8 – Banethok Deurali">Ward 8 – बेनी </option>
-          <option value="Ward 9 – Thakle">Ward 9 – घतान </option>
-          <option value="Ward 10 – Patlekhet">Ward 10 – पात्लेखेत</option>
-        </select>
-      </div>
-
-      <!-- Tole input (initially hidden) -->
-      <div class="form-group" id="toleDiv" style="display:none;">
-        <label for="tole">Tole</label>
-        <input type="text" id="tole" name="tole" placeholder="Enter your Tole" required>
-      </div>
-
-      <button type="submit">Sign Up</button>
-    </form>
-
-    <div class="login-link">
-      Already have an account? <a href="{% url 'login' %}">Login here</a>
+  <!-- ROLE -->
+  <div class="form-row full-width">
+    <div>
+      <label for="id_role">भूमिका (Role)</label>
+      <select name="role" id="id_role" required aria-required="true" aria-describedby="roleHelp">
+        <option value="">-- भूमिका छान्नुहोस् (choose your role) --</option>
+        <option value="farmer" {% if request.POST.role == "farmer" %}selected{% endif %}>किसान (farmer)</option>
+        <option value="customer" {% if request.POST.role == "customer" %}selected{% endif %}>ग्राहक (customer)</option>
+      </select>
+      <!-- <small id="roleHelp" class="sr-only">Choose</small> -->
+      {% if form.role.errors %}
+        <div class="form-errors" role="alert" aria-live="assertive">{{ form.role.errors|striptags }}</div>
+      {% endif %}
     </div>
   </div>
 
-  <script>
-    const addressSelect = document.getElementById('address');
-    const wardDiv = document.getElementById('wardDiv');
-    const wardSelect = document.getElementById('ward');
-    const toleDiv = document.getElementById('toleDiv');
+  <!-- ADDRESS STATIC -->
+  <div class="form-row full-width">
+    <div>
+      <label for="address">ठेगाना (address)</label>
+   <select id="address" name="address" required>
+  <option value="" {% if not request.POST.address %}selected{% endif %}>-- ठेगाना छान्नुहोस् (choose your address) --</option>
+  <option value="Beni Municipality" {% if request.POST.address == 'Beni Municipality' %}selected{% endif %}>वेनी नगरपालिका (Beni Municipality)</option>
+</select>
 
-    addressSelect.addEventListener('change', function() {
-      if (this.value === 'Beni Municipality') {
-        wardDiv.style.display = 'block';
-      } else {
-        wardDiv.style.display = 'none';
-        toleDiv.style.display = 'none';
-        wardSelect.value = '';
-      }
-    });
 
-    wardSelect.addEventListener('change', function() {
-      if (this.value !== '') {
-        toleDiv.style.display = 'block';
-      } else {
-        toleDiv.style.display = 'none';
-      }
+
+      <!-- <small id="addressHelp" class="sr-only">Choose your address</small> -->
+    </div>
+  </div>
+
+  <!-- WARD -->
+  <div class="form-row full-width" id="wardDiv" style="display:none;">
+    <div>
+      <label for="ward">वडा (ward)</label>
+      <select id="ward" name="ward" required aria-required="true" aria-describedby="wardHelp">
+        <option value="">-- वडा छान्नुहोस् (choose ward) --</option>
+        {% for w in form.fields.ward.choices %}
+          <option value="{{ w.0 }}" {% if request.POST.ward == w.0 %}selected{% endif %}>{{ w.1 }}</option>
+        {% endfor %}
+      </select>
+      <!-- <small id="wardHelp" class="sr-only">Choose your ward</small> -->
+    </div>
+  </div>
+
+  <!-- TOLE -->
+  <div class="form-row full-width" id="toleDiv" style="display:block;">
+    <div>
+      <label for="tole">टोल (tole)</label>
+      <input
+        type="text"
+        id="tole"
+        name="tole"
+        placeholder="तपाइको टोल को नाम लेख्नुहोस्"
+        required
+        aria-required="true"
+        value="{{ request.POST.tole }}"
+      >
+      <input type="hidden" id="latitude" name="latitude" value="{{ request.POST.latitude }}">
+      <input type="hidden" id="longitude" name="longitude" value="{{ request.POST.longitude }}">
+    </div>
+  </div>
+
+  <div class="form-row full-width" id="mapButtonDiv" style="display: none;">
+    <div>
+      <button type="button" onclick="openMapModal()" aria-label="Select location on map">स्थान छान्नुहोस् (Select Location on Map)</button>
+    </div>
+  </div>
+
+  <button type="submit">साइन अप (Sign Up)</button>
+</form>
+
+
+
+      <div class="login-link">
+        पहिले नै खाता छ <a href="{% url 'login' %}">लग इन गर्नुहोस् </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map Modal -->
+  <div id="mapModal" aria-hidden="true" role="dialog" aria-labelledby="mapModalLabel">
+    <div class="modal-header">
+      <button class="modal-close-btn" onclick="closeMapModal()" aria-label="Close map modal">Close</button>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <!-- Leaflet CSS/JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const wardCoordinates = {
+  "Ward 1 – Ratnechaur": [28.3076959, 83.5858405],
+  "Ward 2 – Jyamrukot": [28.3300181, 83.5497002],
+  "Ward 3 – Bhakimli": [28.3300181, 83.4997002],
+  "Ward 4 – Singa": [28.3313306, 83.484081],
+  "Ward 5 – Pulachaur": [28.370018, 83.5097002],
+  "Ward 6 – Arthunge": [28.3476719, 83.5400604],
+  "Ward 7 – Beni": [28.3517, 83.5640546],
+  "Ward 8 – Beni": [28.3500244, 83.5648022],
+  "Ward 9 – Ghatan": [28.3748225, 83.5267781],
+  "Ward 10 – Patlekhet": [28.3978722, 83.5094187]
+};
+
+const addressSelect = document.getElementById('address');
+const wardDiv = document.getElementById('wardDiv');
+const wardSelect = document.getElementById('ward');
+const toleDiv = document.getElementById('toleDiv');
+const mapButtonDiv = document.getElementById('mapButtonDiv');
+const toleInput = document.getElementById('tole');
+
+const latitudeInput = document.getElementById('latitude');
+const longitudeInput = document.getElementById('longitude');
+
+let map, marker;
+
+// Show/hide based on address and ward
+addressSelect.addEventListener('change', function () {
+  if (this.value === 'Beni Municipality') {
+    wardDiv.style.display = 'block';
+  } else {
+    wardDiv.style.display = 'none';
+    toleDiv.style.display = 'none';
+    mapButtonDiv.style.display = 'none';
+    wardSelect.value = '';
+  }
+});
+
+wardSelect.addEventListener('change', function () {
+  if (this.value !== '') {
+    toleDiv.style.display = 'block';
+    mapButtonDiv.style.display = 'none';
+    latitudeInput.value = '';
+    longitudeInput.value = '';
+  } else {
+    toleDiv.style.display = 'none';
+    mapButtonDiv.style.display = 'none';
+    latitudeInput.value = '';
+    longitudeInput.value = '';
+  }
+});
+
+toleInput.addEventListener('input', function () {
+  if (this.value.trim() !== '') {
+    mapButtonDiv.style.display = 'block';
+  } else {
+    mapButtonDiv.style.display = 'none';
+    latitudeInput.value = '';
+    longitudeInput.value = '';
+  }
+});
+
+function setError(inputElem, message) {
+  let errorElem = inputElem.nextElementSibling;
+  if (!errorElem || !errorElem.classList.contains('form-errors')) {
+    errorElem = document.createElement('div');
+    errorElem.className = 'form-errors';
+    inputElem.insertAdjacentElement('afterend', errorElem);
+  }
+  errorElem.textContent = message;
+}
+
+function clearError(inputElem) {
+  let errorElem = inputElem.nextElementSibling;
+  if (errorElem && errorElem.classList.contains('form-errors')) {
+    errorElem.textContent = '';
+  }
+}
+
+// Validation functions with Nepali error messages
+function validateUsername() {
+  const val = usernameInput.value.trim();
+  if (val.length === 0) {
+    setError(usernameInput, 'कृपया प्रयोगकर्ता नाम लेख्नुहोस्।');
+    return false;
+  } else if (!/^[a-zA-Z0-9_]+$/.test(val)) {
+    setError(usernameInput, 'प्रयोगकर्ता नाममा केवल अक्षर, संख्या र अन्डरस्कोर मात्र हुनसक्छ।');
+    return false;
+  } else {
+    clearError(usernameInput);
+    return true;
+  }
+}
+
+function validateEmail() {
+  const val = emailInput.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (val.length === 0) {
+    setError(emailInput, 'कृपया इमेल ठेगाना लेख्नुहोस्।');
+    return false;
+  } else if (!emailRegex.test(val)) {
+    setError(emailInput, 'कृपया मान्य इमेल ठेगाना लेख्नुहोस्।');
+    return false;
+  } else {
+    clearError(emailInput);
+    return true;
+  }
+}
+
+function validatePhone() {
+  const val = phoneInput.value.trim();
+  const phoneRegex = /^[0-9]{10}$/;
+  if (val.length === 0) {
+    setError(phoneInput, 'कृपया फोन नम्बर लेख्नुहोस्।');
+    return false;
+  } else if (!phoneRegex.test(val)) {
+    setError(phoneInput, 'फोन नम्बर १० अंकको हुनुपर्छ।');
+    return false;
+  } else {
+    clearError(phoneInput);
+    return true;
+  }
+}
+
+function validatePassword() {
+  const val = passwordInput.value;
+  if (val.length < 8) {
+    setError(passwordInput, 'पासवर्ड कम्तिमा ८ क्यारेक्टर लामो हुनुपर्छ।');
+    return false;
+  } else {
+    clearError(passwordInput);
+    return true;
+  }
+}
+
+function validateConfirmPassword() {
+  const passVal = passwordInput.value;
+  const confirmVal = confirmPasswordInput.value;
+  if (confirmVal.length === 0) {
+    setError(confirmPasswordInput, 'कृपया पासवर्ड पुनः लेख्नुहोस्।');
+    return false;
+  } else if (passVal !== confirmVal) {
+    setError(confirmPasswordInput, 'पासवर्ड मिलेन।');
+    return false;
+  } else {
+    clearError(confirmPasswordInput);
+    return true;
+  }
+}
+
+// Event listeners on blur to show error messages
+const usernameInput = document.querySelector('input[name="username"]');
+usernameInput.addEventListener('blur', validateUsername);
+
+const emailInput = document.querySelector('input[name="email"]');
+emailInput.addEventListener('blur', validateEmail);
+
+const phoneInput = document.querySelector('input[name="phonenumber"]');
+phoneInput.addEventListener('blur', validatePhone);
+
+const passwordInput = document.querySelector('input[name="password1"]');
+passwordInput.addEventListener('blur', validatePassword);
+
+const confirmPasswordInput = document.querySelector('input[name="password2"]');
+confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+
+// Check confirm password on password change too
+passwordInput.addEventListener('input', () => {
+  if (confirmPasswordInput.value.length > 0) {
+    validateConfirmPassword();
+  }
+});
+
+function openMapModal() {
+  const wardName = wardSelect.value;
+  if (!wardName || !wardCoordinates[wardName]) {
+    alert('कृपया पहिले वडा छान्नुहोस्।');
+    return;
+  }
+
+  const coords = wardCoordinates[wardName];
+  const mapModal = document.getElementById('mapModal');
+  mapModal.style.display = 'flex';
+  mapModal.setAttribute('aria-hidden', 'false');
+
+  if (!map) {
+    map = L.map('map').setView(coords, 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors',
+    }).addTo(map);
+
+    marker = L.marker(coords, { draggable: true }).addTo(map);
+    marker.on('dragend', updateLatLng);
+    map.on('click', function (e) {
+      marker.setLatLng(e.latlng);
+      updateLatLng();
     });
-  </script>
+  } else {
+    map.setView(coords, 15);
+    marker.setLatLng(coords);
+  }
+  updateLatLng();
+}
+
+function closeMapModal() {
+  const mapModal = document.getElementById('mapModal');
+  mapModal.style.display = 'none';
+  mapModal.setAttribute('aria-hidden', 'true');
+}
+
+function updateLatLng() {
+  if (marker) {
+    const pos = marker.getLatLng();
+    latitudeInput.value = pos.lat.toFixed(6);
+    longitudeInput.value = pos.lng.toFixed(6);
+  }
+}
+
+(function addSaveLocationButton() {
+  const modalHeader = document.querySelector('#mapModal .modal-header');
+  const saveBtn = document.createElement('button');
+  saveBtn.className = 'modal-close-btn';
+  saveBtn.textContent = 'स्थान सुरक्षित गर्नुहोस्';
+  saveBtn.setAttribute('aria-label', 'स्थान सुरक्षित गरी नक्शा बन्द गर्नुहोस्');
+  saveBtn.style.marginRight = '8px';
+  saveBtn.style.backgroundColor = '#388e3c';
+
+  saveBtn.addEventListener('click', () => {
+    closeMapModal();
+  });
+
+  const closeBtn = modalHeader.querySelector('.modal-close-btn');
+  modalHeader.insertBefore(saveBtn, closeBtn);
+})();
+
+document.getElementById('signupForm').addEventListener('submit', (e) => {
+  // Validate all fields on submit
+  let valid =
+    validateUsername() &
+    validateEmail() &
+    validatePhone() &
+    validatePassword() &
+    validateConfirmPassword();
+
+  const role = document.getElementById('id_role').value;
+  const address = addressSelect.value;
+  const ward = wardSelect.value;
+  const tole = toleInput.value.trim();
+
+  if (!role) {
+    alert('कृपया भूमिका छान्नुहोस्।');
+    valid = false;
+  }
+  if (!address) {
+    alert('कृपया ठेगाना छान्नुहोस्।');
+    valid = false;
+  }
+  if (address === 'Beni Municipality' && !ward) {
+    alert('कृपया वडा छान्नुहोस्।');
+    valid = false;
+  }
+  if (ward && tole === '') {
+    alert('कृपया टोल लेख्नुहोस्।');
+    valid = false;
+  }
+
+  // If no lat/lng picked by user on map but ward and tole filled, fill lat/lng with ward default coords
+  if (
+    tole !== '' &&
+    (latitudeInput.value === '' || longitudeInput.value === '') &&
+    wardCoordinates[ward]
+  ) {
+    const defaultCoords = wardCoordinates[ward];
+    latitudeInput.value = defaultCoords[0].toFixed(6);
+    longitudeInput.value = defaultCoords[1].toFixed(6);
+  }
+
+  // If lat/lng still empty and tole filled, show error
+  if (tole !== '' && (latitudeInput.value === '' || longitudeInput.value === '')) {
+    alert('कृपया नक्सामा स्थान छान्नुहोस्।');
+    valid = false;
+  }
+
+  if (!valid) {
+    e.preventDefault();
+  }
+});
+</script>
+
 </body>
 </html>
