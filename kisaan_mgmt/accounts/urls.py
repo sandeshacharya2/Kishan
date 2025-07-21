@@ -34,4 +34,6 @@ urlpatterns = [
     # Profile updates
     path('farmer/profile/update/', update_farmer_profile, name='update-farmer-profile'),
     path('customer/profile/update/', update_customer_profile, name='update-customer-profile'),  # URL path सुधारियो
+    path('farmer-location/<int:farmer_id>/', views.view_farmer_location, name='view_farmer_location'),
+
 ]

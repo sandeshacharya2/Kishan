@@ -4,16 +4,16 @@ from django.contrib.auth.models import User
 from .models import Profile, FarmerProfile, CustomerProfile
 
 WARD_CHOICES = [
-    ('Ward 1 – Ratnechaur', 'Ward 1 – Ratnechaur'),
-    ('Ward 2 – Jyamrukot', 'Ward 2 – Jyamrukot'),
-    ('Ward 3 – Bhakimli', 'Ward 3 – Bhakimli'),
-    ('Ward 4 – Singa', 'Ward 4 – Singa'),
-    ('Ward 5 – Pulachaur', 'Ward 5 – Pulachaur'),
-    ('Ward 6 – Arthunge', 'Ward 6 – Arthunge'),
-    ('Ward 7 – Beni', 'Ward 7 – Beni'),
-    ('Ward 8 – Beni', 'Ward 8 – Beni'),
-    ('Ward 9 – Ghatan', 'Ward 9 – Ghatan'),
-    ('Ward 10 – Patlekhet', 'Ward 10 – Patlekhet'),
+    ('Ward 1 – Ratnechaur', 'वडा १ – रातनेचौर'),
+    ('Ward 2 – Jyamrukot', 'वडा २ – ज्यामरुकोट'),
+    ('Ward 3 – Bhakimli', 'वडा ३ – भाकिम्ली'),
+    ('Ward 4 – Singa', 'वडा ४ – सिङ्गा'),
+    ('Ward 5 – Pulachaur', 'वडा ५ – पुलाचौर'),
+    ('Ward 6 – Arthunge', 'वडा ६ – अर्थुङ्गे'),
+    ('Ward 7 – Beni', 'वडा ७ – बेनी'),
+    ('Ward 8 – Beni', 'वडा ८ – बेनी'),
+    ('Ward 9 – Ghatan', 'वडा ९ – घतान'),
+    ('Ward 10 – Patlekhet', 'वडा १० – पात्लेखेत'),
 ]
 
 class SignUpForm(UserCreationForm):
@@ -100,20 +100,6 @@ class FarmerProfileForm(forms.ModelForm):
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super(FarmerProfileForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].required = True
-        self.fields['last_name'].required = True
-
-    class Meta:
-        model = FarmerProfile
-        fields = ['first_name', 'last_name', 'profile_picture']
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-        }
-
 
 class CustomerProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -129,18 +115,3 @@ class CustomerProfileForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
-
-    def __init__(self, *args, **kwargs):
-        super(CustomerProfileForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].required = True
-        self.fields['last_name'].required = True
-
-    class Meta:
-        model = CustomerProfile
-        fields = ['first_name', 'last_name', 'profile_picture']
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-        }
-

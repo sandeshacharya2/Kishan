@@ -23,6 +23,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
     price = models.FloatField(help_text="Price per unit")
     date_posted = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
 
     def total_price(self):
         return self.quantity * self.price
