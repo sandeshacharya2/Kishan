@@ -58,6 +58,6 @@ def farmer_dashboard_view(request):
     return render(request, 'accounts/farmer_dashboard.html', {'products': products})
 
 
-def marketplace_view(request):
-    products = Product.objects.all().order_by('-date_posted')  # 🛠️ FIXED
-    return render(request, 'products/marketplace.html', {'products': products})
+# def marketplace_view(request):
+#     products = Product.objects.all().order_by('-date_posted')  # 🛠️ FIXED
+#     return render(request, 'products/marketplace.html', {'products': products})

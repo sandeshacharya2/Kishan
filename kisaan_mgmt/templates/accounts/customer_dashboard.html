@@ -7,101 +7,375 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% trans "ग्राहक ड्याशबोर्ड" %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Responsive sidebar styles */
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 50;
+        height: 100vh;
+        width: 80vw;
+        max-width: 320px;
+        background: linear-gradient(to bottom right, #e6ffe6, #b2ff59);
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+        box-shadow: 2px 0 12px rgba(44,62,80,0.13);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(44,62,80,0.13);
+        z-index: 40;
+      }
+      .sidebar-overlay.active {
+        display: block;
+      }
+      .ml-72 {
+        margin-left: 0 !important;
+      }
+    }
+    @media (max-width: 640px) {
+      .sidebar {
+        width: 100vw;
+        max-width: none;
+      }
+    }
+  </style>
 </head>
 <body class="bg-green-50 text-green-900">
-
-<!-- Sidebar -->
-<aside class="w-72 bg-gradient-to-br from-green-100 via-green-200 to-green-50 border-r border-green-300 fixed h-screen top-0 left-0 z-10">
-  <div class="p-4 border-b border-green-300 bg-green-200 text-center">
-    {% if user.customerprofile.profile_picture %}
-      <img src="{{ user.customerprofile.profile_picture.url }}" class="w-20 h-20 mx-auto rounded-full border-4 border-green-500 shadow-md" alt="{% trans 'Profile' %}">
-    {% else %}
-      <img src="{% static 'default_profile.jpg' %}" class="w-20 h-20 mx-auto rounded-full border-4 border-green-500 shadow-md" alt="{% trans 'No Profile' %}">
-    {% endif %}
-    <h2 class="mt-2 font-bold text-green-900 flex items-center justify-center gap-1">🧑‍💼 @{{ user.username }}</h2>
-    <p class="text-sm font-semibold text-green-800">{{ user.customerprofile.first_name }} {{ user.customerprofile.last_name }}</p>
-    <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, {% blocktrans %}वाड नं. {{ user.profile.ward }}{% endblocktrans %}</p>
-    <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "थप विवरण हेर्नुहोस्" %}</button>
-    <div id="details" class="hidden mt-2 text-sm text-green-800">
-      <p>📧 {{ user.email }}</p>
-      <p>📞 {{ user.profile.phonenumber }}</p>
-    </div>
-    <div class="mt-3 text-green-900 text-xs italic">{% trans "ग्राहक साथी, तपाईंको सहभागिताले कृषि बजार चल्दछ!" %}</div>
+  <!-- Hamburger for mobile -->
+  <div class="lg:hidden flex items-center justify-between px-4 py-2 bg-white shadow sticky top-0 z-30">
+    <button id="sidebar-toggle" class="text-green-700 text-3xl focus:outline-none">
+      &#9776;
+    </button>
+    <span class="text-xl font-bold text-green-800 tracking-wide flex items-center gap-2">
+      {% trans "किसान" %} <span class="text-green-400 text-xl">🌱</span>
+    </span>
   </div>
-  <nav class="flex-1 p-4 space-y-4 text-green-800 font-semibold">
-    <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "प्रोफाइल सम्पादन" %}</a>
-    <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "ड्याशबोर्ड" %}</a>
-  </nav>
-  <form method="post" action="{% url 'logout' %}" class="p-4 border-t border-green-300">
-    {% csrf_token %}
-    <button class="text-red-700 font-semibold w-full hover:underline">🚪 {% trans "लगआउट" %}</button>
+  <!-- Sidebar overlay for mobile -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar w-72 bg-gradient-to-br from-green-100 via-green-200 to-green-50 border-r border-green-300 fixed h-screen top-0 left-0 z-50 lg:z-10 lg:block">
+    <div class="p-4 border-b border-green-300 bg-green-200 text-center">
+      {% if user.customerprofile.profile_picture %}
+        <img src="{{ user.customerprofile.profile_picture.url }}" class="w-20 h-20 mx-auto rounded-full border-4 border-green-500 shadow-md" alt="{% trans 'Profile' %}">
+      {% else %}
+        <img src="{% static 'default_profile.jpg' %}" class="w-20 h-20 mx-auto rounded-full border-4 border-green-500 shadow-md" alt="{% trans 'No Profile' %}">
+      {% endif %}
+      <h2 class="mt-2 font-bold text-green-900 flex items-center justify-center gap-1">🧑‍💼 @{{ user.username }}</h2>
+      <p class="text-sm font-semibold text-green-800">{{ user.customerprofile.first_name }} {{ user.customerprofile.last_name }}</p>
+      <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
+      <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "थप विवरण हेर्नुहोस्" %}</button>
+      <div id="details" class="hidden mt-2 text-sm text-green-800">
+        <p>📧 {{ user.email }}</p>
+        <p>📞 {{ user.profile.phonenumber }}</p>
+      </div>
+      <div class="mt-3 text-green-900 text-xs italic">{% trans "ग्राहक साथी, तपाईंको सहभागिताले कृषि बजार चल्दछ!" %}</div>
+    </div>
+    <nav class="flex-1 p-4 space-y-4 text-green-800 font-semibold">
+      <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "प्रोफाइल सम्पादन" %}</a>
+      <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "ड्याशबोर्ड" %}</a>
+    </nav>
+    <form method="post" action="{% url 'logout' %}" class="p-4 border-t border-green-300">
+      {% csrf_token %}
+      <button class="text-red-700 font-semibold w-full hover:underline">🚪 {% trans "लगआउट" %}</button>
+    </form>
+  </aside>
+  <!-- Main Content -->
+  <div class="ml-72 min-h-screen flex flex-col">
+
+    <!-- Navbar (desktop only) -->
+    <header class="bg-white shadow p-3 flex items-center justify-between sticky top-0 z-20 lg:flex hidden">
+      <div class="flex items-center gap-3 pl-4">
+        <img src="{% static 'accounts/images/download.jpg' %}"
+             alt="{% trans 'Logo' %}"
+             class="w-12 h-12 object-cover rounded-full border-2 border-green-500 shadow-md" />
+        <span class="text-2xl font-bold text-green-800 tracking-wide flex items-center gap-2">
+          {% trans "किसान" %} <span class="text-green-400 text-xl">🌱</span>
+        </span>
+      </div>
+      <h2 class="text-xl font-semibold text-green-700 pr-6 flex items-center gap-2">🛒 {% trans "उपलब्ध उत्पादनहरू" %}</h2>
+    </header>
+
+    <!-- Leafy Divider -->
+    <div class="flex justify-center items-center mt-2 mb-2">
+      <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8">
+        <path d="M10 16 Q 30 0, 60 16 Q 90 32, 110 16" stroke="#81c784" stroke-width="3" fill="none"/>
+        <ellipse cx="10" cy="16" rx="4" ry="8" fill="#43a047"/>
+        <ellipse cx="110" cy="16" rx="4" ry="8" fill="#43a047"/>
+      </svg>
+    </div>
+
+    <!-- Motivational Message -->
+    <div class="text-center text-green-800 font-semibold mb-4 text-lg">
+      {% trans "नमस्ते ग्राहक साथी! यहाँ तपाईंले किसानहरूले पोस्ट गरेका उत्पादनहरू हेर्न सक्नुहुन्छ।" %}
+    </div>
+
+    <!-- Search & Filter Form -->
+    <div class="px-6 mb-4">
+      <form method="get" class="flex flex-col sm:flex-row items-center gap-3">
+        <input
+      type="text"
+      name="q"
+      value="{{ query|default_if_none:'' }}"
+      placeholder="{% trans 'उत्पादन खोज्नुहोस् (जस्तै: आलु, अदुवा, आ...)' %}"
+      class="w-full sm:w-1/2 px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+    />
+
+    <!-- Filter Button and Dropdown -->
+    <div class="relative">
+      <button type="button" id="filter-toggle" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+        ⚙️ {% trans "Filter" %}
+      </button>
+
+      <div id="filter-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white border border-green-300 rounded-lg shadow-lg z-50 p-4">
+        <label class="block mb-2 font-semibold text-green-800">{% trans "Filter by:" %}</label>
+
+        <select id="filter-type" name="filter_type" class="w-full mb-3 border border-green-300 rounded px-3 py-2">
+          <option value="">{% trans "Select Filter" %}</option>
+          <option value="price" {% if filter_type == 'price' %}selected{% endif %}>{% trans "Price Range" %}</option>
+          <option value="date" {% if filter_type == 'date' %}selected{% endif %}>{% trans "Date Range" %}</option>
+          <option value="quantity" {% if filter_type == 'quantity' %}selected{% endif %}>{% trans "Quantity Range" %}</option>
+          <option value="distance" {% if filter_type == 'distance' %}selected{% endif %}>{% trans "Distance Range" %}</option>
+        </select>
+
+        <!-- Price Range Inputs -->
+        <div id="price-filter" class="filter-inputs hidden space-y-2">
+          <input type="number" name="min_price" placeholder="{% trans 'Minimum Price' %}" value="{{ request.GET.min_price }}" class="w-full border border-green-300 rounded px-3 py-2" />
+          <input type="number" name="max_price" placeholder="{% trans 'Maximum Price' %}" value="{{ request.GET.max_price }}" class="w-full border border-green-300 rounded px-3 py-2" />
+        </div>
+
+        <!-- Date Range Inputs -->
+        <div id="date-filter" class="filter-inputs hidden space-y-2">
+          <label class="block text-green-700 font-medium">{% trans "From" %}</label>
+          <input type="date" name="start_date" value="{{ request.GET.start_date }}" class="w-full border border-green-300 rounded px-3 py-2" />
+          <label class="block text-green-700 font-medium">{% trans "To" %}</label>
+          <input type="date" name="end_date" value="{{ request.GET.end_date }}" class="w-full border border-green-300 rounded px-3 py-2" />
+        </div>
+
+        <!-- Quantity Range Inputs -->
+        <div id="quantity-filter" class="filter-inputs hidden space-y-2">
+          <input type="number" name="min_quantity" placeholder="{% trans 'Minimum Quantity' %}" value="{{ request.GET.min_quantity }}" class="w-full border border-green-300 rounded px-3 py-2" />
+          <input type="number" name="max_quantity" placeholder="{% trans 'Maximum Quantity' %}" value="{{ request.GET.max_quantity }}" class="w-full border border-green-300 rounded px-3 py-2" />
+        </div>
+
+        <!-- Distance Range Inputs -->
+        <div id="distance-filter" class="filter-inputs hidden space-y-2">
+          <select id="distance-option" name="distance_option" class="w-full border border-green-300 rounded px-3 py-2 mb-2">
+            <option value="nearest" {% if request.GET.distance_option == 'nearest' %}selected{% endif %}>{% trans "Nearest" %}</option>
+            <option value="farthest" {% if request.GET.distance_option == 'farthest' %}selected{% endif %}>{% trans "Farthest" %}</option>
+            <option value="enter_range" {% if request.GET.distance_option == 'enter_range' %}selected{% endif %}>{% trans "Enter Range" %}</option>
+          </select>
+
+          <!-- Show only if Enter Range is selected -->
+          <div id="enter-range-inputs" class="hidden space-y-2">
+            <div class="flex gap-2 items-center">
+              <input type="number" step="any" name="min_distance" placeholder="{% trans 'Min Distance' %}" value="{{ request.GET.min_distance }}" class="flex-grow border border-green-300 rounded px-3 py-2" />
+              <select name="distance_unit" class="w-24 border border-green-300 rounded px-3 py-2">
+                <option value="km" {% if request.GET.distance_unit == 'km' %}selected{% endif %}>km</option>
+                <option value="meter" {% if request.GET.distance_unit == 'meter' %}selected{% endif %}>meter</option>
+              </select>
+            </div>
+            <div>
+              <input type="number" step="any" name="max_distance" placeholder="{% trans 'Max Distance' %}" value="{{ request.GET.max_distance }}" class="w-full border border-green-300 rounded px-3 py-2" />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="mt-4 w-full bg-green-600 text-white rounded-lg py-2 hover:bg-green-700 transition">
+          {% trans "Apply Filters" %}
+        </button>
+      </div>
+    </div>
+
+
+
+        <button
+      type="submit"
+      class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+    >
+      🔍 {% trans "खोज्नुहोस्" %}
+    </button>
   </form>
-</aside>
 
-<!-- Main Content -->
-<div class="ml-72 min-h-screen flex flex-col">
-
-  <!-- Navbar -->
-  <header class="bg-white shadow p-3 flex items-center justify-between sticky top-0 z-20">
-    <div class="flex items-center gap-3 pl-4">
-      <img src="{% static 'accounts/images/download.jpg' %}"
-           alt="{% trans 'Logo' %}"
-           class="w-12 h-12 object-cover rounded-full border-2 border-green-500 shadow-md" />
-      <span class="text-2xl font-bold text-green-800 tracking-wide flex items-center gap-2">
-        {% trans "किसान" %} <span class="text-green-400 text-xl">🌱</span>
-      </span>
     </div>
-    <h2 class="text-xl font-semibold text-green-700 pr-6 flex items-center gap-2">🛒 {% trans "उपलब्ध उत्पादनहरू" %}</h2>
-  </header>
 
-  <!-- Leafy Divider -->
-  <div class="flex justify-center items-center mt-2 mb-2">
-    <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8">
-      <path d="M10 16 Q 30 0, 60 16 Q 90 32, 110 16" stroke="#81c784" stroke-width="3" fill="none"/>
-      <ellipse cx="10" cy="16" rx="4" ry="8" fill="#43a047"/>
-      <ellipse cx="110" cy="16" rx="4" ry="8" fill="#43a047"/>
-    </svg>
-  </div>
-
-  <!-- Motivational Message -->
-  <div class="text-center text-green-800 font-semibold mb-4 text-lg">
-    {% trans "नमस्ते ग्राहक साथी! यहाँ तपाईंले किसानहरूले पोस्ट गरेका उत्पादनहरू हेर्न सक्नुहुन्छ।" %}
-  </div>
-
-  <!-- Product Cards -->
-  <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
+      <!-- Product Cards -->
+    <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {% if products %}
         {% for product in products %}
-          <div class="bg-white shadow-md rounded-lg overflow-hidden border border-green-200">
+          <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-green-300 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
+            <!-- Farmer Info -->
+            <div class="flex items-center gap-4 p-4 bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
+              {% if product.farmer.farmerprofile.profile_picture %}
+                <img src="{{ product.farmer.farmerprofile.profile_picture.url }}"
+                     alt="{% trans 'Farmer Picture' %}"
+                     class="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-sm" />
+              {% else %}
+                <img src="{% static 'default_profile.jpg' %}"
+                     alt="{% trans 'Default Picture' %}"
+                     class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
+              {% endif %}
+              <div class="flex flex-col">
+                <span class="font-semibold text-green-900 text-base flex items-center gap-1">
+                  👨‍🌾 {{ product.farmer.farmerprofile.first_name }} {{ product.farmer.farmerprofile.last_name }}
+                </span>
+                <span class="text-xs text-green-700">@{{ product.farmer.username }}</span>
+                <span class="text-xs text-green-600 mt-1">📅 {% trans "पोस्ट गरिएको मिति" %}: {{ product.date_posted|date:"Y-m-d" }}</span>
+              </div>
+            </div>
+
+            <!-- Product Image -->
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-40 object-cover">
+              <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover" />
             {% else %}
-              <img src="{% static 'default_product.jpg' %}" alt="{% trans 'Default Product' %}" class="w-full h-40 object-cover">
+              <img src="{% static 'default_product.jpg' %}" alt="{% trans 'Default Product' %}" class="w-full h-48 object-cover" />
             {% endif %}
 
-            <div class="p-4">
-              <h3 class="text-lg font-semibold text-green-800">🌾 {{ product.sub_category }}</h3>
-              <p class="text-sm">{% trans "मात्रा" %}: <span class="font-bold text-green-700">{{ product.quantity }}</span> {{ product.unit }}</p>
-              <p class="text-sm">{% trans "मूल्य प्रति एकाइ" %}: <span class="font-bold text-green-700">Rs. {{ product.price }}</span></p>
-              <p class="text-sm">{% trans "कुल मूल्य" %}: <span class="font-bold text-green-700">Rs. {{ product.total_price }}</span></p>
-              <p class="text-sm">{% trans "स्थान" %}: <span class="font-bold text-green-700">{{ product.user.profile.address }}, {{ product.user.profile.tole }}, {% blocktrans %}वाड नं. {{ product.user.profile.ward }}{% endblocktrans %}</span></p>
-              <p class="text-xs text-green-600 mt-2">📅 {% trans "पोस्ट गरिएको मिति" %}: {{ product.date_posted|date:"Y-m-d" }}</p>
+            <!-- Product Details -->
+            <div class="p-5 space-y-2 text-green-900">
+              <h3 class="text-lg font-bold text-green-800 flex items-center gap-2">
+                🌾 {{ product.sub_category }}
+              </h3>
+
+              <div class="flex flex-wrap gap-2 text-sm text-green-700">
+                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
+                  🧮 {% trans "मात्रा" %}: {{ product.quantity }} {{ product.unit }}
+                </span>
+                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
+                  💵 {% trans "प्रति एकाइ मूल्य" %}: Rs. {{ product.price }}
+                </span>
+                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
+                  🧾 {% trans "कुल" %}: Rs. {{ product.total_price }}
+                </span>
+              </div>
+
+              <div class="text-sm mt-2 text-green-700 leading-relaxed">
+                📍 <strong>{% trans "स्थान" %}</strong>: {{ product.farmer.profile.address }}, {{ product.farmer.profile.tole }},
+                {% blocktrans with ward=product.farmer.profile.ward %}
+                  वाड नं. {{ ward }}
+                {% endblocktrans %}
+              </div>
+
+             <!-- Distance Display -->
+    {% if product.display_distance %}
+      <div class="text-sm mt-2 text-green-800 font-semibold flex items-center gap-1">
+        📍 <strong>{% trans "दूरी" %}:</strong> {{ product.display_distance }}
+      </div>
+    {% else %}
+      <div class="text-sm mt-2 text-red-600 font-semibold">
+        ⚠️ {% trans "दूरी उपलब्ध छैन" %}
+      </div>
+    {% endif %}
+    <a href="{% url 'view_farmer_location' product.farmer.id %}" class="text-blue-600 underline text-sm">
+        👨‍🌾 किसानको स्थान हेर्नुहोस्
+    </a>
+
+              <div class="mt-4 flex justify-between gap-3">
+                <a href="" class="flex-1 text-center text-sm font-semibold bg-white border border-green-500 text-green-700 py-2 rounded-lg hover:bg-green-100 transition">
+                  👁️ {% trans "हेर्नुहोस्" %}
+                </a>
+                <a href="" class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+                  🛒 {% trans "किन्नुहोस्" %}
+                </a>
+              </div>
             </div>
+            
           </div>
         {% endfor %}
       {% else %}
         <p class="text-center col-span-full text-green-600">{% trans "हाल कुनै उत्पादन उपलब्ध छैन।" %}</p>
       {% endif %}
     </div>
-  </main>
+
+    <!-- Pagination Controls -->
+    <div class="mt-8 flex justify-center items-center gap-3 text-green-800 font-semibold">
+  {% if products.has_previous %}
+    <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
+      &laquo; {% trans "अघिल्लो" %}
+    </a>
+  {% endif %}
+
+  <span class="px-3 py-1 rounded border border-green-400 bg-green-100">
+    {% trans "पृष्ठ" %} {{ products.number }} {% trans "बाट" %} {{ products.paginator.num_pages }}
+  </span>
+
+  {% if products.has_next %}
+    <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
+      {% trans "अर्को" %} &raquo;
+    </a>
+  {% endif %}
 </div>
 
-<!-- Minimal JS -->
-<script>
-  function toggleDetails() {
-    document.getElementById('details').classList.toggle('hidden');
-  }
-</script>
+  </main>
+
+
+  </div>
+
+  <!-- Minimal JS -->
+  <script>
+    const filterToggle = document.getElementById('filter-toggle');
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const filterTypeSelect = document.getElementById('filter-type');
+    const distanceFilterSelect = document.getElementById('distance-filter');
+    const filterInputs = document.querySelectorAll('.filter-inputs');
+    const distanceRangeInputs = document.getElementById('distance-range-inputs');
+
+    filterToggle.addEventListener('click', () => {
+      filterDropdown.classList.toggle('hidden');
+    });
+
+    function showFilterInputs(type) {
+      filterInputs.forEach(div => div.classList.add('hidden'));
+      if (type) {
+        const el = document.getElementById(type + '-filter');
+        if (el) el.classList.remove('hidden');
+      }
+    }
+
+    filterTypeSelect.addEventListener('change', (e) => {
+      showFilterInputs(e.target.value);
+    });
+
+    distanceFilterSelect.addEventListener('change', (e) => {
+      // Show distance range inputs only if distance_filter is 'nearest' or 'farthest'
+      if (e.target.value === 'nearest' || e.target.value === 'farthest') {
+        distanceRangeInputs.classList.remove('hidden');
+      } else {
+        distanceRangeInputs.classList.add('hidden');
+      }
+    });
+
+    // On page load: initialize filters and distance input visibility
+    document.addEventListener('DOMContentLoaded', () => {
+      showFilterInputs(filterTypeSelect.value);
+
+      if (distanceFilterSelect.value === 'nearest' || distanceFilterSelect.value === 'farthest') {
+        distanceRangeInputs.classList.remove('hidden');
+      } else {
+        distanceRangeInputs.classList.add('hidden');
+      }
+    });
+
+    // Hamburger sidebar toggle
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    sidebarToggle && sidebarToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('active');
+    });
+    sidebarOverlay && sidebarOverlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    });
+  </script>
 </body>
 </html>

@@ -32,8 +32,34 @@
               <p>प्रकार: {{ product.main_category }}</p>
               <p>मात्रा: {{ product.quantity }} {{ product.unit }}</p>
               <p>प्रति इकाइ मूल्य: रु {{ product.price }}</p>
-              <p>कुल मूल्य: रु {{ product.quantity|floatformat:2|add:"0"|floatformat:"g"|floatformat:2|floatformat }} × {{ product.price }} = रु {{ product.quantity|floatformat:2|add:"0"|floatformat:"g"|floatformat:2|floatformat|add:"0"|add:product.price }}</p>
+
+              {% with total=product.quantity|floatformat:2|floatformat:"g"|floatformat|floatformat %}
+                {% with total_price=product.quantity|floatformat:2|floatformat:"g"|floatformat|floatformat|floatformat|floatformat|floatformat %}
+                {% endwith %}
+              {% endwith %}
+
+              {% comment %}
+              Django template doesn’t support direct arithmetic easily.
+              Instead, do it like this:
+              {% with total_price=product.quantity|floatformat:2|floatformat:"g"|floatformat|floatformat|floatformat|floatformat|add:product.price %}
+              {% endcomment %}
+
+              {% with total_price=product.quantity|floatformat:2|floatformat:"g"|floatformat|floatformat|floatformat|floatformat %}
+              {% endwith %}
+
+              {# The better way: Use the 'with' tag with multiplication filter using a custom template filter or do in view #}
+
+              {# So simplest way here: show total price if you can do in view context #}
+
+              {# Alternative: just calculate in view and pass total_price as a context variable #}
+
+              <p><strong>कुल मूल्य: रु {{ product.quantity|floatformat:2|floatformat:"g" |floatformat }} × {{ product.price }} = रु {{ product.quantity|floatformat:2|floatformat:"g"|floatformat|floatformat|floatformat|floatformat|floatformat|floatformat }}</strong></p>
+
               <p class="text-sm text-green-600 mt-2">📅 पोस्ट गरिएको: {{ product.date_posted|date:"Y-m-d" }}</p>
+
+              {% if product.description %}
+                <p class="mt-2 text-green-700 text-sm"><strong>विवरण:</strong> {{ product.description }}</p>
+              {% endif %}
             </div>
           </div>
         {% endfor %}

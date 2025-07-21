@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <title>किसानको स्थान</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f7f7f7;
+      text-align: center;
+    }
+    h2 {
+      color: #2e4600;
+      margin-bottom: 10px;
+    }
+    #map {
+      height: 300px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      border: 2px solid #2e4600;
+      border-radius: 10px;
+    }
+    .btn-close {
+      background-color: #2e4600;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+    .btn-close:hover {
+      background-color: #3b5e00;
+    }
+    .distance-info {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>{{ farmer_name|default:"अज्ञात किसान" }} को फार्म स्थान</h2>
+  <div id="map"></div>
+  <div class="distance-info" id="distanceText">तपाईंको स्थान खोज्दै...</div>
+  <a href="javascript:window.history.back()" class="btn-close">बन्द गर्नुहोस्</a>
+
+  <script>
+    // Template variables from backend (Django)
+    var latitude = parseFloat("{{ latitude|default:'0' }}");
+    var longitude = parseFloat("{{ longitude|default:'0' }}");
+    var farmerName = "{{ farmer_name|escapejs }}";
+
+    // Initialize map
+    var map = L.map('map').setView([latitude, longitude], 13);
+
+    // Use free OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add marker for farmer's location
+    var farmerMarker = L.marker([latitude, longitude])
+      .addTo(map)
+      .bindPopup(farmerName + " को फार्म यहीं छ")
+      .openPopup();
+
+    // Show user's location and distance if available
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var userLat = position.coords.latitude;
+        var userLng = position.coords.longitude;
+
+        // Add user marker
+        var customerMarker = L.marker([userLat, userLng], {
+          title: "तपाईंको स्थान"
+        }).addTo(map).bindPopup("तपाईं यहाँ हुनुहुन्छ");
+
+        // Draw a red line between user and farmer
+        var line = L.polyline([[userLat, userLng], [latitude, longitude]], {
+          color: 'red',
+          weight: 3,
+          dashArray: '6, 6'
+        }).addTo(map);
+
+        // Fit map to both markers
+        var group = new L.featureGroup([farmerMarker, customerMarker]);
+        map.fitBounds(group.getBounds().pad(0.3));
+
+        // Calculate distance in meters
+        var distance = map.distance([userLat, userLng], [latitude, longitude]);
+        var distanceText = "";
+
+        if (distance >= 1000) {
+          distanceText = (distance / 1000).toFixed(2) + " कि.मी. टाढा";
+        } else {
+          distanceText = distance.toFixed(0) + " मिटर टाढा";
+        }
+
+        document.getElementById("distanceText").innerText = "तपाइँ भएको ठाउदेखि फार्मसम्मको दूरी: " + distanceText;
+      }, function () {
+        document.getElementById("distanceText").innerText = "तपाईंको स्थान पहुँच गर्न सकिएन।";
+      });
+    } else {
+      document.getElementById("distanceText").innerText = "यो ब्राउजरले भू-स्थान समर्थन गर्दैन।";
+    }
+  </script>
+
+</body>
+</html>
