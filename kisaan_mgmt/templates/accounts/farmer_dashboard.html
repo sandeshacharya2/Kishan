@@ -1,4 +1,253 @@
+
 {% load static %}
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>किसान ड्याशबोर्ड</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Fixed sidebar on large screens */
+    @media (min-width: 992px) {
+      #sidebar-desktop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 18rem;
+        height: 100vh;
+        background: linear-gradient(to bottom right, #e6ffe6, #b2ff59);
+        border-right: 1px solid #a3d23b;
+        padding-bottom: 1rem;
+        overflow-y: auto;
+        box-shadow: 2px 0 12px rgba(44,62,80,0.13);
+        z-index: 1030;
+      }
+      main {
+        margin-left: 18rem;
+      }
+    }
+
+    /* Customize offcanvas width on mobile: 50vw */
+    .offcanvas-start {
+      background: linear-gradient(to bottom right, #e6ffe6, #b2ff59);
+      width: 50vw !important;
+      max-width: none !important;
+    }
+    /* Smallest screens fallback */
+    @media (max-width: 400px) {
+      .offcanvas-start {
+        width: 80vw !important;
+      }
+    }
+
+    /* Profile img sizes */
+    .profile-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+    }
+    .farmer-img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+    }
+
+    /* Card image fixed height and object-fit */
+    .product-img {
+      height: 14rem;
+      object-fit: cover;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    /* Card styling */
+    .card-custom {
+      border: 1.5px solid #8bc34a; /* lighter green border */
+      border-radius: 0.75rem;
+      transition: box-shadow 0.3s ease;
+      background: #f9fff4; /* very light green background */
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-custom:hover {
+      box-shadow: 0 6px 18px rgba(139,195,74,0.5);
+      border-color: #7cb342;
+    }
+    .card-body {
+      flex-grow: 1;
+    }
+
+    /* Card header styling */
+    .card-header-custom {
+      background: #dcedc8;
+      border-bottom: 1px solid #aed581;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-radius: 0.75rem 0.75rem 0 0;
+      padding: 0.75rem 1rem;
+    }
+
+    /* Links inside sidebar */
+    nav a.text-success-hover:hover {
+      color: #558b2f !important;
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body class="bg-success-subtle text-success-emphasis">
+
+  <!-- Mobile navbar with hamburger -->
+  <nav class="navbar navbar-light bg-white shadow sticky-top d-lg-none" style="z-index: 1040;">
+    <div class="container-fluid d-flex justify-content-between align-items-center px-3 py-2">
+      <button class="btn btn-link text-success fs-2 p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar-mobile" aria-controls="sidebar-mobile" aria-label="Toggle sidebar">&#9776;</button>
+      <span class="fs-4 fw-bold text-success d-flex align-items-center gap-2">
+        किसान <span class="text-success fs-5">🌱</span>
+      </span>
+    </div>
+  </nav>
+
+  <!-- Offcanvas sidebar for mobile -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar-mobile" aria-labelledby="sidebarMobileLabel">
+    <div class="offcanvas-header border-bottom border-success">
+      <h5 class="offcanvas-title text-success fw-bold" id="sidebarMobileLabel">किसान 🌱</h5>
+      <button type="button" class="btn-close btn-close-success" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <div class="text-center p-3 border-bottom border-success">
+        {% if user.farmerprofile.profile_picture %}
+          <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Profile" class="rounded-circle border border-success shadow profile-img mb-2">
+        {% else %}
+          <img src="{% static 'default_profile.jpg' %}" alt="No Profile" class="rounded-circle border border-success shadow profile-img mb-2">
+        {% endif %}
+        <h2 class="fw-bold text-success mb-0 d-flex justify-content-center align-items-center gap-1">👨‍🌾 @{{ user.username }}</h2>
+        <p class="text-success fw-semibold mb-0">{{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</p>
+        <p class="text-success small mb-2">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
+      </div>
+      <nav class="d-flex flex-column gap-2 px-3 pb-3 fw-semibold text-success">
+        <a href="{% url 'farmer-dashboard' %}" class="text-decoration-none text-success-hover">📋 ड्याशबोर्ड</a>
+        <a href="#" class="text-decoration-none text-success-hover">💰 आम्दानी सारांश</a>
+        <a href="#" class="text-decoration-none text-success-hover">🌿 कृषि सम्बन्धी जानकारी</a>
+        <a href="{% url 'add-product' %}" class="text-decoration-none text-success-hover">➕ नयाँ उत्पादन थप्नुहोस्</a>
+        <a href="{% url 'update-farmer-profile' %}" class="text-decoration-none text-success-hover">✏️ प्रोफाइल सम्पादन</a>
+      </nav>
+      <form method="post" action="{% url 'logout' %}" class="px-3 pb-3 border-top border-success">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger w-100 fw-semibold">🚪 लगआउट</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Fixed sidebar for desktop -->
+  <aside id="sidebar-desktop" class="d-none d-lg-block">
+    <div class="text-center p-3 border-bottom border-success">
+      {% if user.farmerprofile.profile_picture %}
+        <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Profile" class="rounded-circle border border-success shadow profile-img mb-2">
+      {% else %}
+        <img src="{% static 'default_profile.jpg' %}" alt="No Profile" class="rounded-circle border border-success shadow profile-img mb-2">
+      {% endif %}
+      <h2 class="fw-bold text-success mb-0 d-flex justify-content-center align-items-center gap-1">👨‍🌾 @{{ user.username }}</h2>
+      <p class="text-success fw-semibold mb-0">{{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</p>
+      <p class="text-success small mb-2">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
+    </div>
+    <nav class="d-flex flex-column gap-2 px-3 pb-3 fw-semibold text-success">
+      <a href="{% url 'farmer-dashboard' %}" class="text-decoration-none text-success-hover">📋 ड्याशबोर्ड</a>
+      <a href="#" class="text-decoration-none text-success-hover">💰 आम्दानी सारांश</a>
+      <a href="#" class="text-decoration-none text-success-hover">🌿 कृषि सम्बन्धी जानकारी</a>
+      <a href="{% url 'add-product' %}" class="text-decoration-none text-success-hover">➕ नयाँ उत्पादन थप्नुहोस्</a>
+      <a href="{% url 'update-farmer-profile' %}" class="text-decoration-none text-success-hover">✏️ प्रोफाइल सम्पादन</a>
+    </nav>
+    <form method="post" action="{% url 'logout' %}" class="px-3 pb-3 border-top border-success">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger w-100 fw-semibold">🚪 लगआउट</button>
+    </form>
+  </aside>
+
+  <!-- Main content -->
+  <main class="pt-3 px-3">
+
+    <!-- Desktop header -->
+    <header class="d-none d-lg-flex justify-content-between align-items-center bg-white shadow-sm p-3 sticky-top" style="z-index: 1020;">
+      <div class="d-flex align-items-center gap-3 ps-3">
+        <img src="{% static 'accounts/images/download.jpg' %}" alt="Logo" class="rounded-circle border border-success shadow farmer-img">
+        <span class="fs-3 fw-bold text-success d-flex align-items-center gap-2">
+          किसान <span class="text-success fs-5">🌱</span>
+        </span>
+      </div>
+      <h2 class="fs-5 fw-semibold text-success d-flex align-items-center gap-2 me-3">🛒 तपाईंका पोस्ट गरिएका वस्तुहरू</h2>
+    </header>
+
+    <!-- Leafy divider -->
+    <div class="d-flex justify-content-center align-items-center my-3">
+      <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 2rem;">
+        <path d="M10 16 Q 30 0, 60 16 Q 90 32, 110 16" stroke="#81c784" stroke-width="3" fill="none"/>
+        <ellipse cx="10" cy="16" rx="4" ry="8" fill="#43a047"/>
+        <ellipse cx="110" cy="16" rx="4" ry="8" fill="#43a047"/>
+      </svg>
+    </div>
+
+    <!-- Motivational message -->
+    <div class="text-center text-success fw-semibold mb-4 fs-5">
+      नमस्ते किसान साथी! यहाँबाट तपाईंले आफ्ना उत्पादनहरू सजिलै व्यवस्थापन गर्न सक्नुहुन्छ।
+    </div>
+
+    <!-- Product cards -->
+    <div class="container-fluid px-0">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% if products %}
+          {% for product in products %}
+            <div class="col">
+              <div class="card card-custom h-100">
+                <div class="card-header-custom">
+                  {% if user.farmerprofile.profile_picture %}
+                    <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Farmer" class="rounded-circle border border-success farmer-img">
+                  {% else %}
+                    <img src="{% static 'default_profile.jpg' %}" alt="Farmer" class="rounded-circle border border-success farmer-img">
+                  {% endif %}
+                  <div>
+                    <p class="mb-0 fw-semibold text-success d-flex align-items-center gap-1">👨‍🌾 {{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</p>
+                    <small class="text-success">@{{ user.username }}</small>
+                  </div>
+                </div>
+                {% if product.image %}
+                  <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="card-img-top product-img">
+                {% else %}
+                  <img src="{% static 'default_product.png' %}" alt="{{ product.sub_category }}" class="card-img-top product-img">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title text-success d-flex align-items-center gap-1">🌾 {{ product.sub_category }}</h5>
+                  <p class="card-text mb-1">मात्रा: <span class="fw-bold text-success">{{ product.quantity }}</span> {{ product.unit }}</p>
+                  <p class="card-text mb-1">मूल्य प्रति एकाइ: <span class="fw-bold text-success">Rs. {{ product.price }}</span></p>
+                  <p class="card-text mb-1">कुल मूल्य: <span class="fw-bold text-success">Rs. {{ product.total_price }}</span></p>
+                  <p class="card-text mb-2">स्थान: <span class="fw-bold text-success">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></p>
+                  <p class="card-text mt-2 flex-grow-1"><strong>विवरण:</strong> {{ product.description }}</p>
+                  <p class="card-text text-success small mt-2">📅 पोस्ट गरिएको मिति: {{ product.date_posted|date:"Y-m-d" }}</p>
+                  <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a href="{% url 'edit-product' product.id %}" class="btn btn-warning btn-sm">✏️ सम्पादन</a>
+                    <a href="{% url 'delete-product' product.id %}" class="btn btn-danger btn-sm" onclick="return confirm('पक्का हटाउन चाहनुहुन्छ?')">🗑️ हटाउनुहोस्</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-center text-success col-12">तपाईंले अहिलेसम्म कुनै उत्पादन थप्नुभएको छैन।</p>
+        {% endif %}
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+<!-- {% load static %}
 <!DOCTYPE html>
 <html lang="ne">
 <head>
@@ -46,20 +295,20 @@
     }
   </style>
 </head>
-<body class="bg-green-50 text-green-900">
+<body class="bg-green-50 text-green-900"> -->
   <!-- Hamburger for mobile -->
-  <div class="lg:hidden flex items-center justify-between px-4 py-2 bg-white shadow sticky top-0 z-30">
+  <!-- <div class="lg:hidden flex items-center justify-between px-4 py-2 bg-white shadow sticky top-0 z-30">
     <button id="sidebar-toggle" class="text-green-700 text-3xl focus:outline-none">
       &#9776;
     </button>
     <span class="text-xl font-bold text-green-800 tracking-wide flex items-center gap-2">
       किसान <span class="text-green-400 text-xl">🌱</span>
     </span>
-  </div>
+  </div> -->
   <!-- Sidebar overlay for mobile -->
-  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+  <!-- <div id="sidebar-overlay" class="sidebar-overlay"></div> -->
   <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar w-72 bg-gradient-to-br from-green-100 via-green-200 to-green-50 border-r border-green-300 fixed h-screen top-0 left-0 z-50 lg:z-10 lg:block">
+  <!-- <aside id="sidebar" class="sidebar w-72 bg-gradient-to-br from-green-100 via-green-200 to-green-50 border-r border-green-300 fixed h-screen top-0 left-0 z-50 lg:z-10 lg:block">
     <div class="p-4 border-b border-green-300 bg-green-200 text-center">
       {% if user.farmerprofile.profile_picture %}
         <img src="{{ user.farmerprofile.profile_picture.url }}" class="w-20 h-20 mx-auto rounded-full border-4 border-green-500 shadow-md" alt="Profile">
@@ -87,12 +336,12 @@
       {% csrf_token %}
       <button class="text-red-700 font-semibold w-full hover:underline">🚪 लगआउट</button>
     </form>
-  </aside>
+  </aside> -->
   <!-- Main Content -->
-  <div class="ml-72 min-h-screen flex flex-col">
+  <!-- <div class="ml-72 min-h-screen flex flex-col"> -->
 
     <!-- Navbar (desktop only) -->
-    <header class="bg-white shadow p-3 flex items-center justify-between sticky top-0 z-20 lg:flex hidden">
+    <!-- <header class="bg-white shadow p-3 flex items-center justify-between sticky top-0 z-20 lg:flex hidden">
       <div class="flex items-center gap-3 pl-4">
         <img src="{% static 'accounts/images/download.jpg' %}"
              alt="Logo"
@@ -102,24 +351,24 @@
         </span>
       </div>
       <h2 class="text-xl font-semibold text-green-700 pr-6 flex items-center gap-2">🛒 तपाईंका पोस्ट गरिएका वस्तुहरू</h2>
-    </header>
+    </header> -->
 
     <!-- Leafy Divider -->
-    <div class="flex justify-center items-center mt-2 mb-2">
+    <!-- <div class="flex justify-center items-center mt-2 mb-2">
       <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8">
         <path d="M10 16 Q 30 0, 60 16 Q 90 32, 110 16" stroke="#81c784" stroke-width="3" fill="none"/>
         <ellipse cx="10" cy="16" rx="4" ry="8" fill="#43a047"/>
         <ellipse cx="110" cy="16" rx="4" ry="8" fill="#43a047"/>
       </svg>
-    </div>
+    </div> -->
 
     <!-- Motivational Message -->
-    <div class="text-center text-green-800 font-semibold mb-2 text-lg">
+    <!-- <div class="text-center text-green-800 font-semibold mb-2 text-lg">
       नमस्ते किसान साथी! यहाँबाट तपाईंले आफ्ना उत्पादनहरू सजिलै व्यवस्थापन गर्न सक्नुहुन्छ。
-    </div>
+    </div> -->
 
     <!-- Product Cards -->
-    <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
+    <!-- <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% if products %}
           {% for product in products %}
@@ -138,44 +387,44 @@
                   <p class="font-semibold text-green-900 flex items-center gap-1">👨‍🌾 {{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</p>
                   <p class="text-xs text-green-700">@{{ user.username }}</p>
                 </div>
-              </div>
-           {% if product.image %}
+              </div> -->
+           <!-- {% if product.image %}
   <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover rounded-b-xl">
 {% else %}
   <img src="{% static 'default_product.jpg' %}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover rounded-b-xl">
-{% endif %}
-              <div class="p-4">
+{% endif %} -->
+              <!-- <div class="p-4">
                 <h3 class="text-lg font-semibold text-green-800 flex items-center gap-1">🌾 {{ product.sub_category }}</h3>
                 <p class="text-sm">मात्रा: <span class="font-bold text-green-700">{{ product.quantity }}</span> {{ product.unit }}</p>
                 <p class="text-sm">मूल्य प्रति एकाइ: <span class="font-bold text-green-700">Rs. {{ product.price }}</span></p>
                 <p class="text-sm">कुल मूल्य: <span class="font-bold text-green-700">Rs. {{ product.total_price }}</span></p>
-                <p class="text-sm">स्थान: <span class="font-bold text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></p>
+                <p class="text-sm">स्थान: <span class="font-bold text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></p> -->
 
                 <!-- Added description here -->
-                <p class="text-sm mt-2"><strong>विवरण:</strong> {{ product.description }}</p>
+                <!-- <p class="text-sm mt-2"><strong>विवरण:</strong> {{ product.description }}</p> -->
 
-                <p class="text-xs text-green-600 mt-2">📅 पोस्ट गरिएको मिति: {{ product.date_posted|date:"Y-m-d" }}</p>
+                <!-- <p class="text-xs text-green-600 mt-2">📅 पोस्ट गरिएको मिति: {{ product.date_posted|date:"Y-m-d" }}</p>
                 <div class="flex justify-end gap-2 mt-3">
                   <a href="{% url 'edit-product' product.id %}" class="text-sm bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow">✏️ सम्पादन</a>
                   <a href="{% url 'delete-product' product.id %}" class="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" onclick="return confirm('पक्का हटाउन चाहनुहुन्छ?')">🗑️ हटाउनुहोस्</a>
                 </div>
               </div>
-            </div>
-          {% endfor %}
+            </div> -->
+          <!-- {% endfor %}
         {% else %}
           <p class="text-center col-span-full text-green-600">तपाईंले अहिलेसम्म कुनै उत्पादन थप्नुभएको छैन।</p>
         {% endif %}
       </div>
     </main>
-  </div>
+  </div> -->
 
   <!-- Minimal JS -->
-  <script>
+  <!-- <script>
     function toggleDetails() {
       document.getElementById('details').classList.toggle('hidden');
-    }
+    } -->
 
-    // Hamburger sidebar toggle
+    <!-- // Hamburger sidebar toggle
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -189,4 +438,4 @@
     });
   </script>
 </body>
-</html>
+</html> -->

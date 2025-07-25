@@ -78,7 +78,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kisaan.helps@gmail.com'            # your Gmail
-EMAIL_HOST_PASSWORD = 'bdqpmgrjngrrpzzr'           # 16-char App Password from Google
+EMAIL_HOST_PASSWORD = 'wlifyrakcqptxiuk'           # 16-char App Password from Google
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ROOT_URLCONF = 'kisaan_mgmt.urls'
