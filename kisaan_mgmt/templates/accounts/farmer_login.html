@@ -3,6 +3,7 @@
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Farmer Login - किसान</title>
   <style>
     /* Reset and base */
@@ -14,12 +15,24 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       height: 100vh;
-      background: url("{% static 'accounts/images/pexels-chi-n-ba-3626645-28778308.jpg' %}") no-repeat center center/cover;
+      background: url("{% static 'accounts/images/back2.jpg' %}") no-repeat center center/cover;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
       color: #333;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Container */
@@ -32,12 +45,13 @@
       display: flex;
       overflow: hidden;
       min-height: 480px;
+      animation: fadeIn 0.8s ease-in-out;
     }
 
     /* Sidebar with image */
     .sidebar {
       width: 40%;
-      background: url("{% static 'accounts/images/desktop fam.jpg' %}") no-repeat center center/cover;
+      background: url("{% static 'accounts/images/farmer 8k.jpg' %}") no-repeat center center/cover;
     }
 
     /* Form area */
@@ -179,7 +193,7 @@
     }
 
     /* Responsive */
-    @media (max-width: 720px) {
+    @media (max-width: 768px) {
       .login-container {
         flex-direction: column;
         min-height: auto;
@@ -188,6 +202,8 @@
       .sidebar {
         width: 100%;
         height: 200px;
+        background-position: center center;
+        background-size: cover;
       }
       .form-area {
         width: 100%;
@@ -195,6 +211,12 @@
       }
       .header-logo-text h2 {
         font-size: 2rem;
+      }
+      input[type="text"],
+      input[type="password"],
+      input[type="email"],
+      button {
+        width: 100%;
       }
     }
   </style>

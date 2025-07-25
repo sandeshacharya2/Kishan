@@ -4,98 +4,158 @@
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>हाम्रोबारे - किसान</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f0f4e3;
+      font-family: sans-serif;
+      color: #2e4600;
+    }
+
+    h2.team-title {
+      font-weight: 800;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-member {
+      background-color: #f0f4e3;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+    .team-member:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(46, 70, 0, 0.25);
+    }
+    .team-member img {
+      width: 128px;
+      height: 128px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+    .team-member h4 {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #2e4600;
+    }
+    .team-member p {
+      color: #6c757d;
+      margin-bottom: 1rem;
+    }
+
+    .social-icons a img {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease;
+    }
+    .social-icons a:hover img {
+      transform: scale(1.1);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
+<body>
 
-    {% include 'landingpage/header.html' %}
-
+  {% include 'landingpage/header.html' %}
 
   <!-- About Content -->
-  <main class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 my-10">
-    <h2 class="team-title text-center text-[#2e4600] text-4xl font-extrabold mb-12 drop-shadow-md">हाम्रो बारेमा</h2>
+  <main class="container my-5 bg-white rounded shadow p-4 p-md-5">
+    <h2 class="team-title text-center mb-5 fs-1">हाम्रो बारेमा</h2>
 
     <img 
       src="{% static 'accounts/images/about.jpg' %}" 
       alt="About Kisaan" 
-      class="w-full max-h-[400px] object-cover rounded-lg mb-6"
+      class="img-fluid rounded mb-4 mx-auto d-block" 
+      style="max-height: 400px; object-fit: cover;"
     />
 
-    <p class="mb-4 leading-relaxed text-base">
+    <p class="mb-3 fs-6">
       <strong>किसान</strong> एक सरल र उपयोगी वेब एप्लिकेसन हो, जसले नेपाली किसान र ग्राहकहरूलाई सिधा जोड्ने काम गर्छ। अब किसानहरूले आफ्ना तरकारी, फलफूल वा अन्य कृषि सामग्रीहरू मोबाइल वा कम्प्युटरबाटै सजिलै अनलाइन राख्न सक्छन्। ग्राहकहरूले पनि नजिकैका किसानहरूबाट सिधा उत्पादन हेरेर किनमेल गर्न सक्छन्।
     </p>
 
-    <p class="mb-4 leading-relaxed text-base">
+    <p class="mb-3 fs-6">
       हाम्रो एपमा किसानका लागि विशेष ड्यासबोर्ड छ, जहाँ उनीहरूले आफ्ना उत्पादनहरू पोस्ट गर्न, मासिक वा वार्षिक आम्दानी हेर्न, अनि ग्राहकहरूसँग सिधा संवाद गर्न सक्छन्।
     </p>
 
-    <p class="mb-4 leading-relaxed text-base">
+    <p class="mb-3 fs-6">
       हामी चाहन्छौं कि किसानले राम्रो मूल्य पाऊन्, ग्राहकले ताजा उत्पादन पाऊन्, र दुबैको बीचमा विश्वासको सम्बन्ध बनोस्। एपमा स्थानको आधारमा पनि खोजी गर्न सकिने सुविधा छ, जसले गर्दा ग्राहकले नजिकैको किसान रोज्न सक्नेछन्।
     </p>
 
-    <p class="mb-4 leading-relaxed text-base">
+    <p class="mb-4 fs-6">
       हामी प्रविधिको माध्यमबाट गाउँ–शहरबीचको दूरी घटाउन, कृषि कारोबारलाई सजिलो बनाउन र किसानको आय बढाउन सहयोग गर्न चाहन्छौं।
     </p>
 
-    <p class="mb-8 text-lg font-semibold">“किसानसँगै भविष्य सुरक्षित बनाऔं।”</p>
+    <p class="mb-5 fs-5 fw-semibold text-center fst-italic">“किसानसँगै भविष्य सुरक्षित बनाऔं।”</p>
 
     <!-- Team Section -->
-    <h2 class="team-title text-center text-[#2e4600] text-4xl font-extrabold mb-12 drop-shadow-md">हाम्रो टिम</h2>
+    <h2 class="team-title text-center mb-5 fs-1">हाम्रो टिम</h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+    <div class="row g-4 justify-content-center">
       <!-- Team member -->
-      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
-        <img src="{% static 'accounts/images/Sandesh s.jpg' %}" alt="Sandesh" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
-        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Sandesh Acharya</h4>
-        <p class="text-gray-600 mb-3">Developer</p>
-        <div class="social-icons flex justify-center gap-3">
-          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="team-member">
+          <img src="{% static 'accounts/images/Sandesh s.jpg' %}" alt="Sandesh" />
+          <h4>Sandesh Acharya</h4>
+          <p>Developer</p>
+          <div class="social-icons d-flex justify-content-center gap-3">
+            <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" /></a>
+            <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" /></a>
+            <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" /></a>
+          </div>
         </div>
       </div>
 
       <!-- Repeat for other members -->
-      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
-        <img src="{% static 'accounts/images/deepa.jpg' %}" alt="Dipa" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
-        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Dipa Paudel</h4>
-        <p class="text-gray-600 mb-3">Developer</p>
-        <div class="social-icons flex justify-center gap-3">
-          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="team-member">
+          <img src="{% static 'accounts/images/deepa.jpg' %}" alt="Dipa" />
+          <h4>Dipa Paudel</h4>
+          <p>Developer</p>
+          <div class="social-icons d-flex justify-content-center gap-3">
+            <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" /></a>
+            <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" /></a>
+            <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" /></a>
+          </div>
         </div>
       </div>
 
-      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
-        <img src="{% static 'accounts/images/Sila.jpg' %}" alt="Sila" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
-        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Sila GC</h4>
-        <p class="text-gray-600 mb-3">Developer</p>
-        <div class="social-icons flex justify-center gap-3">
-          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="team-member">
+          <img src="{% static 'accounts/images/Sila.jpg' %}" alt="Sila" />
+          <h4>Sila GC</h4>
+          <p>Developer</p>
+          <div class="social-icons d-flex justify-content-center gap-3">
+            <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" /></a>
+            <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" /></a>
+            <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" /></a>
+          </div>
         </div>
       </div>
 
-      <div class="team-member bg-[#f0f4e3] rounded-lg p-4 text-center transition-transform hover:-translate-y-1 hover:shadow-lg">
-        <img src="{% static 'accounts/images/bibek.png' %}" alt="Bibek" class="w-32 h-32 object-cover rounded-full mx-auto mb-3" />
-        <h4 class="text-[#2e4600] text-lg font-semibold mb-1">Bibek Sapkota</h4>
-        <p class="text-gray-600 mb-3">Developer</p>
-        <div class="social-icons flex justify-center gap-3">
-          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
-          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 hover:scale-110 transition-transform" /></a>
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="team-member">
+          <img src="{% static 'accounts/images/bibek.png' %}" alt="Bibek" />
+          <h4>Bibek Sapkota</h4>
+          <p>Developer</p>
+          <div class="social-icons d-flex justify-content-center gap-3">
+            <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" /></a>
+            <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" /></a>
+            <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" /></a>
+          </div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
-  
   {% include 'landingpage/footer.html' %}
 
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
