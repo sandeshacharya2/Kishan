@@ -704,10 +704,10 @@ msgstr ""
 #~ msgstr "%(value)r मान उपयुक्त छनोट होइन ।"
 
 #~ msgid "This field cannot be null."
-#~ msgstr "यो फाँट शून्य हुन सक्दैन ।"
+#~ msgstr "कृपया सबै विवरणहरू सही रूपमा भर्नुहोस् ।"
 
 #~ msgid "This field cannot be blank."
-#~ msgstr "यो फाँट खाली हुन सक्दैन ।"
+#~ msgstr "कृपया सबै विवरणहरू सही रूपमा भर्नुहोस्।"
 
 #, python-format
 #~ msgid "%(model_name)s with this %(field_label)s already exists."
