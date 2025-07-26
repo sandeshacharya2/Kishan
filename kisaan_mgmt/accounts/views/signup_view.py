@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from datetime import timedelta
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 from ..models import EmailOTP, Profile, FarmerProfile
 from ..forms import SignUpForm, FarmerProfileForm
@@ -37,7 +37,7 @@ def contact(request):
             fail_silently=False,
         )
 
-        messages.success(request, 'तपाईंको सन्देश सफलतापूर्वक पठाइयो।')
+        messages.success(request, _('तपाईंको सन्देश सफलतापूर्वक पठाइयो।'))
 
     return render(request, 'landingpage/contact.html')
 
@@ -53,8 +53,8 @@ def switch_to_customer(request):
 
 # ✅ Send OTP Email
 def send_otp(email, otp):
-    subject = "किसान app को लागि तपाइको OTP"
-    message = f"तपाइको OTP {otp}. यो OTP ३ मिनेट सम्म मात्र मान्य हुनेछ ।"
+    subject = _("किसान app को लागि तपाइको OTP")
+    message = _(f"तपाइको OTP {otp}. यो OTP ३ मिनेट सम्म मात्र मान्य हुनेछ ।")
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
 
@@ -68,7 +68,7 @@ def signup_view(request):
             domain = email.split('@')[-1].lower()
 
             if domain not in allowed_domains:
-                messages.error(request, "यो ईमेल डोमेन अनुमति छैन। कृपया अरु डोमेन प्रयोग गर्नुहोस्।")
+                messages.error(request, _("यो ईमेल डोमेन अनुमति छैन। कृपया अरु डोमेन प्रयोग गर्नुहोस्।"))
                 return render(request, 'accounts/signup.html', {'form': form})
 
             signup_data = form.cleaned_data.copy()

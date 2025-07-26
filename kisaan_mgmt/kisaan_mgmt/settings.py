@@ -45,12 +45,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # ✅ Added for translation support
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
 ]
 
 
@@ -64,11 +64,11 @@ LANGUAGES = [
 ]
 
 # Default language (Nepali)
-LANGUAGE_CODE = 'ne'
+LANGUAGE_CODE = 'ne'  # ✅ Make Nepali the default language
 
 # Path where translation files will be stored
 LOCALE_PATHS = [
-    BASE_DIR / 'locale',  # Assuming BASE_DIR is defined as your project root
+    BASE_DIR / 'locale',  # ✅ Folder to hold .po/.mo translation files
 ]
 
 # kisaan_mgmt/settings.py
@@ -144,15 +144,20 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+USE_I18N = True
+LANGUAGE_CODE = 'ne'  # ✅ Ensure Nepali is the default
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
+    BASE_DIR / 'locale',
 ]
-LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('ne', 'Nepali'),
+]
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+
 
 USE_TZ = True
 import os

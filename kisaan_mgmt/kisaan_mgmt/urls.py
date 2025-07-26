@@ -3,8 +3,9 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts import views  # views import गरियो
+from django.views.i18n import set_language  # <-- Add this import
 
+from accounts import views  # views import गरियो
 from accounts.views import signup_view, landing_page, about, contact  # Import your views
 
 urlpatterns = [
@@ -36,6 +37,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('products/', include('products.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
+
+    path('set_language/', set_language, name='set_language'),  # <-- Add this line at the end
 ]
 
 if settings.DEBUG:

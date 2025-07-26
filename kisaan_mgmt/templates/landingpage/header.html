@@ -1,10 +1,12 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>किसान</title>
+  <title>{% trans "Farmer" %}</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -56,6 +58,21 @@
     .logo-img:hover {
       transform: scale(1.1);
     }
+    /* Dropdown styles */
+    .language-form select {
+      background-color: #ffe066;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: 600;
+      color: #1b5e20;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-left: 10px;
+    }
+    .language-form select:hover {
+      background-color: #ffeb99;
+    }
   </style>
 </head>
 <body>
@@ -68,8 +85,8 @@
     <a class="navbar-brand d-flex align-items-center gap-3" href="#">
       <img src="{% static 'accounts/images/download.jpg' %}" alt="किसान लोगो" class="logo-img">
       <div>
-        <h1>किसान</h1>
-        <p>हामी किसानको साथमा छौं</p>
+        <h1>{% trans "Farmer" %}</h1>
+        <p>{% trans "We are with farmer" %}</p>
       </div>
     </a>
 
@@ -78,24 +95,37 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Center Links and Right Login -->
+    <!-- Center Links and Right Login + Language -->
     <div class="collapse navbar-collapse" id="navLinks">
       <!-- Navigation Links -->
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-3">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'landing' %}">गृहपृष्ठ</a>
+          <a class="nav-link" href="{% url 'landing' %}">{% trans "Home" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'about' %}">हाम्रोबारे</a>
+          <a class="nav-link" href="{% url 'about' %}">{% trans "About Us" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'contact' %}">सम्पर्क गर्नुहोस्</a>
+          <a class="nav-link" href="{% url 'contact' %}">{% trans "Contact Us" %}</a>
         </li>
       </ul>
 
-      <!-- Login Button -->
-      <div class="d-flex">
-        <a href="{% url 'login' %}" class="btn btn-login shadow-sm">लगइन</a>
+      <!-- Login Button and Language Dropdown -->
+      <div class="d-flex align-items-center">
+        <a href="{% url 'login' %}" class="btn btn-login shadow-sm">{% trans "Login" %}</a>
+
+        <!-- Language Switcher Form -->
+        <form action="{% url 'set_language' %}" method="post" class="language-form d-flex align-items-center">
+          {% csrf_token %}
+          <select name="language" onchange="this.form.submit()">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% for lang_code, lang_name in LANGUAGES %}
+              <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>{{ lang_name }}</option>
+            {% endfor %}
+          </select>
+          <input type="hidden" name="next" value="{{ request.path }}">
+        </form>
       </div>
     </div>
   </div>

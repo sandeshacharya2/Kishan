@@ -25,7 +25,7 @@ def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can edit
     if product.farmer != request.user:
-        return HttpResponseForbidden("You are not allowed to edit this product.")
+        return HttpResponseForbidden(_("You are not allowed to edit this product."))
 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)  # include request.FILES here
@@ -44,7 +44,7 @@ def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can delete
     if product.farmer != request.user:
-        return HttpResponseForbidden("You are not allowed to delete this product.")
+        return HttpResponseForbidden(_("You are not allowed to delete this product."))
 
     if request.method == 'POST':
         product.delete()
