@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, FarmerProfile, CustomerProfile
+from django.utils.translation import gettext_lazy as _
 
 WARD_CHOICES = [
     ('Ward 1 – Ratnechaur', 'वडा १ – रातनेचौर'),

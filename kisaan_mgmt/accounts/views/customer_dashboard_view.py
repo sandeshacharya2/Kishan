@@ -5,6 +5,7 @@ from django.utils.dateparse import parse_date
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import math
+from django.utils.translation import gettext_lazy as _
 
 
 def haversine(lat1, lon1, lat2, lon2):
