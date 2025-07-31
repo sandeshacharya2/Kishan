@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <style>
   footer {
@@ -204,55 +205,55 @@
 
 </style>
 
+
 <footer>
   <div class="footer-container">
 
-    <!-- लोगो र सन्देश -->
+    <!-- Logo and Message -->
     <div class="footer-logo-section">
-      <img src="{% static 'accounts/images/download.jpg' %}" alt="किसान लोगो" />
-      <h2>किसान</h2>
+      <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'Kisaan Logo' %}" />
+      <h2>{% trans "Kisaan" %}</h2>
       <p>
-        कृषक र उपभोक्ताबीचको सिधा सम्बन्धका <br />
-        लागि एक भरपर्दो डिजिटल पुल।
+        {% blocktrans %}A trusted digital bridge <br /> between farmers and consumers.{% endblocktrans %}
       </p>
     </div>
 
-    <!-- लिंकहरू -->
+    <!-- Links -->
     <div class="footer-links">
 
-      <!-- कम्पनी -->
+      <!-- Company -->
       <div class="footer-links-section">
-        <h3>कम्पनी</h3>
-        <a href="{% url 'about' %}">हाम्रोबारे</a>
-        <p>हाम्रा परियोजनाहरू</p>
-        <p>हाम्रा सेवाहरू</p>
-        <p>रोजगार</p>
+        <h3>{% trans "Company" %}</h3>
+        <a href="{% url 'about' %}">{% trans "About Us" %}</a>
+        <p>{% trans "Our Projects" %}</p>
+        <p>{% trans "Our Services" %}</p>
+        <p>{% trans "Careers" %}</p>
       </div>
 
-      <!-- उत्पादनहरू -->
+      <!-- Products -->
       <div class="footer-links-section">
-        <h3>उत्पादनहरू</h3>
-        <p>फलफूल</p>
-        <p>तरकारी</p>
-        <p>बिउ</p>
-        <p>अर्गानिक वस्तुहरू</p>
+        <h3>{% trans "Products" %}</h3>
+        <p>{% trans "Fruits" %}</p>
+        <p>{% trans "Vegetables" %}</p>
+        <p>{% trans "Seeds" %}</p>
+        <p>{% trans "Organic Goods" %}</p>
       </div>
 
-      <!-- सहयोग -->
+      <!-- Support -->
       <div class="footer-links-section">
-        <h3>सहयोग</h3>
-        <p>सहायता केन्द्र</p>
-        <p>सोधिने प्रश्नहरू</p>
-        <p>नियम र सर्तहरू</p>
-        <p>गोपनीयता नीति</p>
+        <h3>{% trans "Support" %}</h3>
+        <p>{% trans "Help Center" %}</p>
+        <p>{% trans "FAQs" %}</p>
+        <p>{% trans "Terms & Conditions" %}</p>
+        <p>{% trans "Privacy Policy" %}</p>
       </div>
 
-      <!-- सम्पर्क -->
+      <!-- Contact -->
       <div class="footer-links-section footer-contact">
-        <h3>सम्पर्क</h3>
+        <h3>{% trans "Contact" %}</h3>
         <p>✉ kisaan.helps@gmail.com</p>
-        <p>📞 +९७७-९८६२९०४०९७</p>
-        <p>📍 बेनी, म्याग्दी, नेपाल</p>
+        <p>📞 +977-9862904097</p>
+        <p>📍 {% trans "Beni, Myagdi, Nepal" %}</p>
         <div class="social-icons">
           <img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" />
           <img src="{% static 'accounts/images/github.png' %}" alt="Github" />
@@ -263,8 +264,8 @@
     </div>
   </div>
 
-  <!-- तल्लो भाग -->
+  <!-- Bottom -->
   <div class="footer-bottom">
-    &copy; २०२५ किसान। सबै अधिकार सुरक्षित छन्।
+    &copy; 2025 {% trans "Kisaan. All rights reserved." %}
   </div>
 </footer>

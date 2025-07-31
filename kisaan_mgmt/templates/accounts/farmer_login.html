@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Farmer Login - किसान</title>
+  <title>{% trans "Farmer Login" %}</title>
   <style>
     /* Reset and base */
     * {
@@ -223,14 +224,14 @@
 </head>
 <body>
 
-  <div class="login-container" role="main" aria-label="Farmer login form">
+  <div class="login-container" role="main" aria-label="{% trans 'Farmer login form' %}">
     <div class="sidebar" aria-hidden="true"></div>
     <div class="form-area">
       <div class="header-logo-text">
         <div class="logo-circle">
-          <img src="{% static 'accounts/images/download.jpg' %}" alt="किसान लोगो" />
+          <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'किसान लोगो' %}" />
         </div>
-        <h2>किसान</h2>
+        <h2>{% trans "Farmer" %}</h2>
       </div>
 
       {% if messages %}
@@ -240,7 +241,7 @@
       {% endif %}
 
       {% if form.errors %}
-        <p class="message error" role="alert">तपाइको प्रयोगकर्ता नाम र पासवर्ड मिलेन</p>
+        <p class="message error" role="alert">{% trans "Username or password do not match" %}</p>
       {% endif %}
 
       <form method="post" novalidate autocomplete="off" aria-describedby="loginInstructions">
@@ -249,7 +250,7 @@
         {% for field in form %}
           {% if field.name == 'username' %}
             <div class="form-field">
-              <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम (username)</label>
+              <label for="{{ field.id_for_label }}">{% trans "Username" %}</label>
               {{ field }}
               {% if field.errors %}
                 <p class="message error" role="alert">{{ field.errors|striptags }}</p>
@@ -257,7 +258,7 @@
             </div>
           {% elif field.name == 'password' %}
             <div class="form-field">
-              <label for="{{ field.id_for_label }}">पासवर्ड (password)</label>
+              <label for="{{ field.id_for_label }}">{% trans "Password" %}</label>
               {{ field }}
               {% if field.errors %}
                 <p class="message error" role="alert">{{ field.errors|striptags }}</p>
@@ -268,14 +269,14 @@
           {% endif %}
         {% endfor %}
 
-        <button type="submit" aria-label="Login to किसान portal">लगइन गर्नुहोस् (login)</button>
+        <button type="submit" aria-label="{% trans 'Login to किसान portal' %}">{% trans "लगइन गर्नुहोस् (login)" %}</button>
       </form>
 
       <div class="note" id="loginInstructions">
-        <p><a href="{% url 'password_reset' %}">पासवर्ड बिर्सनुभयो?</a></p>
-        <p>खाता छैन? <a href="{% url 'signup' %}">दर्ता गर्नुहोस्</a></p>
-        <p>ग्राहक हुनुहुन्छ? <a href="{% url 'switch_to_customer' %}">ग्राहकको रूपमा लगइन गर्नुहोस्</a></p>
-        <p><a href="{% url 'landing' %}">← गृहपृष्ठ फर्कनुहोस्</a></p>
+        <p><a href="{% url 'password_reset' %}">{% trans "Forget Password?" %}</a></p>
+        <p>{% trans "No account?" %} <a href="{% url 'signup' %}">{% trans "Register" %}</a></p>
+        <p>{% trans "Are you customer?" %} <a href="{% url 'switch_to_customer' %}">{% trans "Login as Customer" %}</a></p>
+        <p><a href="{% url 'landing' %}">← {% trans " Return homepage" %}</a></p>
       </div>
     </div>
   </div>

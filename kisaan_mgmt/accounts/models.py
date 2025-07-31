@@ -78,12 +78,12 @@ class CustomerProfile(models.Model):
 @receiver(post_save, sender=User)
 def create_or_update_user_profiles(sender, instance, created, **kwargs):
     if created:
-        # General Profile बनाउने
+        # General Profile 
         Profile.objects.create(user=instance)
 
-        # Role अनुसार specific profile बनाउने
-        if hasattr(instance, 'profile') and instance.profile.role == 'farmer':
-            FarmerProfile.objects.create(user=instance)
+        # FarmerProfile or CustomerProfile creation based on role
+        if hasattr(instance, 'profile') and instance.profile.role == 'farmer':      #hasattr Safely checks if the Profile exists
+            FarmerProfile.objects.create(user=instance)    # Creates a farmer-specific profile linked to that user and user= instance means link the profile to the newly created user
         elif hasattr(instance, 'profile') and instance.profile.role == 'customer':
             CustomerProfile.objects.create(user=instance)
 

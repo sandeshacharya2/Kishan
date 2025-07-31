@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-26 10:13+0545\n"
+"POT-Creation-Date: 2025-07-26 11:18+0545\n"
 "PO-Revision-Date: 2020-07-14 21:42+0000\n"
 "Last-Translator: Transifex Bot <>\n"
 "Language-Team: Nepali (http://www.transifex.com/django/django/language/ne/)\n"
@@ -46,7 +46,6 @@ msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:58
 #: .\templates\accounts\customer_dashboard.html:100
-#: .\templates\landingpage\index.html:8
 msgid "किसान"
 msgstr ""
 
@@ -254,55 +253,201 @@ msgstr ""
 msgid "अर्को"
 msgstr ""
 
-#: .\templates\landingpage\header.html:9 .\templates\landingpage\header.html:88
-msgid "Farmer"
+#: .\templates\accounts\farmer_login.html:8
+msgid "Farmer Login"
+msgstr "किसान लगइन"
+
+#: .\templates\accounts\farmer_login.html:227
+msgid "Farmer login form"
+msgstr "किसान लगइन फर्म "
+
+#: .\templates\accounts\farmer_login.html:232
+msgid "किसान लोगो"
 msgstr ""
+
+#: .\templates\accounts\farmer_login.html:234
+#: .\templates\landingpage\header.html:9 .\templates\landingpage\header.html:88
+#: .\templates\landingpage\index.html:9
+msgid "Farmer"
+msgstr "किसान "
+
+#: .\templates\accounts\farmer_login.html:244
+msgid "Username or password do not match"
+msgstr "प्रयोगकर्ता नाम र पासवर्ड मिलेन "
+
+#: .\templates\accounts\farmer_login.html:253
+msgid "Username"
+msgstr "प्रयोगकर्ता नाम "
+
+#: .\templates\accounts\farmer_login.html:261
+msgid "Password"
+msgstr "पासवर्ड"
+
+#: .\templates\accounts\farmer_login.html:272
+msgid "Login to किसान portal"
+msgstr ""
+
+#: .\templates\accounts\farmer_login.html:272
+msgid "लगइन गर्नुहोस् (login)"
+msgstr ""
+
+#: .\templates\accounts\farmer_login.html:276
+msgid "Forget Password?"
+msgstr "पासवर्ड बिर्सिनुभयो?"
+
+#: .\templates\accounts\farmer_login.html:277
+msgid "No account?"
+msgstr "खाता छैन "
+
+#: .\templates\accounts\farmer_login.html:277
+msgid "Register"
+msgstr "दर्ता गर्नुहोस्।"
+
+#: .\templates\accounts\farmer_login.html:278
+msgid "Are you customer?"
+msgstr "ग्राहक हुनहुन्छ? "
+
+#: .\templates\accounts\farmer_login.html:278
+msgid "Login as Customer"
+msgstr "ग्राहकका रुपमा लगइन गर्नुहोस् "
+
+#: .\templates\accounts\farmer_login.html:279
+msgid " Return homepage"
+msgstr "होमपेजमा फर्कनुहोस "
+
+#: .\templates\landingpage\footer.html:214
+msgid "Kisaan Logo"
+msgstr "किसान लोगो"
+
+#: .\templates\landingpage\footer.html:215
+msgid "Kisaan"
+msgstr "किसान"
+
+#: .\templates\landingpage\footer.html:217
+msgid "A trusted digital bridge <br /> between farmers and consumers."
+msgstr "किसान र उपभोक्ताबीचको एक भरपर्दो डिजिटल ब्रिज ।"
+
+#: .\templates\landingpage\footer.html:226
+msgid "Company"
+msgstr "कम्पनी"
+
+#: .\templates\landingpage\footer.html:227
+#: .\templates\landingpage\header.html:106
+msgid "About Us"
+msgstr "हाम्रो बारेमा"
+
+#: .\templates\landingpage\footer.html:228
+msgid "Our Projects"
+msgstr "हाम्रा परियोजनाहरू"
+
+#: .\templates\landingpage\footer.html:229
+msgid "Our Services"
+msgstr "हाम्रा सेवाहरू"
+
+#: .\templates\landingpage\footer.html:230
+msgid "Careers"
+msgstr "रोजगार"
+
+#: .\templates\landingpage\footer.html:235
+msgid "Products"
+msgstr "उत्पादनहरू"
+
+#: .\templates\landingpage\footer.html:236
+msgid "Fruits"
+msgstr "फलफूलहरू"
+
+#: .\templates\landingpage\footer.html:237
+msgid "Vegetables"
+msgstr "तरकारीहरू"
+
+#: .\templates\landingpage\footer.html:238
+msgid "Seeds"
+msgstr "बीउहरू"
+
+#: .\templates\landingpage\footer.html:239
+msgid "Organic Goods"
+msgstr "जैविक सामानहरू"
+
+#: .\templates\landingpage\footer.html:244
+msgid "Support"
+msgstr "सहयोग"
+
+#: .\templates\landingpage\footer.html:245
+msgid "Help Center"
+msgstr "सहायता केन्द्र"
+
+#: .\templates\landingpage\footer.html:246
+msgid "FAQs"
+msgstr "प्रायः सोधिने प्रश्नहरू"
+
+#: .\templates\landingpage\footer.html:247
+msgid "Terms & Conditions"
+msgstr "नियम र सर्तहरू"
+
+#: .\templates\landingpage\footer.html:248
+msgid "Privacy Policy"
+msgstr "गोपनीयता नीति"
+
+#: .\templates\landingpage\footer.html:253
+#, fuzzy
+#| msgid "Contact Us"
+msgid "Contact"
+msgstr "सम्पर्क गर्नुहोस्"
+
+#: .\templates\landingpage\footer.html:256
+msgid "Beni, Myagdi, Nepal"
+msgstr "बेनी, म्याग्दी, नेपाल"
+
+#: .\templates\landingpage\footer.html:269
+msgid "Kisaan. All rights reserved."
+msgstr "किसान। सबै अधिकारहरू सुरक्षित छन्।"
+
 
 #: .\templates\landingpage\header.html:89
 msgid "We are with farmer"
-msgstr ""
+msgstr "हामि किसानका साथमा छौ "
 
 #: .\templates\landingpage\header.html:103
 msgid "Home"
-msgstr ""
-
-#: .\templates\landingpage\header.html:106
-msgid "About Us"
-msgstr ""
+msgstr "गृहपुष्ठ"
 
 #: .\templates\landingpage\header.html:109
 msgid "Contact Us"
-msgstr ""
+msgstr "सम्पर्क गर्नुहोस्"
 
 #: .\templates\landingpage\header.html:115
 msgid "Login"
-msgstr ""
+msgstr "लगइन "
 
-#: .\templates\landingpage\index.html:144
-msgid "वास्तविक र प्राकृतिक"
-msgstr ""
-
-#: .\templates\landingpage\index.html:146
-msgid "कृषिमा हाम्रो आत्मा बस्छ"
-msgstr ""
-
-#: .\templates\landingpage\index.html:147
-msgid "शुद्ध उत्पादन, समृद्ध भविष्य"
-msgstr ""
-
-#: .\templates\landingpage\index.html:150
-msgid ""
-"हामी नेपाली किसानहरूलाई सशक्त बनाउन प्रतिबद्ध छौं। <br /> शुद्धता, पारदर्शिता र "
-"प्रविधिको साथ, कृषि क्षेत्रमा नयाँ युग ल्याउँछौं।"
-msgstr ""
+#: .\templates\landingpage\index.html:154
+msgid "Original and Natural"
+msgstr "वास्तविक र प्राकृतिक"
 
 #: .\templates\landingpage\index.html:156
-msgid "थप जान्नुहोस्"
-msgstr ""
+msgid "Farming is our life."
+msgstr "कृषिमा हाम्रो आत्मा बस्छ"
 
 #: .\templates\landingpage\index.html:157
-msgid "अहिल्यै सुरु गर्नुहोस्"
+msgid "Good crops, bright future"
+msgstr "शुद्ध उत्पादन, समृद्ध भविष्य"
+
+#: .\templates\landingpage\index.html:160
+msgid ""
+"We are committed to empowering Nepali farmers. <br> With honesty, "
+"transparency, and technology, we bring a new era to farming."
 msgstr ""
+"हामी नेपाली किसानहरूलाई सशक्त बनाउन प्रतिबद्ध छौं। <br> शुद्धता, पारदर्शिता र "
+"प्रविधिको साथ, कृषि क्षेत्रमा नयाँ युग ल्याउँछौं।"
+
+#: .\templates\landingpage\index.html:166
+msgid "Learn More"
+msgstr "थप जान्नुहोस्"
+
+#: .\templates\landingpage\index.html:167
+#, fuzzy
+#| msgid "Get started with Django"
+msgid "Get Started Now"
+msgstr "अहिल्यै सुरु गर्नुहोस्"
 
 #~ msgid "Afrikaans"
 #~ msgstr "अफ्रिकन"
@@ -822,7 +967,7 @@ msgstr ""
 #~ msgstr ":?.!"
 
 #~ msgid "This field is required."
-#~ msgstr "यो फाँट अनिवार्य छ ।"
+#~ msgstr "कृपया सबै विवरणहरू सही रूपमा भर्नुहोस्। ।"
 
 #~ msgid "Enter a whole number."
 #~ msgstr "संख्या राख्नुहोस ।"
@@ -1335,9 +1480,6 @@ msgstr ""
 
 #~ msgid "Tutorial: A Polling App"
 #~ msgstr "मतदान एप उदाहरण "
-
-#~ msgid "Get started with Django"
-#~ msgstr "ज्याङ्गो सुरु गर्नु होस ।"
 
 #~ msgid "Django Community"
 #~ msgstr "ज्याङ्गो समुदाय"
