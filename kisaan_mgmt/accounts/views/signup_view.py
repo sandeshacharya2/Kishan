@@ -71,23 +71,25 @@ def signup_view(request):
                 messages.error(request, _("यो ईमेल डोमेन अनुमति छैन। कृपया अरु डोमेन प्रयोग गर्नुहोस्।"))
                 return render(request, 'accounts/signup.html', {'form': form})
 
-            signup_data = form.cleaned_data.copy()
+            signup_data = form.cleaned_data.copy()      #retrieve form data in dictionary
             signup_data.pop('password2', None)
 
-            signup_data['latitude'] = request.POST.get('latitude')
-            signup_data['longitude'] = request.POST.get('longitude')
+            signup_data['latitude'] = request.POST.get('latitude')      #the first part is the key, the second part is the value in dictionary signup_data
+            signup_data['longitude'] = request.POST.get('longitude')    
 
             request.session['signup_data'] = signup_data
 
+            """signup_data = form.cleaned_data.copy()	Get form data temporarily (this view only)
+                request.session['signup_data'] = signup_data	Store data across views (OTP, login, etc.)"""
             # Cleanup expired OTPs
-            EmailOTP.cleanup_expired()
+            EmailOTP.cleanup_expired()      #calls the cleanup_expired method from model to delete expired OTPs
 
             # Delete any existing OTP for this email before creating a new one
             EmailOTP.objects.filter(email=email).delete()
 
-            otp_obj = EmailOTP.objects.create(email=email)
-            otp_obj.generate_otp()
-            send_otp(email, otp_obj.otp)
+            otp_obj = EmailOTP.objects.create(email=email)      #creates a new OTP object with the email
+            otp_obj.generate_otp()     #generate a new OTP through the generate_otp method in model
+            send_otp(email, otp_obj.otp)        #sending the otp through send_otp function
 
             print(f"OTP sent to {email}: {otp_obj.otp}")
             return redirect('verify-otp')
@@ -99,25 +101,25 @@ def signup_view(request):
 
 # ✅ OTP Verification View
 def verify_otp_view(request):
-    EmailOTP.cleanup_expired()
+    EmailOTP.cleanup_expired()  #delete expired OTPs before processing
 
-    signup_data = request.session.get('signup_data')
+    signup_data = request.session.get('signup_data') #retrieves the signup data from session
     if not signup_data:
         return redirect('signup')
 
-    email = signup_data.get('email')
+    email = signup_data.get('email') #gets the email from signup data
     try:
         otp_obj = EmailOTP.objects.get(email=email)
     except EmailOTP.DoesNotExist:
         return redirect('signup')
 
-    now = timezone.now()
-    expiry_time = otp_obj.created_at + timedelta(minutes=3)
+    now = timezone.now()        #This gets the current date and time
+    expiry_time = otp_obj.created_at + timedelta(minutes=3) # This calculates the expiry time of the OTP
     seconds_left = max(0, (expiry_time - now).total_seconds())
     can_resend = seconds_left == 0
 
     # Resend OTP
-    if request.method == 'POST' and 'resend_otp' in request.POST:
+    if request.method == 'POST' and 'resend_otp' in request.POST:   #post method and user clicks resend OTP button
         if not can_resend:
             messages.warning(request, f"पर्खनुहोस्, OTP पुन: पठाउन {int(seconds_left)} सेकेन्ड बाकी छ।")
         else:
@@ -136,7 +138,7 @@ def verify_otp_view(request):
 
     # Submit OTP
     if request.method == 'POST' and 'otp' in request.POST:
-        entered_otp = request.POST.get('otp', '').strip()
+        entered_otp = request.POST.get('otp', '').strip()       #Gets the OTP the user entered from the form data.
 
         if otp_obj.is_valid() and otp_obj.otp == entered_otp:
             if User.objects.filter(email=email).exists():
@@ -211,16 +213,16 @@ def farmer_dashboard_view(request):
     return render(request, 'accounts/farmer_dashboard.html', context)
 
 
-@login_required
-def customer_dashboard_view(request):
-    products = Product.objects.all().order_by('-date_posted')
+# @login_required
+# def customer_dashboard_view(request):
+#     products = Product.objects.all().order_by('-date_posted')
 
-    try:
-        customer_profile = request.user.customerprofile
-    except:
-        customer_profile = None
+#     try:
+#         customer_profile = request.user.customerprofile
+#     except:
+#         customer_profile = None
 
-    return render(request, 'accounts/customer_dashboard.html', {
-        'products': products,
-        'customer_profile': customer_profile,
-    })
+#     return render(request, 'accounts/customer_dashboard.html', {
+#         'products': products,
+#         'customer_profile': customer_profile,
+#     })

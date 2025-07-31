@@ -2,10 +2,11 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% trans "किसान" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% trans "Farmer" %}</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -62,7 +63,7 @@
       font-weight: 700;
       display: block;
       margin-top: 6px;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
     }
 
     .description {
@@ -70,7 +71,7 @@
       margin-bottom: 25px;
       color: #f0f0f0;
       line-height: 1.5;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .btn-custom {
@@ -97,15 +98,19 @@
       .hero {
         padding: 60px 20px;
       }
+
       .hero h1 {
         font-size: 36px;
       }
+
       .small-title {
         font-size: 20px;
       }
+
       .description {
         font-size: 14px;
       }
+
       .btn-custom {
         padding: 10px 20px;
         font-size: 14px;
@@ -116,15 +121,19 @@
       .hero {
         padding: 40px 15px;
       }
+
       .hero h1 {
         font-size: 28px;
       }
+
       .small-title {
         font-size: 18px;
       }
+
       .description {
         font-size: 13px;
       }
+
       .btn-custom {
         padding: 8px 16px;
         font-size: 13px;
@@ -133,7 +142,8 @@
   </style>
 </head>
 
-<body class="text-white min-vh-100 bg-cover bg-center" style="background-image: url({% static 'accounts/images/sunny-meadow-landscape.jpg' %})">
+<body class="text-white min-vh-100 bg-cover bg-center"
+  style="background-image: url({% static 'accounts/images/sunny-meadow-landscape.jpg' %})">
 
   <!-- Header Include -->
   {% include 'landingpage/header.html' %}
@@ -141,20 +151,20 @@
   <!-- Hero Section -->
   <section class="hero d-flex">
     <div class="hero-content">
-      <p class="small-title">{% trans "वास्तविक र प्राकृतिक" %}</p>
+      <p class="small-title">{% trans "Original and Natural" %}</p>
       <h1>
-        <span class="yellow">{% trans "कृषिमा हाम्रो आत्मा बस्छ" %}</span><br />
-        <span class="white">{% trans "शुद्ध उत्पादन, समृद्ध भविष्य" %}</span>
+        <span class="yellow">{% trans "Farming is our life." %}</span><br />
+        <span class="white">{% trans "Good crops, bright future" %}</span>
       </h1>
       <p class="description">
         {% blocktrans trimmed %}
-        हामी नेपाली किसानहरूलाई सशक्त बनाउन प्रतिबद्ध छौं। <br />
-        शुद्धता, पारदर्शिता र प्रविधिको साथ, कृषि क्षेत्रमा नयाँ युग ल्याउँछौं।
+        We are committed to empowering Nepali farmers. <br>
+        With honesty, transparency, and technology, we bring a new era to farming.
         {% endblocktrans %}
       </p>
       <div class="d-flex flex-wrap">
-        <a href="{% url 'about' %}" class="btn-custom">{% trans "थप जान्नुहोस्" %}</a>
-        <a href="{% url 'signup' %}" class="btn-custom">{% trans "अहिल्यै सुरु गर्नुहोस्" %}</a>
+        <a href="{% url 'about' %}" class="btn-custom">{% trans "Learn More" %}</a>
+        <a href="{% url 'signup' %}" class="btn-custom">{% trans "Get Started Now" %}</a>
       </div>
     </div>
   </section>
@@ -163,4 +173,5 @@
   {% include 'landingpage/footer.html' %}
 
 </body>
+
 </html>
