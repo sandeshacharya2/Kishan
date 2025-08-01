@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-26 11:18+0545\n"
+"POT-Creation-Date: 2025-07-31 22:19+0545\n"
 "PO-Revision-Date: 2020-07-14 21:42+0000\n"
 "Last-Translator: Transifex Bot <>\n"
 "Language-Team: Nepali (http://www.transifex.com/django/django/language/ne/)\n"
@@ -41,13 +41,15 @@ msgid "You are not allowed to delete this product."
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:8
-msgid "ग्राहक ड्याशबोर्ड"
+msgid "customer-dashboard"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:58
-#: .\templates\accounts\customer_dashboard.html:100
-msgid "किसान"
-msgstr ""
+#: .\templates\accounts\farmer_login.html:234
+#: .\templates\landingpage\header.html:9 .\templates\landingpage\header.html:88
+#: .\templates\landingpage\index.html:9
+msgid "Farmer"
+msgstr "किसान "
 
 #: .\templates\accounts\customer_dashboard.html:67
 msgid "Profile"
@@ -58,7 +60,7 @@ msgid "No Profile"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:74
-msgid "थप विवरण हेर्नुहोस्"
+msgid "Add more information"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:79
@@ -66,31 +68,37 @@ msgid "ग्राहक साथी, तपाईंको सहभागि
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:82
-msgid "प्रोफाइल सम्पादन"
+msgid "Edit Profile"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:83
-msgid "ड्याशबोर्ड"
+msgid "Dashboard"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:87
-msgid "लगआउट"
+msgid "Logout"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:97
 msgid "Logo"
 msgstr ""
 
-#: .\templates\accounts\customer_dashboard.html:103
-msgid "उपलब्ध उत्पादनहरू"
+#: .\templates\accounts\customer_dashboard.html:100
+msgid "किसान"
 msgstr ""
+
+#: .\templates\accounts\customer_dashboard.html:103
+#, fuzzy
+#| msgid "Products"
+msgid "Available Products"
+msgstr "उत्पादनहरू"
 
 #: .\templates\accounts\customer_dashboard.html:117
 msgid "नमस्ते ग्राहक साथी! यहाँ तपाईंले किसानहरूले पोस्ट गरेका उत्पादनहरू हेर्न सक्नुहुन्छ।"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:127
-msgid "उत्पादन खोज्नुहोस् (जस्तै: आलु, अदुवा, आ...)"
+msgid "Search items like (जस्तै: आलु, अदुवा, आ...)"
 msgstr ""
 
 #: .\templates\accounts\customer_dashboard.html:134
@@ -265,12 +273,6 @@ msgstr "किसान लगइन फर्म "
 msgid "किसान लोगो"
 msgstr ""
 
-#: .\templates\accounts\farmer_login.html:234
-#: .\templates\landingpage\header.html:9 .\templates\landingpage\header.html:88
-#: .\templates\landingpage\index.html:9
-msgid "Farmer"
-msgstr "किसान "
-
 #: .\templates\accounts\farmer_login.html:244
 msgid "Username or password do not match"
 msgstr "प्रयोगकर्ता नाम र पासवर्ड मिलेन "
@@ -402,7 +404,6 @@ msgstr "बेनी, म्याग्दी, नेपाल"
 msgid "Kisaan. All rights reserved."
 msgstr "किसान। सबै अधिकारहरू सुरक्षित छन्।"
 
-
 #: .\templates\landingpage\header.html:89
 msgid "We are with farmer"
 msgstr "हामि किसानका साथमा छौ "
@@ -448,6 +449,14 @@ msgstr "थप जान्नुहोस्"
 #| msgid "Get started with Django"
 msgid "Get Started Now"
 msgstr "अहिल्यै सुरु गर्नुहोस्"
+
+#: .\templates\products\add_product.html:173
+msgid "aalu"
+msgstr "आलु"
+
+#: .\templates\products\add_product.html:174
+msgid "pyaaj"
+msgstr "प्याज"
 
 #~ msgid "Afrikaans"
 #~ msgstr "अफ्रिकन"

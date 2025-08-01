@@ -3,15 +3,27 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from products import views
 from django.views.i18n import set_language  # <-- Add this import
 
 from accounts import views  # views import गरियो
+from products.views import vegetables, fruits, grains, category_list_view, krishi_news, farming_tips, tech_updates,weather_view
 from accounts.views import signup_view, landing_page, about, contact  # Import your views
+# from views import landing_view
 
 urlpatterns = [
     path('', landing_page, name='landing'),   # Main landing page at "/"
     path('about/', about, name='about'),
     path('contact/', contact, name='contact'),
+    path('vegetables/', vegetables, name= 'vegetables'),
+    path('ourproducts/', category_list_view, name='products'),
+    path('fruits/', fruits, name= 'fruits'),
+    path('grains/', grains, name= 'grains'),
+    path('krishi-news/', krishi_news, name='krishi_news'),
+    path('farming-tips/', farming_tips, name='farming_tips'),
+    path('tech-updates/', tech_updates, name='tech_updates'),
+    path('weather/', weather_view, name='weather'),
+
     path('login/', auth_views.LoginView.as_view(template_name='accounts/farmer_login.html'), name='login'),
 
     # Login paths

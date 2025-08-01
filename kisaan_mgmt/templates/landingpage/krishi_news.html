@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <title>कृषि समाचार</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #e6f0d4; /* soft green background */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h2 {
+      font-weight: 700;
+      color: #2e7d32;
+      margin-bottom: 2rem;
+      text-align: center;
+      text-shadow: 1px 1px 2px #a3c293;
+    }
+
+    .news-card {
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      margin-bottom: 2.5rem;
+      overflow: hidden;
+      background: white;
+      transition: transform 0.3s ease;
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .news-img {
+      height: 220px;
+      object-fit: cover;
+      width: 100%;
+      border-bottom: 5px solid #4caf50;
+      transition: transform 0.3s ease;
+    }
+
+    .news-card:hover .news-img {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 1.8rem 2rem;
+    }
+
+    .news-title {
+      color: #2e7d32;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      text-transform: capitalize;
+    }
+
+    .news-date {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .news-text {
+      font-size: 1.1rem;
+      color: #355e35;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 576px) {
+      .news-img {
+        height: 160px;
+      }
+      .news-title {
+        font-size: 1.3rem;
+      }
+      .news-text {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  {% include "landingpage/header.html" %}
+
+  <div class="container mt-5">
+    <h2>कृषि समाचार</h2>
+
+    <div class="news-card">
+      <img src="{% static 'dhaan.jpg' %}" alt="धान उत्पादन" class="news-img" />
+      <div class="card-body">
+        <h5 class="news-title">धान उत्पादनमा वृद्धि</h5>
+        <p class="news-date">२०८२ साउन १५</p>
+        <p class="news-text">
+          नेपालमा यो वर्ष धानको उत्पादनमा १०% ले वृद्धि भएको छ। किसानहरूले प्रविधिको सही प्रयोग र मौसमको साथ दिएको कारण उत्पादन राम्रो भएको बताइएको छ।
+        </p>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <img src="{% static 'mal.jpg' %}" alt="जैविक मल" class="news-img" />
+      <div class="card-body">
+        <h5 class="news-title">जैविक मल प्रयोग गर्ने किसानलाई अनुदान</h5>
+        <p class="news-date">२०८२ साउन १०</p>
+        <p class="news-text">
+          सरकारले जैविक मल प्रयोग गर्ने किसानहरूलाई प्रति रोपनी रू. ५०० अनुदान दिने घोषणा गरेको छ। यसबाट किसानहरू जैविक खेतीतर्फ आकर्षित हुने अपेक्षा गरिएको छ।
+        </p>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <img src="{% static 'yaantrikaran.jpg' %}" alt="कृषि यान्त्रीकरण" class="news-img" />
+      <div class="card-body">
+        <h5 class="news-title">कृषि यान्त्रीकरणको अभियान</h5>
+        <p class="news-date">२०८२ असार ३०</p>
+        <p class="news-text">
+          गाउँपालिकाहरूले संयुक्त रुपमा कृषि यान्त्रीकरणको अभियान थालेका छन्। ट्र्याक्टर, थ्रेसर र आधुनिक सिँचाइ संयन्त्रको प्रयोग बढाइएको छ।
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  {% include "landingpage/footer.html" %}
+
+</body>
+</html>
