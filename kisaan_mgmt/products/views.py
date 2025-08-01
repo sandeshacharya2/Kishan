@@ -3,13 +3,10 @@ from .forms import ProductForm
 from .models import Product
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-<<<<<<< HEAD
 from django.utils.translation import gettext_lazy as _
-=======
 from django.db.models import Sum, Avg, Count
 from django.utils.translation import gettext_lazy as _
 import requests
->>>>>>> sandesh
 
 @login_required
 def add_product(request):
@@ -67,8 +64,6 @@ def farmer_dashboard_view(request):
 # def marketplace_view(request):
 #     products = Product.objects.all().order_by('-date_posted')  # 🛠️ FIXED
 #     return render(request, 'products/marketplace.html', {'products': products})
-<<<<<<< HEAD
-=======
 
 def category_list_view(request):
     # Get distinct main categories only that have products
@@ -267,4 +262,3 @@ def vegetables(request):
         'selected_subcategory': selected_subcategory,
         'MEDIA_URL': settings.MEDIA_URL,
     })
->>>>>>> sandesh

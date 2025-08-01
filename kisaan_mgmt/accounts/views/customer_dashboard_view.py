@@ -25,11 +25,8 @@ def haversine(lat1, lon1, lat2, lon2):
 def customer_dashboard_view(request):
     query = request.GET.get('q')
     filter_type = request.GET.get('filter_type')
-<<<<<<< HEAD
     distance_filter = request.GET.get('distance_filter')  # expected values: 'nearest', 'farthest', or None
-=======
     distance_filter = request.GET.get('distance_filter')  # expected values: 'nearest', 'farthest', 'enter_range', or None
->>>>>>> sandesh
 
     products = Product.objects.all().order_by('-date_posted')
 
@@ -100,9 +97,7 @@ def customer_dashboard_view(request):
             reverse_sort = True if distance_filter == 'farthest' else False
             products_with_distance.sort(key=lambda x: x[1], reverse=reverse_sort)
 
-<<<<<<< HEAD
         # Extract sorted products
-=======
         elif distance_filter == 'enter_range':
             # Get min_distance, max_distance, distance_unit from request.GET
             min_dist = request.GET.get('min_distance')
@@ -135,7 +130,6 @@ def customer_dashboard_view(request):
             products_with_distance = filtered
 
         # Extract final products list
->>>>>>> sandesh
         products = [p[0] for p in products_with_distance]
 
     else:
