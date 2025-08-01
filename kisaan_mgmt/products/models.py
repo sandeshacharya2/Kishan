@@ -18,6 +18,11 @@ class Product(models.Model):
     farmer = models.ForeignKey(User, on_delete=models.CASCADE)
     main_category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     sub_category = models.CharField(max_length=100)
+<<<<<<< HEAD
+=======
+    sub_category_roman = models.CharField(max_length=100, blank=True, null=True)
+
+>>>>>>> sandesh
     quantity = models.FloatField()
     unit = models.CharField(max_length=20, choices=UNIT_CHOICES)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)

@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <title>खाद्यान्नहरु</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --black: #222;
+      --light-color: #666;
+      --green: #4caf50;
+      --box-shadow: 0 .3rem .8rem rgba(0, 0, 0, 0.1);
+      --outline: .1rem solid rgba(0, 0, 0, 0.1);
+      --outline-hover: .2rem solid var(--green);
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #edf6e5, #f7ffe5, #e2f3d8);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      color: #374151;
+      margin: 0;
+    }
+
+    .heading {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--black);
+      text-transform: capitalize;
+      font-weight: 600;
+    }
+
+    /* Product box */
+    .box {
+      background: #fff;
+      border-radius: 0.5rem;
+      padding: 1.25rem 1rem 1.5rem;
+      box-shadow: var(--box-shadow);
+      border: var(--outline);
+      text-align: center;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      cursor: default;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .box:hover {
+      border-color: var(--green);
+      box-shadow: 0 .5rem 1rem rgba(76, 175, 80, 0.3);
+      cursor: pointer;
+    }
+
+    .box img {
+      height: 14rem;
+      width: 100%;
+      object-fit: contain;
+      border-radius: 0.3rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      background: white;
+      flex-shrink: 0;
+    }
+
+    .box h3 {
+      font-size: 1.3rem;
+      color: var(--black);
+      text-transform: capitalize;
+      margin-bottom: 0.5rem;
+      min-height: 2.5rem;
+    }
+
+    .box p {
+      font-size: 1rem;
+      color: var(--light-color);
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .btn-custom {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.3rem;
+      font-size: 1rem;
+      transition: background 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-custom:hover {
+      background: #388e3c;
+      color: white;
+      text-decoration: none;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 767.98px) {
+      .box img {
+        height: 12rem;
+      }
+      .box h3 {
+        font-size: 1.1rem;
+      }
+      .box p {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 479.98px) {
+      .box img {
+        height: 10rem;
+      }
+      .box h3 {
+        font-size: 1rem;
+      }
+      .box p {
+        font-size: 0.85rem;
+      }
+      .btn-custom {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  {% include 'landingpage/header.html' %}
+
+  <main class="container bg-white rounded-3 shadow p-5 my-5">
+    <section class="products" id="products">
+      <h1 class="heading">खाद्यान्नहरु</h1>
+
+      <form method="get" class="mb-4 d-flex justify-content-center align-items-center gap-2 flex-wrap">
+        <select name="subcategory" class="form-select w-auto" aria-label="Select Subcategory">
+          <option value="">-- सबै उपश्रेणीहरू --</option>
+          {% for name in all_subcategories %}
+            <option value="{{ name }}" {% if selected_subcategory == name %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-success">खोज्नुहोस्</button>
+      </form>
+
+      <div class="row g-4">
+        {% for chunk in chunks %}
+          {% for item in chunk %}
+            {% if item %}
+              <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
+                <div class="box w-100">
+                  {% if item.latest_image %}
+                    <img src="{{ MEDIA_URL }}{{ item.latest_image }}" alt="{{ item.sub_category }}">
+                  {% else %}
+                    <img src="{% static 'default_product.png' %}" alt="Default Image">
+                  {% endif %}
+                  <h3>{{ item.sub_category }}</h3>
+                  <p class="price-range">
+                    मूल्य दायरा: Rs. {{ item.min_price|floatformat:2 }} - Rs. {{ item.max_price|floatformat:2 }} प्रति {{ item.unit }}
+                  </p>
+                  <p>कुल परिमाण: {{ item.total_quantity }} {{ item.unit }}</p>
+                  <p>प्रडक्टहरू: {{ item.product_count }}</p>
+                  <a href="#" class="btn-custom mt-auto">Add to Cart</a>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  {% include 'landingpage/footer.html' %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
