@@ -56,7 +56,6 @@
       &#9776;
     </button>
     <span class="text-xl font-bold text-green-800 tracking-wide flex items-center gap-2">
-      {% trans "किसान" %} <span class="text-green-400 text-xl">🌱</span>
       {% trans "Farmer" %} <span class="text-green-400 text-xl">🌱</span>
     </span>
   </div>
@@ -72,8 +71,8 @@
       {% endif %}
       <h2 class="mt-2 font-bold text-green-900 flex items-center justify-center gap-1">🧑‍💼 @{{ user.username }}</h2>
       <p class="text-sm font-semibold text-green-800">{{ user.customerprofile.first_name }} {{ user.customerprofile.last_name }}</p>
-      <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
-      <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "थप विवरण हेर्नुहोस्" %}</button>
+      <!-- <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p> -->
+      <!-- <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "थप विवरण हेर्नुहोस्" %}</button> -->
       <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, Ward No. {{ user.profile.ward }}</p>
       <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "Add more information" %}</button>
       <div id="details" class="hidden mt-2 text-sm text-green-800">
@@ -83,12 +82,12 @@
       <div class="mt-3 text-green-900 text-xs italic">{% trans "ग्राहक साथी, तपाईंको सहभागिताले कृषि बजार चल्दछ!" %}</div>
     </div>
     <nav class="flex-1 p-4 space-y-4 text-green-800 font-semibold">
-      <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "प्रोफाइल सम्पादन" %}</a>
-      <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "ड्याशबोर्ड" %}</a>
+      <!-- <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "प्रोफाइल सम्पादन" %}</a> -->
+      <!-- <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "ड्याशबोर्ड" %}</a> -->
     </nav>
     <form method="post" action="{% url 'logout' %}" class="p-4 border-t border-green-300">
       {% csrf_token %}
-      <button class="text-red-700 font-semibold w-full hover:underline">🚪 {% trans "लगआउट" %}</button>
+      <!-- <button class="text-red-700 font-semibold w-full hover:underline">🚪 {% trans "लगआउट" %}</button> -->
       <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "Edit Profile" %}</a>
       <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "Dashboard" %}</a>
     </nav>
@@ -110,7 +109,6 @@
           {% trans "किसान" %} <span class="text-green-400 text-xl">🌱</span>
         </span>
       </div>
-      <h2 class="text-xl font-semibold text-green-700 pr-6 flex items-center gap-2">🛒 {% trans "उपलब्ध उत्पादनहरू" %}</h2>
       <h2 class="text-xl font-semibold text-green-700 pr-6 flex items-center gap-2">🛒 {% trans "Available Products" %}</h2>
     </header>
 
