@@ -188,6 +188,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/accounts/redirect/'
 LOGOUT_REDIRECT_URL = '/accounts/farmer/login/'
+
 AUTHENTICATION_BACKENDS = [
     'accounts.auth_backend.RoleBasedBackend',
     'django.contrib.auth.backends.ModelBackend',  # fallback default
