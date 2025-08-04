@@ -1,0 +1,82 @@
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<h2 class="text-3xl font-extrabold mb-6 text-gray-900 tracking-tight drop-shadow-sm">
+  Buy <span class="text-green-700">{{ product.name }}</span>
+</h2>
+
+<div class="mb-6 space-y-2 text-gray-700">
+  <p class="text-lg">
+    <span class="font-semibold">Available Quantity:</span>
+    <span class="text-green-600 font-semibold">{{ product.quantity }} {{ product.unit }}</span>
+  </p>
+  <p class="text-lg">
+    <span class="font-semibold">Price per unit:</span>
+    <span class="text-green-600 font-semibold">Rs. {{ product.price }}</span>
+  </p>
+</div>
+
+<form method="POST" action="{% url 'payments:payment_request' product.id %}"
+      class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-300
+             hover:shadow-2xl transition-shadow duration-500"
+>
+    {% csrf_token %}
+
+    <label for="qty" class="block mb-3 text-lg font-medium text-gray-800 tracking-wide">
+      Select Quantity
+    </label>
+
+    <input
+      type="number"
+      id="qty"
+      name="quantity"
+      min="1"
+      max="{{ product.quantity }}"
+      required
+      class="w-full px-4 py-3 mb-6 text-lg border-2 border-gray-300 rounded-xl
+             focus:outline-none focus:ring-4 focus:ring-green-400 focus:border-green-500
+             transition-colors duration-300 placeholder-gray-400 font-semibold"
+      placeholder="Enter quantity"
+      aria-label="Quantity"
+    >
+
+    <p class="mb-8 text-2xl font-extrabold text-green-700 tracking-tight drop-shadow-md">
+      Total Price: Rs. <span id="total-price">0.00</span>
+    </p>
+
+    <button
+      type="submit"
+      class="w-full py-4 text-xl font-extrabold text-white rounded-3xl
+             bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600
+             shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:-translate-y-1"
+      aria-label="Proceed to Payment"
+    >
+      Proceed to Payment
+    </button>
+</form>
+
+<script>
+  (function() {
+    const qtyInput = document.getElementById('qty');
+    const totalPriceElem = document.getElementById('total-price');
+
+    const pricePerUnitStr = "{{ product.price|default:'0' }}";
+    const pricePerUnit = parseFloat(pricePerUnitStr) || 0;
+const maxQty = Number("{{ product.quantity|default:'0' }}");
+
+function updateTotalPrice() {
+  let qty = parseFloat(qtyInput.value);
+  if (isNaN(qty) || qty < 1) qty = 0;
+  if (qty > maxQty) qty = maxQty;
+  totalPriceElem.textContent = (qty * pricePerUnit).toFixed(2);
+}
+    qtyInput.addEventListener('input', updateTotalPrice);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!qtyInput.value) {
+        qtyInput.value = 1;
+      }
+      updateTotalPrice();
+    });
+  })();
+</script>

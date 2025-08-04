@@ -1,0 +1,6 @@
+<h2>Pay with eSewa</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Proceed to Pay</button>
+</form>

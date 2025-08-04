@@ -1,10 +1,7 @@
 
 {% load static %}
-<<<<<<< HEAD
-=======
 {% load i18n %}
 
->>>>>>> sandesh
 <!DOCTYPE html>
 <html lang="ne">
 <head>
@@ -242,6 +239,35 @@
         {% endif %}
       </div>
     </div>
+<h3>📩 Pending Chat Requests</h3>
+
+{% if pending_chats %}
+    <ul>
+    {% for chat in pending_chats %}
+        <li>
+            Chat request from <strong>{{ chat.customer.username }}</strong>
+            for product <strong>{{ chat.product.name }}</strong><br>
+
+            <!-- Accept Button -->
+            <form method="post" action="{% url 'chat:accept_chat' chat.id %}">
+                {% csrf_token %}
+                <button type="submit">✅ Accept</button>
+            </form>
+
+            <!-- Reject Button -->
+            <form method="post" action="{% url 'chat:reject_chat' chat.id %}">
+                {% csrf_token %}
+                <button type="submit">❌ Reject</button>
+            </form>
+
+            <p>Waiting for your response...</p>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No pending chat requests.</p>
+{% endif %}
+
 
   </main>
 

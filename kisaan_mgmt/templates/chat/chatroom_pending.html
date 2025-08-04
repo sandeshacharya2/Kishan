@@ -1,0 +1,21 @@
+<h2>Chat with {{ chatroom.farmer.username }} about {{ chatroom.product.name }}</h2>
+
+<div id="chat-box" style="border:1px solid #ccc; height:300px; overflow-y:scroll; padding:10px;">
+  {% for msg in messages %}
+    <p>
+      <strong>{{ msg.sender.username }}</strong>: {{ msg.text }} <br>
+      <small>{{ msg.timestamp }}</small>
+    </p>
+  {% empty %}
+    <p>No messages yet.</p>
+  {% endfor %}
+</div>
+
+{% if is_farmer %}
+  <form method="POST" action="{% url 'chat:accept_chat' chatroom.id %}">
+    {% csrf_token %}
+    <button type="submit">Accept Chat Request</button>
+  </form>
+{% else %}
+  <p>Waiting for farmer to accept the chat request...</p>
+{% endif %}

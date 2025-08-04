@@ -54,7 +54,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('products/', include('products.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
-
+    path('payments/', include('payments.urls')),
+    path('chat/', include('chat.urls', namespace='chat')),
     path('set_language/', set_language, name='set_language'),  # <-- Add this line at the end
 ]
 

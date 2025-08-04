@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6ffed;
+            text-align: center;
+            padding: 50px;
+        }
+        .box {
+            background-color: #fff;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            display: inline-block;
+            padding: 30px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Payment Successful!</h2>
+<p>Thank you. Your payment of Rs. {{ amount }} was successful.</p>
+<p>Transaction ID: {{ pid }}</p>
+
+<a href="{% url 'customer-dashboard' %}">Go back to Dashboard</a>
+
+    </div>
+</body>
+</html>

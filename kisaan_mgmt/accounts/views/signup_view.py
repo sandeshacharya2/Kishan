@@ -12,6 +12,8 @@ from django.utils.translation import gettext as _
 from ..models import EmailOTP, Profile, FarmerProfile
 from ..forms import SignUpForm, FarmerProfileForm
 from products.models import Product
+from chat.models import ChatRoom
+
 
 
 def landing_page(request):
@@ -186,21 +188,36 @@ def verify_otp_view(request):
     })
 
 
-# ✅ Dashboards
 @login_required
 def farmer_dashboard_view(request):
     user = request.user
+    print(f"[DEBUG] Logged in user: {user}")
+
     products = Product.objects.filter(farmer=user)
+    print(f"[DEBUG] Products count for farmer '{user}': {products.count()}")
 
     try:
         farmer_profile = user.farmerprofile
+        print(f"[DEBUG] FarmerProfile found for user '{user}'")
     except FarmerProfile.DoesNotExist:
         farmer_profile = None
+        print(f"[DEBUG] FarmerProfile NOT found for user '{user}'")
 
     try:
         accounts_profile = user.profile
+        print(f"[DEBUG] Accounts Profile found for user '{user}'")
     except Profile.DoesNotExist:
         accounts_profile = None
+        print(f"[DEBUG] Accounts Profile NOT found for user '{user}'")
+
+    # Fetch pending chat requests (not accepted, not rejected)
+    pending_chats = ChatRoom.objects.filter(
+        farmer=user, 
+        farmer_accepted=False,
+        farmer_rejected=False  # remove this if you don't have this field
+    )
+    print(f"[DEBUG] Pending chat requests count for farmer '{user}': {pending_chats.count()}")
+    print(f"[DEBUG] Pending chat requests IDs: {[chat.id for chat in pending_chats]}")
 
     form = FarmerProfileForm(instance=farmer_profile)
 
@@ -209,10 +226,10 @@ def farmer_dashboard_view(request):
         'form': form,
         'farmerprofile': farmer_profile,
         'accounts_profile': accounts_profile,
+        'pending_chats': pending_chats,
     }
+
     return render(request, 'accounts/farmer_dashboard.html', context)
-
-
 # @login_required
 # def customer_dashboard_view(request):
 #     products = Product.objects.all().order_by('-date_posted')
