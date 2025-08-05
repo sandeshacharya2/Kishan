@@ -7,6 +7,7 @@ from django.conf import settings
 import requests
 import xml.etree.ElementTree as ET
 from products.models import Product  # Adjust if your product model is elsewhere
+from payments.models import Transaction  # 🔸 Import the Transaction model
 
 
 def choose_quantity(request, product_id):
@@ -85,6 +86,17 @@ def payment_success(request):
                 product.quantity = 0
             product.save()
 
+            # 🔸 Save the transaction
+            Transaction.objects.create(
+                user=request.user,
+                product=product,
+                pid=pid,
+                rid=rid,
+                amount=amt,
+                quantity=qty_num,
+                status='Success',
+            )
+
             # ✅ Send email to farmer with buyer details
             farmer = product.farmer  # assuming FK to User
             customer = request.user
@@ -134,3 +146,33 @@ def payment_success(request):
 @login_required
 def payment_failure(request):
     return render(request, 'payments/failure.html')
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.utils.safestring import mark_safe
+import json
+from payments.models import Transaction
+
+@login_required
+def income_summary(request):
+    user = request.user
+    # Filter transactions for products where the logged-in user is the farmer
+    transactions = Transaction.objects.filter(product__farmer=user, status='Success').order_by('-created_at')
+
+    # Calculate total income
+    total_income = sum(t.amount for t in transactions)
+
+    context = {
+        'transactions': transactions,
+        'total_income': total_income,
+    }
+    return render(request, 'payments/income_summary.html', context)
+
+
+def customer_purchases(request):
+    user = request.user
+    transactions = Transaction.objects.filter(user=request.user).select_related('product', 'product__farmer')
+
+    return render(request, 'payments/purchases.html', {
+        'transactions': transactions
+    })

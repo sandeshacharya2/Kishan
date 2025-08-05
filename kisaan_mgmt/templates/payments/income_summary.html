@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>आम्दानी सारांश</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 sm:p-6 font-sans text-gray-800">
+
+  <!-- Back Button -->
+  <div class="mb-6">
+    <a href="{% url 'farmer-dashboard' %}" 
+       class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+      ← Dashboard मा फर्कनुहोस्
+    </a>
+  </div>
+
+  <!-- Header -->
+  <header class="mb-6">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">💰 आम्दानी सारांश</h1>
+    <p class="text-sm sm:text-lg text-gray-600 mt-1">तपाईंको सबै बिक्रीहरूको विवरण हेर्नुहोस्।</p>
+  </header>
+
+  <!-- Total Income Card -->
+  <div class="bg-white p-5 rounded-lg shadow max-w-md mb-8">
+    <h2 class="text-lg sm:text-xl font-semibold text-gray-700">कुल आम्दानी</h2>
+    <p class="text-3xl sm:text-4xl font-bold text-green-600 mt-1">रु {{ total_income }}</p>
+  </div>
+
+  <!-- Transactions Table -->
+  <div class="bg-white rounded-lg shadow overflow-x-auto">
+    <table class="min-w-full text-sm sm:text-base">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">PID</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">उत्पादन</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">क्रेता</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">परिमाण</th>
+          <th class="px-4 py-3 text-right font-semibold whitespace-nowrap">रकम</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">मिति</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 text-gray-800">
+        {% for t in transactions %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3 font-mono text-xs sm:text-sm text-gray-600">{{ t.pid }}</td>
+          <td class="px-4 py-3">{{ t.product.sub_category }}</td>
+          <td class="px-4 py-3">{{ t.user.username }}</td>
+          <td class="px-4 py-3 text-center">{{ t.quantity }}</td>
+          <td class="px-4 py-3 text-right font-semibold text-green-600">रु {{ t.amount }}</td>
+          <td class="px-4 py-3 text-center text-gray-500">{{ t.created_at|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic">हाल कुनै कारोबार छैन।</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

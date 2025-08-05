@@ -8,4 +8,7 @@ urlpatterns = [
     path('<int:product_id>/payment-request/', views.payment_request, name='payment_request'),  # process payment POST
     path('success/', views.payment_success, name='payment_success'),
     path('failure/', views.payment_failure, name='payment_failure'),
+    path('income-summary/', views.income_summary, name='income_summary'),
+    path('my-purchases/', views.customer_purchases, name='customer_purchases'),
+
 ]
