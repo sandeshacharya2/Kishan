@@ -6,8 +6,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% trans "Farmer Login" %}</title>
+
+  <!-- ✅ Font Awesome for eye icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    /* Reset and base */
     * {
       margin: 0;
       padding: 0;
@@ -24,7 +27,6 @@
       color: #333;
     }
 
-    /* Animation */
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -36,7 +38,6 @@
       }
     }
 
-    /* Container */
     .login-container {
       max-width: 900px;
       width: 100%;
@@ -49,13 +50,11 @@
       animation: fadeIn 0.8s ease-in-out;
     }
 
-    /* Sidebar with image */
     .sidebar {
       width: 40%;
       background: url("{% static 'accounts/images/farmer 8k.jpg' %}") no-repeat center center/cover;
     }
 
-    /* Form area */
     .form-area {
       width: 60%;
       padding: 50px 40px;
@@ -64,7 +63,6 @@
       justify-content: center;
     }
 
-    /* Header with logo and text */
     .header-logo-text {
       display: flex;
       align-items: center;
@@ -72,6 +70,7 @@
       margin-bottom: 40px;
       user-select: none;
     }
+
     .logo-circle {
       width: 80px;
       height: 80px;
@@ -84,6 +83,7 @@
       transition: transform 0.3s ease;
       flex-shrink: 0;
     }
+
     .logo-circle img {
       width: 65px;
       height: 65px;
@@ -92,10 +92,12 @@
       border-radius: 50%;
       padding: 6px;
     }
+
     .logo-circle:hover {
       transform: scale(1.1);
       box-shadow: 0 8px 20px rgba(0,0,0,0.35);
     }
+
     .header-logo-text h2 {
       font-family: 'Mukta', sans-serif;
       font-size: 2.5rem;
@@ -104,10 +106,10 @@
       text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     }
 
-    /* Form */
     form {
       width: 100%;
     }
+
     label {
       display: block;
       margin-bottom: 8px;
@@ -115,6 +117,7 @@
       font-size: 1rem;
       color: #2e2e2e;
     }
+
     input[type="text"],
     input[type="password"],
     input[type="email"] {
@@ -125,6 +128,7 @@
       font-size: 1rem;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
+
     input[type="text"]:focus,
     input[type="password"]:focus,
     input[type="email"]:focus {
@@ -132,11 +136,22 @@
       box-shadow: 0 0 8px rgba(78, 148, 79, 0.4);
       outline: none;
     }
+
     .form-field {
       margin-bottom: 22px;
+      position: relative;
     }
 
-    /* Buttons */
+    .toggle-eye {
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+      padding-top: 30px;
+    }
+
     button {
       width: 100%;
       padding: 14px;
@@ -151,28 +166,29 @@
       transition: background-color 0.3s ease;
       user-select: none;
     }
+
     button:hover,
     button:focus {
       background-color: #3c7e3d;
     }
 
-    /* Messages */
     .message {
       font-size: 0.9rem;
       margin-bottom: 16px;
       text-align: center;
       user-select: none;
     }
+
     .message.success {
       color: #2e7d32;
       font-weight: 600;
     }
+
     .message.error {
       color: #d32f2f;
       font-weight: 600;
     }
 
-    /* Links under form */
     .note {
       margin-top: 24px;
       font-size: 0.95rem;
@@ -181,19 +197,20 @@
       user-select: none;
       line-height: 1.5;
     }
+
     .note a {
       color: #4E944F;
       font-weight: 600;
       text-decoration: none;
       transition: color 0.3s ease;
     }
+
     .note a:hover,
     .note a:focus {
       text-decoration: underline;
       color: #3c7e3d;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
       .login-container {
         flex-direction: column;
@@ -213,73 +230,88 @@
       .header-logo-text h2 {
         font-size: 2rem;
       }
-      input[type="text"],
-      input[type="password"],
-      input[type="email"],
-      button {
-        width: 100%;
-      }
     }
   </style>
 </head>
 <body>
 
-  <div class="login-container" role="main" aria-label="{% trans 'Farmer login form' %}">
-    <div class="sidebar" aria-hidden="true"></div>
-    <div class="form-area">
-      <div class="header-logo-text">
-        <div class="logo-circle">
-          <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'किसान लोगो' %}" />
-        </div>
-        <h2>{% trans "Farmer" %}</h2>
+<div class="login-container" role="main" aria-label="{% trans 'Farmer login form' %}">
+  <div class="sidebar" aria-hidden="true"></div>
+  <div class="form-area">
+    <div class="header-logo-text">
+      <div class="logo-circle">
+        <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'किसान लोगो' %}" />
       </div>
+      <h2>{% trans "Farmer" %}</h2>
+    </div>
 
-      {% if messages %}
-        {% for message in messages %}
-          <p class="message success" role="alert">{{ message }}</p>
-        {% endfor %}
-      {% endif %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="message success" role="alert">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
 
-      {% if form.errors %}
-        <p class="message error" role="alert">{% trans "Username or password do not match" %}</p>
-      {% endif %}
+    {% if form.errors %}
+      <p class="message error" role="alert">{% trans "Username or password do not match" %}</p>
+    {% endif %}
 
-      <form method="post" novalidate autocomplete="off" aria-describedby="loginInstructions">
-        {% csrf_token %}
+    <form method="post" novalidate autocomplete="off" aria-describedby="loginInstructions">
+      {% csrf_token %}
 
-        {% for field in form %}
-          {% if field.name == 'username' %}
-            <div class="form-field">
-              <label for="{{ field.id_for_label }}">{% trans "Username" %}</label>
-              {{ field }}
-              {% if field.errors %}
-                <p class="message error" role="alert">{{ field.errors|striptags }}</p>
-              {% endif %}
-            </div>
-          {% elif field.name == 'password' %}
-            <div class="form-field">
-              <label for="{{ field.id_for_label }}">{% trans "Password" %}</label>
-              {{ field }}
-              {% if field.errors %}
-                <p class="message error" role="alert">{{ field.errors|striptags }}</p>
-              {% endif %}
-            </div>
-          {% else %}
+      {% for field in form %}
+        {% if field.name == 'username' %}
+          <div class="form-field">
+            <label for="{{ field.id_for_label }}">{% trans "Username" %}</label>
             {{ field }}
-          {% endif %}
-        {% endfor %}
+            {% if field.errors %}
+              <p class="message error" role="alert">{{ field.errors|striptags }}</p>
+            {% endif %}
+          </div>
+        {% elif field.name == 'password' %}
+          <div class="form-field">
+            <label for="{{ field.id_for_label }}">{% trans "Password" %}</label>
+            {{ field }}
+            <span class="toggle-eye" onclick="togglePassword()">
+              <i id="eyeIcon" class="fa fa-eye"></i>
+            </span>
+            {% if field.errors %}
+              <p class="message error" role="alert">{{ field.errors|striptags }}</p>
+            {% endif %}
+          </div>
+        {% else %}
+          {{ field }}
+        {% endif %}
+      {% endfor %}
 
-        <button type="submit" aria-label="{% trans 'Login to किसान portal' %}">{% trans "लगइन गर्नुहोस् (login)" %}</button>
-      </form>
+      <button type="submit" aria-label="{% trans 'Login to किसान portal' %}">{% trans "लगइन गर्नुहोस् (login)" %}</button>
+    </form>
 
-      <div class="note" id="loginInstructions">
-        <p><a href="{% url 'password_reset' %}">{% trans "Forget Password?" %}</a></p>
-        <p>{% trans "No account?" %} <a href="{% url 'signup' %}">{% trans "Register" %}</a></p>
-        <p>{% trans "Are you customer?" %} <a href="{% url 'switch_to_customer' %}">{% trans "Login as Customer" %}</a></p>
-        <p><a href="{% url 'landing' %}">← {% trans " Return homepage" %}</a></p>
-      </div>
+    <div class="note" id="loginInstructions">
+      <p><a href="{% url 'password_reset' %}">{% trans "Forget Password?" %}</a></p>
+      <p>{% trans "No account?" %} <a href="{% url 'signup' %}">{% trans "Register" %}</a></p>
+      <p>{% trans "Are you customer?" %} <a href="{% url 'switch_to_customer' %}">{% trans "Login as Customer" %}</a></p>
+      <p><a href="{% url 'landing' %}">← {% trans " Return homepage" %}</a></p>
     </div>
   </div>
+</div>
+
+<!-- ✅ Password toggle script -->
+<script>
+  function togglePassword() {
+    const passwordField = document.getElementById("id_password");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIcon.classList.remove("fa-eye");
+      eyeIcon.classList.add("fa-eye-slash");
+    } else {
+      passwordField.type = "password";
+      eyeIcon.classList.remove("fa-eye-slash");
+      eyeIcon.classList.add("fa-eye");
+    }
+  }
+</script>
 
 </body>
 </html>

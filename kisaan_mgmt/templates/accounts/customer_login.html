@@ -1,10 +1,15 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ग्राहक लगइन - Customer Login</title>
+  <title>{% trans "Customer Login" %}</title>
+
+  <!-- Font Awesome for eye icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -90,6 +95,21 @@
       background-color: #fff;
     }
 
+    .form-field {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .toggle-eye {
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+      padding-top: 20px;
+    }
+
     .error {
       color: red;
       font-size: 14px;
@@ -160,50 +180,80 @@
 </head>
 <body>
 
-  <div class="login-container">
-    <div class="image-side"></div>
+<div class="login-container">
+  <div class="image-side" aria-hidden="true"></div>
 
-    <div class="form-side">
-      <div class="form-area">
-        <h2>ग्राहक लगइन</h2>
+  <div class="form-side">
+    <div class="form-area">
+      <h2>{% trans "Customer Login" %}</h2>
 
-        {% if messages %}
-          {% for message in messages %}
-            <p class="message">{{ message }}</p>
-          {% endfor %}
-        {% endif %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="message">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
 
-        {% if form.errors %}
-          <p class="error">तपाईंको प्रयोगकर्ता नाम वा पासवर्ड मिलेन। कृपया फेरि प्रयास गर्नुहोस्।</p>
-        {% endif %}
+      {% if form.errors %}
+        <p class="error">{% trans "Invalid username or password. Please try again." %}</p>
+      {% endif %}
 
-        <form method="post" novalidate autocomplete="off">
-          {% csrf_token %}
-          {% for field in form %}
-            {% if field.name == 'username' %}
-              <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम</label>
-            {% elif field.name == 'password' %}
-              <label for="{{ field.id_for_label }}">पासवर्ड</label>
-            {% endif %}
+      <form method="post" novalidate autocomplete="off">
+        {% csrf_token %}
+        {% for field in form %}
+          {% if field.name == 'username' %}
+            <div class="form-field">
+              <label for="{{ field.id_for_label }}">{% trans "Username" %}</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="error">{{ field.errors|striptags }}</p>
+              {% endif %}
+            </div>
+          {% elif field.name == 'password' %}
+            <div class="form-field">
+              <label for="{{ field.id_for_label }}">{% trans "Password" %}</label>
+              {{ field }}
+              <span class="toggle-eye" onclick="togglePassword()">
+                <i id="eyeIcon" class="fa fa-eye"></i>
+              </span>
+              {% if field.errors %}
+                <p class="error">{{ field.errors|striptags }}</p>
+              {% endif %}
+            </div>
+          {% else %}
             {{ field }}
+          {% endif %}
+        {% endfor %}
 
-            {% if field.errors %}
-              <p class="error">कृपया सबै विवरणहरू सही रूपमा भर्नुहोस्।</p>
-            {% endif %}
-          {% endfor %}
+        <button type="submit">{% trans "Login" %}</button>
 
-          <button type="submit">लगइन गर्नुहोस्</button>
-
-          <div class="note">
-            <p><a href="{% url 'password_reset' %}">पासवर्ड बिर्सनुभयो?</a></p>
-            <p>खाता छैन? <a href="{% url 'signup' %}">दर्ता गर्नुहोस्</a></p>
-            <p>किसान हुनुहुन्छ? <a href="{% url 'switch_to_farmer' %}">किसानको रूपमा लगइन गर्नुहोस्</a></p>
-            <p><a href="{% url 'landing' %}">← गृहपृष्ठ फर्कनुहोस्</a></p>
-          </div>
-        </form>
-      </div>
+        <div class="note">
+          <p><a href="{% url 'password_reset' %}">{% trans "Forgot Password?" %}</a></p>
+          <p>{% trans "No account?" %} <a href="{% url 'signup' %}">{% trans "Register" %}</a></p>
+          <p>{% trans "Are you a farmer?" %} <a href="{% url 'switch_to_farmer' %}">{% trans "Login as Farmer" %}</a></p>
+          <p><a href="{% url 'landing' %}">← {% trans "Return to Homepage" %}</a></p>
+        </div>
+      </form>
     </div>
   </div>
+</div>
+
+<!-- Password visibility toggle -->
+<script>
+  function togglePassword() {
+    const passwordField = document.getElementById("id_password");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIcon.classList.remove("fa-eye");
+      eyeIcon.classList.add("fa-eye-slash");
+    } else {
+      passwordField.type = "password";
+      eyeIcon.classList.remove("fa-eye-slash");
+      eyeIcon.classList.add("fa-eye");
+    }
+  }
+</script>
 
 </body>
 </html>
