@@ -13,7 +13,16 @@
     <h1 class="text-2xl sm:text-3xl font-bold text-green-700">🛒 मेरो किनमेल</h1>
     <p class="text-sm sm:text-base text-gray-600 mt-1">तपाईंले किनेका उत्पादनहरूको विवरण तल छ।</p>
   </header>
-
+   <div class="mb-6">
+    <a href="{% url 'customer-dashboard' %}" 
+       class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+      ← Dashboard मा फर्कनुहोस्
+    </a>
+  </div>
+  <button onclick="window.print()" 
+          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm sm:text-base">
+    🖨️ प्रिन्ट गर्नुहोस्
+  </button>
   <!-- Check if there are transactions -->
   {% if transactions %}
   <div class="bg-white rounded-lg shadow overflow-x-auto">
