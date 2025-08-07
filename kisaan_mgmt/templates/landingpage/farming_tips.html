@@ -1,224 +1,202 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="ne" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <title>खेतीका सुझावहरू</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-  <style>
-    body {
-      background: #f0f7ec; /* Soft light green background */
-      font-family: 'Noto Sans Devanagari', sans-serif;
-      color: #2f3d23;
-      padding-bottom: 60px;
-    }
-
-    .section-header {
-      background-color: #c8e6c9; /* soft green */
-      padding: 40px 30px;
-      border-radius: 15px;
-      margin-bottom: 40px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    .section-header h2 {
-      font-weight: 800;
-      font-size: 2.8rem;
-      color: #2e7d32;
-      margin-bottom: 0.3rem;
-      text-shadow: 1px 1px 3px #a4c494;
-    }
-
-    .section-header p {
-      font-size: 1.2rem;
-      color: #4a6b3b;
-      font-weight: 500;
-      max-width: 700px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .suggestion-card {
-      background: #ffffff;
-      border-radius: 15px;
-      padding: 25px 30px;
-      margin-bottom: 25px;
-      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border-left: 8px solid #4caf50;
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-    }
-
-    .suggestion-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 15px 30px rgba(46, 125, 50, 0.2);
-    }
-
-    .suggestion-icon {
-      font-size: 2.5rem;
-      color: #4caf50;
-      flex-shrink: 0;
-      margin-top: 5px;
-    }
-
-    .suggestion-content h4 {
-      color: #2e7d32;
-      font-weight: 700;
-      font-size: 1.6rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .suggestion-content p {
-      font-size: 1.15rem;
-      color: #3b4b20;
-      line-height: 1.6;
-      margin-bottom: 0;
-    }
-
-    @media (max-width: 768px) {
-      .suggestion-card {
-        flex-direction: column;
-        padding: 20px;
-      }
-      .suggestion-icon {
-        margin: 0 0 10px 0;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .section-header h2 {
-        font-size: 2.2rem;
-      }
-      .section-header p {
-        font-size: 1rem;
-      }
-      .suggestion-content h4 {
-        font-size: 1.3rem;
-      }
-      .suggestion-content p {
-        font-size: 1rem;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-[#f0f7ec] font-sans text-[#2f3d23] pb-16">
 
   {% include "landingpage/header.html" %}
 
-  <div class="container mt-5 mb-5">
-    <div class="section-header">
-      <h2>खेतीका सुझावहरू</h2>
-      <p>नेपालका किसानहरूका लागि उपयोगी कृषि सुझावहरू — जसले उत्पादन बढाउन, रोग नियन्त्रण गर्न र माटोको उर्वरता जोगाउन सहयोग गर्छ।</p>
-    </div>
+  <main class="container mx-auto px-4 mt-10 mb-10 max-w-4xl">
+    <section
+      class="bg-[#c8e6c9] rounded-2xl py-12 px-8 mb-12 shadow-lg text-center"
+    >
+      <h2
+        class="text-4xl font-extrabold text-[#2e7d32] mb-2 drop-shadow-md"
+        style="text-shadow: 1px 1px 3px #a4c494;"
+      >
+        खेतीका सुझावहरू
+      </h2>
+      <p class="text-lg font-medium text-[#4a6b3b] max-w-xl mx-auto leading-relaxed">
+        नेपालका किसानहरूका लागि उपयोगी कृषि सुझावहरू — जसले उत्पादन बढाउन, रोग नियन्त्रण गर्न र माटोको उर्वरता जोगाउन सहयोग गर्छ।
+      </p>
+    </section>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-seedling"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>१. माटो परीक्षण गर्नुहोस्</h4>
-        <p>खेती सुरु गर्नु अघि माटो परीक्षण गर्नु अत्यन्त आवश्यक छ। यसले माटोमा कुन पोषकतत्व कम वा बढी छ भन्ने जानकारी दिन्छ र तदनुसार मलको प्रयोग गर्न सकिन्छ।</p>
-      </div>
-    </div>
+    <section class="space-y-8">
+      <!-- Suggestion Card Template -->
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            १. माटो परीक्षण गर्नुहोस्
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            खेती सुरु गर्नु अघि माटो परीक्षण गर्नु अत्यन्त आवश्यक छ। यसले माटोमा कुन पोषकतत्व कम वा बढी छ भन्ने जानकारी दिन्छ र तदनुसार मलको प्रयोग गर्न सकिन्छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-leaf"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>२. मौसमी बालीको छनोट गर्नुहोस्</h4>
-        <p>स्थानीय मौसमअनुसारको बाली छनोट गर्नु राम्रो उत्पादनका लागि महत्त्वपूर्ण हुन्छ। चिसो मौसममा तोरी, गहुँ, आलु, र तातो मौसममा मकै, धान, तरकारी खेती उपयुक्त हुन्छ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-leaf"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            २. मौसमी बालीको छनोट गर्नुहोस्
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            स्थानीय मौसमअनुसारको बाली छनोट गर्नु राम्रो उत्पादनका लागि महत्त्वपूर्ण हुन्छ। चिसो मौसममा तोरी, गहुँ, आलु, र तातो मौसममा मकै, धान, तरकारी खेती उपयुक्त हुन्छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-hand-holding-water"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>३. जैविक मल प्रयोग गर्नुहोस्</h4>
-        <p>रासायनिक मलको अत्यधिक प्रयोगले माटो बिगार्न सक्छ। सकेसम्म कम्पोष्ट, गहुँगोबर, वर्मीकम्पोष्ट जस्ता जैविक मलको प्रयोग गर्नुपर्छ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-hand-holding-water"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            ३. जैविक मल प्रयोग गर्नुहोस्
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            रासायनिक मलको अत्यधिक प्रयोगले माटो बिगार्न सक्छ। सकेसम्म कम्पोष्ट, गहुँगोबर, वर्मीकम्पोष्ट जस्ता जैविक मलको प्रयोग गर्नुपर्छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-tint"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>४. सिंचाइको उचित व्यवस्था</h4>
-        <p>समयमै सिंचाइ नगरेमा बालीमा असर पर्न सक्छ। ड्रिप इरिगेसन वा स्प्रिंकलर प्रणाली जस्ता आधुनिक सिंचाइ प्रणाली अपनाउनु लाभदायक हुन्छ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-tint"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            ४. सिंचाइको उचित व्यवस्था
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            समयमा सिंचाइ नगरेमा बालीमा असर पर्न सक्छ। ड्रिप इरिगेसन वा स्प्रिंकलर प्रणाली जस्ता आधुनिक सिंचाइ प्रणाली अपनाउनु लाभदायक हुन्छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-bug"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>५. रोग र कीराको व्यवस्थापन</h4>
-        <p>बालीमा आउने रोग र कीराहरूको नियमित निगरानी गर्नुपर्छ। जैविक कीटनाशक वा IPM (Integrated Pest Management) विधि प्रयोग गर्नु राम्रो हुन्छ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-bug"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            ५. रोग र कीराको व्यवस्थापन
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            बालीमा आउने रोग र कीराहरूको नियमित निगरानी गर्नुपर्छ। जैविक कीटनाशक वा IPM (Integrated Pest Management) विधि प्रयोग गर्नु राम्रो हुन्छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-seedling"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>६. खेतीको विविधिकरण</h4>
-        <p>एकै किसिमको बाली बारम्बार लगाउनुको सट्टा विविध बालीहरू लगाउनुपर्छ, जसले माटोमा पोषणको सन्तुलन कायम गर्छ र आम्दानी पनि बढाउँछ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            ६. खेतीको विविधिकरण
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            एउटै बाली बारम्बार लगाउनुको सट्टा विविध बालीहरू लगाउनुपर्छ, जसले माटोमा पोषणको सन्तुलन कायम गर्छ र आम्दानी पनि बढाउँछ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-tractor"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>७. कृषि प्रविधिको उपयोग</h4>
-        <p>डिजिटल एप्स, कृषि उपकरणहरू, मोबाइल सूचनाको प्रयोग गरी बाली व्यवस्थापन गर्न सकिन्छ। प्रविधिको उपयोगले लागत घटाएर उत्पादन बढाउन सकिन्छ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-tractor"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            ७. कृषि प्रविधिको उपयोग
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            डिजिटल एप्स, कृषि उपकरणहरू, मोबाइल सूचनाको प्रयोग गरी बाली व्यवस्थापन गर्न सकिन्छ। प्रविधिको उपयोगले लागत घटाएर उत्पादन बढाउन सकिन्छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-shield-alt"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>८. बाली बिमा गराउनुहोस्</h4>
-        <p>प्राकृतिक विपद् वा कीराले बालीमा क्षति पुर्‍याएमा बिमा गरिएको बालीबाट राहत पाउन सकिन्छ। सरकारले कृषकहरूका लागि बाली बिमा कार्यक्रम संचालन गरिरहेको छ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            ८. बाली बिमा गराउनुहोस्
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            प्राकृतिक विपद् वा कीराले बालीमा क्षति पुर्‍याएमा बिमा गरिएको बालीबाट राहत पाउन सकिन्छ। सरकारले कृषकहरूका लागि बाली बिमा कार्यक्रम संचालन गरिरहेको छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-chalkboard-teacher"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>९. कृषि तालिममा सहभागी हुनुहोस्</h4>
-        <p>स्थानीय कृषि कार्यालय वा एनजीओहरूले दिइने तालिमहरूमा सहभागी भइ नयाँ ज्ञान र प्रविधिबारे जानकारी लिनुपर्छ।</p>
-      </div>
-    </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            ९. कृषि तालिममा सहभागी हुनुहोस्
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            स्थानीय कृषि कार्यालय वा एनजीओहरूले दिइने तालिमहरूमा सहभागी भइ नयाँ ज्ञान र प्रविधिबारे जानकारी लिनुपर्छ।
+          </p>
+        </div>
+      </article>
 
-    <div class="suggestion-card">
-      <div class="suggestion-icon">
-        <i class="fas fa-chart-line"></i>
-      </div>
-      <div class="suggestion-content">
-        <h4>१०. बजारको अनुसन्धान गर्नुहोस्</h4>
-        <p>बाली उत्पादन अघि बजारमा माग, मूल्य, र बिक्रीको सम्भाव्यता बारे जानकारी लिएर खेती गर्दा राम्रो आम्दानी गर्न सकिन्छ।</p>
-      </div>
-    </div>
-  </div>
+      <article
+        class="flex items-start gap-6 bg-white rounded-2xl p-6 shadow-md border-l-8 border-green-600 transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+      >
+        <div class="flex-shrink-0 text-green-600 text-4xl mt-1">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div>
+          <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
+            १०. बजारको अनुसन्धान गर्नुहोस्
+          </h4>
+          <p class="text-lg leading-relaxed text-[#3b4b20]">
+            बाली उत्पादन अघि बजारमा माग, मूल्य, र बिक्रीको सम्भाव्यता बारे जानकारी लिएर खेती गर्दा राम्रो आम्दानी गर्न सकिन्छ।
+          </p>
+        </div>
+      </article>
+    </section>
+  </main>
 
   {% include "landingpage/footer.html" %}
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <!-- Font Awesome -->
+  <script
+    src="https://kit.fontawesome.com/a076d05399.js"
+    crossorigin="anonymous"
+    defer
+  ></script>
 </body>
 </html>

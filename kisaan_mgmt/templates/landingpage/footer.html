@@ -1,263 +1,60 @@
 {% load static %}
 {% load i18n %}
 
-<style>
-  footer {
-    background-color:#4f8a10;
-    color: white;
-    padding: 24px 56px; /* py-6 px-14 roughly */
-    font-family: Arial, sans-serif;
-  }
+<footer class="bg-[#2e4600] text-white px-4 py-3 md:py-5 md:px-10 font-sans w-full">
 
-  /* Container flex layout */
-  .footer-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-  }
-
-  @media (min-width: 768px) {
-    .footer-container {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 56px;
-    }
-  }
-
-  /* Logo and message */
-  .footer-logo-section {
-    max-width: 350px;
-    text-align: center;
-  }
-
-  @media (min-width: 768px) {
-    .footer-logo-section {
-      text-align: left;
-    }
-  }
-
-  .footer-logo-section img {
-    width: 56px;  /* w-14 */
-    height: 56px; /* h-14 */
-    border-radius: 50%;
-    border: 3px solid #f4c058;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 8px rgba(255 255 255 / 0.1);
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (min-width: 768px) {
-    .footer-logo-section img {
-      width: 64px;  /* md:w-16 */
-      height: 64px; /* md:h-16 */
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-
-  .footer-logo-section h2 {
-    color: #f4c058;
-    font-weight: 700;
-    font-size: 36px; /* text-3xl */
-    margin-bottom: 12px;
-    letter-spacing: 1px;
-  }
-
-  @media (min-width: 768px) {
-    .footer-logo-section h2 {
-      font-size: 40px; /* md:text-4xl */
-    }
-  }
-
-  .footer-logo-section p {
-    color: #e0e0e0;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  @media (min-width: 768px) {
-    .footer-logo-section p {
-      font-size: 16px;
-    }
-  }
-
-  /* Links container */
-  .footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    flex-grow: 1;
-    gap: 40px;
-    margin-top: 24px;
-  }
-
-  @media (min-width: 768px) {
-    .footer-links {
-      justify-content: flex-start;
-      margin-top: 0;
-      gap: 96px; /* md:gap-24 */
-    }
-  }
-
-  /* Each link section */
-  .footer-links-section {
-    min-width: 140px;
-    text-align: center;
-  }
-
-  @media (min-width: 768px) {
-    .footer-links-section {
-      text-align: left;
-    }
-  }
-
-  .footer-links-section h3 {
-    color: #f4c058;
-    font-weight: 600;
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
-
-  .footer-links-section a,
-  .footer-links-section p {
-    color: #ddd;
-    font-size: 14px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-
-  @media (min-width: 768px) {
-    .footer-links-section a,
-    .footer-links-section p {
-      font-size: 16px;
-    }
-  }
-
-  .footer-links-section a:hover,
-  .footer-links-section p:hover {
-    color: white;
-    text-decoration: underline;
-  }
-
-  /* Contact info */
-  .footer-contact p {
-    color: #eee;
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-
-  @media (min-width: 768px) {
-    .footer-contact p {
-      font-size: 16px;
-    }
-  }
-
-  /* Social icons container */
-  .social-icons {
-    display: flex;
-    gap: 12px;
-    margin-top: 12px;
-    justify-content: center;
-  }
-
-  @media (min-width: 768px) {
-    .social-icons {
-      justify-content: flex-start;
-    }
-  }
-
-  .social-icons img {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    object-fit: contain;
-  }
-
-  .social-icons img:hover {
-    transform: scale(1.1);
-  }
-
-  /* Bottom copyright */
-  .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 32px;
-    padding-top: 16px;
-    text-align: center;
-    color: #bbb;
-    font-size: 12px;
-    letter-spacing: 1px;
-  }
-
-  @media (min-width: 768px) {
-    .footer-bottom {
-      font-size: 14px;
-    }
-  }
-
-</style>
-
-
-<footer>
-  <div class="footer-container">
+  <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-y-6 md:gap-y-0 md:gap-x-32 xl:gap-x-40">
 
     <!-- Logo and Message -->
-    <div class="footer-logo-section">
-      <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'Kisaan Logo' %}" />
-      <h2>{% trans "Kisaan" %}</h2>
-      <p>
+    <div class="w-full md:w-auto max-w-sm text-center sm:text-left">
+      <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'Kisaan Logo' %}"
+        class="w-11 h-11 md:w-14 md:h-14 rounded-full border-4 border-white-400 shadow-md mx-auto sm:mx-0 mb-2" />
+      <h2 class="text-xl md:text-3xl font-bold text-white-400 mb-1 tracking-wide">{% trans "Kisaan" %}</h2>
+      <p class="text-gray-200 text-xs md:text-sm font-light leading-relaxed">
         {% blocktrans %}A trusted digital bridge <br /> between farmers and consumers.{% endblocktrans %}
       </p>
     </div>
 
-    <!-- Links -->
-    <div class="footer-links">
+    <!-- Links Section -->
+    <div class="w-full grid grid-cols-2 sm:grid-cols-2 md:flex md:flex-wrap justify-center md:justify-start gap-y-4 gap-x-8 lg:gap-x-20 xl:gap-x-28">
 
       <!-- Company -->
-      <div class="footer-links-section">
-        <h3>{% trans "Company" %}</h3>
-        <a href="{% url 'about' %}">{% trans "About Us" %}</a>
-        <p>{% trans "Our Projects" %}</p>
-        <p>{% trans "Our Services" %}</p>
-        <p>{% trans "Careers" %}</p>
+      <div class="min-w-[120px] text-center sm:text-left">
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Company" %}</h3>
+        <a href="{% url 'about' %}" class="text-gray-300 hover:text-white hover:underline block text-xs md:text-sm mb-1">{% trans "About Us" %}</a>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Our Projects" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Our Services" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm">{% trans "Careers" %}</p>
       </div>
 
       <!-- Products -->
-      <div class="footer-links-section">
-        <h3>{% trans "Products" %}</h3>
-        <p>{% trans "Fruits" %}</p>
-        <p>{% trans "Vegetables" %}</p>
-        <p>{% trans "Seeds" %}</p>
-        <p>{% trans "Organic Goods" %}</p>
+      <div class="min-w-[120px] text-center sm:text-left">
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Products" %}</h3>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Fruits" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Vegetables" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Seeds" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm">{% trans "Organic Goods" %}</p>
       </div>
 
       <!-- Support -->
-      <div class="footer-links-section">
-        <h3>{% trans "Support" %}</h3>
-        <p>{% trans "Help Center" %}</p>
-        <p>{% trans "FAQs" %}</p>
-        <p>{% trans "Terms & Conditions" %}</p>
-        <p>{% trans "Privacy Policy" %}</p>
+      <div class="min-w-[120px] text-center sm:text-left">
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Support" %}</h3>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Help Center" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "FAQs" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Terms & Conditions" %}</p>
+        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm">{% trans "Privacy Policy" %}</p>
       </div>
 
       <!-- Contact -->
-      <div class="footer-links-section footer-contact">
-        <h3>{% trans "Contact" %}</h3>
-        <p>✉ kisaan.helps@gmail.com</p>
-        <p>📞 +977-9862904097</p>
-        <p>📍 {% trans "Beni, Myagdi, Nepal" %}</p>
-        <div class="social-icons">
-          <img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" />
-          <img src="{% static 'accounts/images/github.png' %}" alt="Github" />
-          <img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" />
+      <div class="min-w-[120px] text-center sm:text-left">
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Contact" %}</h3>
+        <p class="text-gray-100 text-xs md:text-sm mb-1">✉ kisaan.helps@gmail.com</p>
+        <p class="text-gray-100 text-xs md:text-sm mb-1">📞 +977-9862904097</p>
+        <p class="text-gray-100 text-xs md:text-sm mb-2">📍 {% trans "Beni, Myagdi, Nepal" %}</p>
+        <div class="flex justify-center sm:justify-start gap-2 mt-1">
+          <img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 rounded-full border border-gray-300 hover:scale-110 transition" />
+          <img src="{% static 'accounts/images/github.png' %}" alt="Github" class="w-5 h-5 rounded-full border border-gray-300 hover:scale-110 transition" />
+          <img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 rounded-full border border-gray-300 hover:scale-110 transition" />
         </div>
       </div>
 
@@ -265,7 +62,9 @@
   </div>
 
   <!-- Bottom -->
-  <div class="footer-bottom">
+  <div class="border-t border-white/10 mt-4 pt-2 text-center text-xs md:text-sm text-gray-400 tracking-wider">
     &copy; 2025 {% trans "Kisaan. All rights reserved." %}
   </div>
+
 </footer>
+

@@ -143,7 +143,7 @@ def payment_success(request):
 
 
 @csrf_exempt
-@login_required
+# @login_required
 def payment_failure(request):
     return render(request, 'payments/failure.html')
 

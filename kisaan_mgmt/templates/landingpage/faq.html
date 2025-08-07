@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FAQ</title>
+</head>
+<body>
+  <h2>Select a Question</h2>
+
+  <form id="faqForm">
+    <select name="question" id="questionSelect" required>
+      <option value="">-- Choose a Question --</option>
+      <option value="How to grow tomatoes?">How to grow tomatoes?</option>
+      <option value="What fertilizer is best for rice?">What fertilizer is best for rice?</option>
+      <option value="When to plant maize?">When to plant maize?</option>
+      <option value="How to prevent pests?">How to prevent pests?</option>
+    </select>
+    <button type="submit">Get Answer</button>
+  </form>
+
+  <h3>Answer:</h3>
+  <div id="answerBox" style="margin-top: 10px; color: green;"></div>
+
+  <script>
+    document.getElementById('faqForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const question = document.getElementById('questionSelect').value;
+
+      fetch('/faq-response/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ question: question })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('answerBox').innerText = data.answer;
+      });
+    });
+  </script>
+</body>
+</html>

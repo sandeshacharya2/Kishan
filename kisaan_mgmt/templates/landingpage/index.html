@@ -7,171 +7,120 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% trans "Farmer" %}</title>
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .menu a {
-      color: white;
-      text-decoration: none;
-      margin-left: 25px;
-      font-size: 15px;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
     }
 
-    .menu a:hover {
-      border-bottom: 2px solid #f4c058;
-      padding-bottom: 2px;
-    }
-
-    .hero {
-      padding: 120px 70px;
-      background-color: rgba(0, 0, 0, 0.4);
-      min-height: calc(100vh - 80px);
+    body {
       display: flex;
-      align-items: start;
-      justify-content: start;
       flex-direction: column;
-      text-align: left;
-    }
-
-    .hero-content {
-      max-width: 600px;
-    }
-
-    .small-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #d4e157;
-      font-size: 24px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow: 0 0 6px #a8cc39;
-    }
-
-    .hero h1 {
-      font-size: 48px;
-      line-height: 1.2;
-      margin-bottom: 20px;
-      font-weight: 900;
-      color: #f4c058;
-      text-shadow: 2px 2px 8px #9c7e00;
-    }
-
-    .hero .white {
+      min-height: 100vh;
+      background-color: black;
       color: white;
-      font-weight: 700;
-      display: block;
-      margin-top: 6px;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+      transition: all 1s ease-in-out;
     }
 
-    .description {
-      font-size: 16px;
-      margin-bottom: 25px;
-      color: #f0f0f0;
-      line-height: 1.5;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    /* Header assumed height variable, you can adjust this or calculate dynamically */
+    header {
+      z-index: 50;
+      position: relative;
     }
 
-    .btn-custom {
-      padding: 12px 30px;
-      background-color: #d4e157;
-      color: #2e4600;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 16px;
-      margin: 5px 8px 0 8px;
-      box-shadow: 0 6px 12px rgba(212, 225, 87, 0.7);
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .btn-custom:hover {
-      background-color: #c0ca33;
-      transform: scale(1.05);
-      box-shadow: 0 10px 20px rgba(192, 202, 51, 0.8);
-      color: #203300;
+    /* Hero Section with background */
+    #hero-section {
+      flex-grow: 1;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-attachment: scroll;
+      min-height: calc(100vh - 80px); /* 80px header height fallback */
+      width: 100%;
+      padding: 3rem 1rem;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
     }
 
     @media (max-width: 768px) {
-      .hero {
-        padding: 60px 20px;
-      }
-
-      .hero h1 {
-        font-size: 36px;
-      }
-
-      .small-title {
-        font-size: 20px;
-      }
-
-      .description {
-        font-size: 14px;
-      }
-
-      .btn-custom {
-        padding: 10px 20px;
-        font-size: 14px;
+      #hero-section {
+        min-height: calc(100vh - 120px);
       }
     }
 
-    @media (max-width: 480px) {
-      .hero {
-        padding: 40px 15px;
-      }
-
-      .hero h1 {
-        font-size: 28px;
-      }
-
-      .small-title {
-        font-size: 18px;
-      }
-
-      .description {
-        font-size: 13px;
-      }
-
-      .btn-custom {
-        padding: 8px 16px;
-        font-size: 13px;
-      }
+    /* Text container max width */
+    #hero-content {
+      max-width: 40rem;
     }
   </style>
 </head>
 
-<body class="text-white min-vh-100 bg-cover bg-center"
-  style="background-image: url({% static 'accounts/images/sunny-meadow-landscape.jpg' %})">
+<body>
 
   <!-- Header Include -->
   {% include 'landingpage/header.html' %}
 
   <!-- Hero Section -->
-  <section class="hero d-flex">
-    <div class="hero-content">
-      <p class="small-title">{% trans "Original and Natural" %}</p>
-      <h1>
-        <span class="yellow">{% trans "Farming is our life." %}</span><br />
-        <span class="white">{% trans "Good crops, bright future" %}</span>
-      </h1>
-      <p class="description">
-        {% blocktrans trimmed %}
-        We are committed to empowering Nepali farmers. <br>
-        With honesty, transparency, and technology, we bring a new era to farming.
-        {% endblocktrans %}
-      </p>
-      <div class="d-flex flex-wrap">
-        <a href="{% url 'about' %}" class="btn-custom">{% trans "Learn More" %}</a>
-        <a href="{% url 'signup' %}" class="btn-custom">{% trans "Get Started Now" %}</a>
-      </div>
+<section id="hero-section" style="background-image: url('{% static 'slider1.jpg' %}'); padding: 7rem 1rem 7rem 7rem;">
+  <div id="hero-content" style="max-width: 40rem; margin-left: 0;">
+    <p class="font-bold mb-2 text-[#d4e157] text-base sm:text-xl uppercase tracking-wider" style="text-shadow: 0 0 6px #94c20bff;">
+      {% trans "Original and Natural" %}
+    </p>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#f4c058] mb-4 sm:mb-5 leading-tight" style="text-shadow: 2px 2px 8px #9c7e00;">
+      {% trans "Farming is our life." %}<br />
+      <span class="text-white font-bold block mt-2" style="text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);">
+        {% trans "Good crops, bright future" %}
+      </span>
+    </h1>
+    <p class="text-sm sm:text-base text-gray-100 leading-relaxed mb-6" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+      {% blocktrans trimmed %}
+        We are committed to empowering Nepali farmers.With honesty, <br>
+        transparency, and technology, we bring a new era to farming.
+      {% endblocktrans %}
+    </p>
+
+    <div class="flex flex-wrap gap-4 mt-6">
+      <a href="{% url 'about' %}" class="px-5 sm:px-6 py-2 bg-cyan-700 text-white font-semibold rounded-lg shadow hover:bg-green-800 transition duration-300 text-sm sm:text-base">
+        {% trans "Learn More" %}
+      </a>
+      <a href="{% url 'signup' %}" class="px-5 sm:px-6 py-2 bg-cyan-700 text-white font-semibold rounded-lg shadow hover:bg-yellow-500 transition duration-300 text-sm sm:text-base">
+        {% trans "Get Started Now" %}
+      </a>
     </div>
-  </section>
+  </div>
+</section>
+
+
 
   <!-- Footer Include -->
   {% include 'landingpage/footer.html' %}
 
-</body>
+  <!-- Background Slider Script -->
+  <script>
+    const images = [
+      "{% static 'slider1.jpg' %}",
+      "{% static 'slider2.jpg' %}",
+      "{% static 'slider3.jpg' %}"
+    ];
 
+    let current = 0;
+    const heroSection = document.getElementById('hero-section');
+
+    function slideBackground() {
+      current = (current + 1) % images.length;
+      heroSection.style.backgroundImage = `url('${images[current]}')`;
+    }
+
+    // Set initial background image
+    heroSection.style.backgroundImage = `url('${images[0]}')`;
+
+    setInterval(slideBackground, 5000);
+  </script>
+
+</body>
 </html>
