@@ -8,13 +8,36 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from datetime import timedelta
 from django.utils.translation import gettext as _
+from accounts.views.role_based_redirect import farmer_required, customer_required
 
 from ..models import EmailOTP, Profile, FarmerProfile
 from ..forms import SignUpForm, FarmerProfileForm
 from products.models import Product
 from chat.models import ChatRoom
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 
 
+@require_GET
+def check_availability(request):
+    field = request.GET.get('field')
+    value = request.GET.get('value', '').strip()
+
+    if not field or not value:
+        return JsonResponse({'error': 'Missing parameters'}, status=400)
+
+    if field == 'username':
+        exists = User.objects.filter(username=value).exists()
+    elif field == 'email':
+        exists = User.objects.filter(email=value).exists()
+    elif field == 'phonenumber':
+        # Assuming you have a custom user model or Profile model with phone number field
+        # Replace this with your actual phone field lookup logic
+        exists = User.objects.filter(profile__phonenumber=value).exists()
+    else:
+        return JsonResponse({'error': 'Invalid field'}, status=400)
+
+    return JsonResponse({'exists': exists})
 
 def landing_page(request):
     return render(request, 'landingpage/index.html')
@@ -189,6 +212,7 @@ def verify_otp_view(request):
 
 
 @login_required
+@farmer_required
 def farmer_dashboard_view(request):
     user = request.user
     print(f"[DEBUG] Logged in user: {user}")

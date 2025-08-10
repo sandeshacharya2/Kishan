@@ -12,7 +12,8 @@ from .views import (
     FarmerLoginView,
     CustomerLoginView,
     update_farmer_profile,
-    update_customer_profile,  # views बाट import गरियो
+    update_customer_profile,
+    check_availability,  # views बाट import गरियो
 )
 
 urlpatterns = [
@@ -35,5 +36,6 @@ urlpatterns = [
     path('farmer/profile/update/', update_farmer_profile, name='update-farmer-profile'),
     path('customer/profile/update/', update_customer_profile, name='update-customer-profile'),  # URL path सुधारियो
     path('farmer-location/<int:farmer_id>/', views.view_farmer_location, name='view_farmer_location'),
+    path('ajax/check-availability/', check_availability, name='check_availability'),
 
 ]

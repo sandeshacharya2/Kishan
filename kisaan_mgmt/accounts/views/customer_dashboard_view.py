@@ -6,6 +6,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import math
 from django.utils.translation import gettext_lazy as _
+from accounts.views.role_based_redirect import farmer_required, customer_required
+
 
 
 def haversine(lat1, lon1, lat2, lon2):
@@ -22,6 +24,7 @@ def haversine(lat1, lon1, lat2, lon2):
 
 
 @login_required
+@customer_required
 def customer_dashboard_view(request):
     query = request.GET.get('q')
     filter_type = request.GET.get('filter_type')

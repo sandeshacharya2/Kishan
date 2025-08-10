@@ -2,186 +2,131 @@
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>उत्पादन थप्नुहोस्</title>
-  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Mukta', sans-serif;
-      background: linear-gradient(120deg, #e6ffe6 0%, #b2ff59 100%);
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-    }
-    .page-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #388e3c;
-      margin-top: 36px;
-      margin-bottom: 10px;
-      text-align: center;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 8px #d7ffd7;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .leaf-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0.5rem 0 1.5rem 0;
-    }
-    .leaf-divider svg {
-      height: 32px;
-      width: 120px;
-    }
-    .motivation {
-      text-align: center;
-      color: #388e3c;
-      font-size: 1.1rem;
-      margin-bottom: 18px;
-      font-weight: 500;
-      background: #e8f5e9;
-      border-radius: 12px;
-      padding: 8px 0;
-      box-shadow: 0 2px 8px #c8e6c9;
-    }
-    .form-card {
-      background: rgba(255,255,255,0.98);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px 0 rgba(44, 62, 80, 0.13);
-      padding: 32px 28px 24px 28px;
-      max-width: 400px;
-      width: 100%;
-      margin-bottom: 32px;
-      border: 2px solid #b2dfdb;
-      position: relative;
-    }
-    label {
-      display: block;
-      margin-top: 14px;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #236d2c;
-      font-size: 1rem;
-    }
-    select, input[type="number"], input[type="text"], input[type="file"] {
-      padding: 11px 12px;
-      width: 100%;
-      border-radius: 10px;
-      border: 1.5px solid #b2dfdb;
-      font-size: 16px;
-      background: #f7fff7;
-      margin-bottom: 8px;
-      box-shadow: 0 1px 4px #e0f2f1;
-      transition: border 0.2s;
-    }
-    select:focus, input:focus {
-      border-color: #43a047;
-      background: #fff;
-      outline: none;
-    }
-    #other-subcategory {
-      display: none;
-      margin-top: 8px;
-    }
-    button[type="submit"] {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(90deg, #43a047 0%, #66bb6a 100%);
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #b2dfdb;
-      letter-spacing: 0.5px;
-      margin-top: 18px;
-      transition: background 0.2s, transform 0.1s;
-    }
-    button[type="submit"]:hover {
-      background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
-      transform: translateY(-2px) scale(1.02);
-    }
-    @media (max-width: 500px) {
-      .form-card { padding: 18px 8px; }
-      .page-title { font-size: 1.3rem; }
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="page-title">
-    <span>🌾</span> उत्पादन थप्नुहोस्
-  </div>
-  <div class="leaf-divider">
-    <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 16 Q 30 0, 60 16 Q 90 32, 110 16" stroke="#81c784" stroke-width="3" fill="none"/>
-      <ellipse cx="10" cy="16" rx="4" ry="8" fill="#43a047"/>
-      <ellipse cx="110" cy="16" rx="4" ry="8" fill="#43a047"/>
-    </svg>
-  </div>
-  <div class="motivation">किसान साथी, यहाँबाट आफ्नो उत्पादन सजिलै थप्न सक्नुहुन्छ।</div>
-  <div class="form-card">
-    <form method="post" enctype="multipart/form-data">
+<body class="bg-gradient-to-tr from-green-50 to-green-200 min-h-screen flex flex-col items-center p-4">
+
+  <!-- Title -->
+  <h1 class="flex items-center gap-2 text-2xl sm:text-3xl font-bold text-green-700 mt-6 mb-2">
+    🌾 उत्पादन थप्नुहोस्
+  </h1>
+  <p class="bg-green-100 text-green-800 px-4 py-2 rounded-xl shadow text-center text-sm sm:text-base">
+    किसान साथी, यहाँबाट आफ्नो उत्पादन सजिलै थप्न सक्नुहुन्छ।
+  </p>
+
+  <!-- Form Card with Close Button -->
+  <div class="relative bg-white shadow-lg rounded-2xl p-6 w-full max-w-md lg:max-w-3xl mt-6 border border-green-200">
+
+    <!-- Close button top right -->
+ 
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
       {% csrf_token %}
-      <!-- 🔷 Main Category -->
-      <label for="main-category">प्रकार छान्नुहोस् <span style="font-size:1.2em;">🌱</span>:</label>
-      <select id="main-category" name="main_category" required>
-        <option value="">-- छान्नुहोस् --</option>
-        <option value="तरकारी">तरकारी</option>
-        <option value="फलफुल">फलफुल</option>
-        <option value="खाद्यान्न">खाद्यान्न</option>
-      </select>
-      <!-- 🔷 Sub Category -->
-      <label for="sub-category">विवरण (उप-प्रकार) <span style="font-size:1.2em;">📝</span>:</label>
-      <select id="sub-category" name="sub_category" required>
-        <option value="">-- कृपया प्रकार छान्नुहोस् --</option>
-      </select>
-      <!-- 🔷 Other input for custom subcategory -->
-      <input type="text" id="other-subcategory" name="other_subcategory" placeholder="अन्य विवरण लेख्नुहोस्">
-      <!-- 🔷 Quantity -->
-      <label for="quantity">परिमाण <span style="font-size:1.2em;">📦</span>:</label>
-      <input type="number" name="quantity" min="1" required id="quantity">
-      <label for="unit">परिमाणको इकाइ <span style="font-size:1.2em;">⚖️</span>:</label>
-      <select name="unit" required>
-        <option value="किलो">किलो</option>
-        <option value="क्विन्टल">क्विन्टल</option>
-        <option value="दर्जन">दर्जन</option>
-        <option value="मुरी">मुरी</option>
-      </select>
-      <!-- 🔷 Price per unit -->
-      <label for="price">प्रति इकाइ मूल्य <span style="font-size:1.2em;">💵</span>:</label>
-      <input type="number" name="price" id="price" min="0" step="0.01" required placeholder="प्रति इकाइ मूल्य">
-      <!-- 🔷 Total price (auto-calculated) -->
-      <div id="total-price" style="margin-top:10px; font-weight:600; color:#388e3c;"></div>
-      <label for="description">विवरण <span style="font-size:1.2em;">📝</span>:</label>
-      <textarea name="description" id="description" rows="4" placeholder="उत्पादनको छोटकरीमा विवरण लेख्नुहोस्" style="width:100%; padding:11px 12px; border-radius:10px; border:1.5px solid #b2dfdb; background:#f7fff7; font-size:16px; margin-bottom:8px; box-shadow: 0 1px 4px #e0f2f1; resize: vertical;"></textarea>
-      <!-- 🔷 Image upload -->
-      <label for="image">उत्पादनको फोटो <span style="font-size:1.2em;">🖼️</span>:</label>
-      <input type="file" name="image" accept="image/*">
-      <br>
-      <button type="submit">✅ सेभ गर्नुहोस्</button>
+
+      <!-- Main Category -->
+      <div>
+        <label for="main-category" class="block font-semibold text-green-800">प्रकार छान्नुहोस् 🌱:</label>
+        <select id="main-category" name="main_category" required
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+          <option value="">-- छान्नुहोस् --</option>
+          <option value="तरकारी">तरकारी</option>
+          <option value="फलफुल">फलफुल</option>
+          <option value="खाद्यान्न">खाद्यान्न</option>
+        </select>
+      </div>
+
+      <!-- Sub Category -->
+      <div>
+        <label for="sub-category" class="block font-semibold text-green-800">विवरण (उप-प्रकार) 📝:</label>
+        <select id="sub-category" name="sub_category" required
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+          <option value="">-- कृपया प्रकार छान्नुहोस् --</option>
+        </select>
+        <input type="text" id="other-subcategory" name="other_subcategory" placeholder="अन्य विवरण लेख्नुहोस्"
+          class="w-full mt-2 p-2 rounded-lg border border-green-200 hidden focus:border-green-500 focus:ring focus:ring-green-200">
+      </div>
+
+      <!-- Quantity & Unit -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="quantity" class="block font-semibold text-green-800">परिमाण 📦:</label>
+          <input type="number" name="quantity" min="1" required id="quantity"
+            class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+        </div>
+        <div>
+          <label for="unit" class="block font-semibold text-green-800">इकाइ ⚖️:</label>
+          <select name="unit" required
+            class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+            <option value="किलो">किलो</option>
+            <option value="क्विन्टल">क्विन्टल</option>
+            <option value="दर्जन">दर्जन</option>
+            <option value="मुरी">मुरी</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label for="price" class="block font-semibold text-green-800">प्रति इकाइ मूल्य 💵:</label>
+        <input type="number" name="price" id="price" min="0" step="0.01" required
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200"
+          placeholder="प्रति इकाइ मूल्य">
+        <p id="total-price" class="text-green-700 font-semibold mt-1"></p>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block font-semibold text-green-800">विवरण 📝:</label>
+        <textarea name="description" id="description" rows="4" maxlength="150"
+          placeholder="उत्पादनको छोटकरीमा विवरण लेख्नुहोस् (अधिकतम 150 अक्षर)"
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200 resize-y"></textarea>
+        <p id="char-count" class="text-sm text-gray-500 mt-1">0 / 150 अक्षर</p>
+      </div>
+
+      <!-- Image -->
+      <div>
+        <label for="image" class="block font-semibold text-green-800">उत्पादनको फोटो 🖼️:</label>
+        <input type="file" name="image" id="image" accept="image/*"
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+
+        <!-- Image Preview Container -->
+        <div id="image-preview-container" class="relative mt-4 hidden max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
+          <img id="image-preview" src="#" alt="Image Preview" class="rounded-lg w-full object-contain max-h-80" />
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"
+        class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition-transform transform hover:scale-[1.02]">
+        ✅ सेभ गर्नुहोस्
+      </button>
+      <div class="mb-6">
+      <a href="{% url 'farmer-dashboard' %}"
+         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+        ← Dashboard मा फर्कनुहोस्
+      </a>
+    </div>
     </form>
   </div>
+
   <script>
+    // Subcategory logic
     const subcategories = {
       "तरकारी": ["आलु", "प्याज", "लसुन", "टमाटर", "बन्दा", "काउली", "मुला", "गाजर", "साग", "काक्रो", "भेनता", "सिमि", "बोडी", "लौका", "करेला", "खुर्सानी", "धनिया", "अदुवा", "फर्सी", "चिचिँडो", "अन्य"],
       "फलफुल": ["स्याउ", "केरा", "सुन्तला", "मेवा", "आँप", "नासपाती", "कागती", "भुइँकटहर", "अन्य"],
       "खाद्यान्न": ["धान", "गहुँ", "मकै", "जौ", "कोदो", "फापर", "चना", "मुसुरो", "मास", "बोडी", "सिमी", "स्याल्टुङ", "केराउ", "तोरी", "अन्य"]
     };
+
     const mainCategorySelect = document.getElementById("main-category");
     const subCategorySelect = document.getElementById("sub-category");
     const otherInput = document.getElementById("other-subcategory");
 
-    mainCategorySelect.addEventListener("change", function() {
+    mainCategorySelect.addEventListener("change", function () {
       const mainCat = this.value;
       subCategorySelect.innerHTML = "<option value=''>-- छान्नुहोस् --</option>";
-      otherInput.style.display = "none";
+      otherInput.classList.add("hidden");
       if (subcategories[mainCat]) {
         subcategories[mainCat].forEach(item => {
           const option = document.createElement("option");
@@ -192,9 +137,8 @@
       }
     });
 
-    subCategorySelect.addEventListener("change", function() {
-      const selected = this.value;
-      otherInput.style.display = selected === "अन्य" ? "block" : "none";
+    subCategorySelect.addEventListener("change", function () {
+      otherInput.classList.toggle("hidden", this.value !== "अन्य");
     });
 
     // Total price calculation
@@ -207,6 +151,33 @@
     }
     document.getElementById("quantity").addEventListener("input", updateTotalPrice);
     document.getElementById("price").addEventListener("input", updateTotalPrice);
+
+    // Character counter
+    const desc = document.getElementById("description");
+    const charCount = document.getElementById("char-count");
+    desc.addEventListener("input", function () {
+      charCount.textContent = `${this.value.length} / 150 अक्षर`;
+    });
+
+    // Image preview logic
+    const imageInput = document.getElementById("image");
+    const previewContainer = document.getElementById("image-preview-container");
+    const previewImage = document.getElementById("image-preview");
+
+    imageInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;
+          previewContainer.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewImage.src = "#";
+        previewContainer.classList.add("hidden");
+      }
+    });
   </script>
 </body>
 </html>

@@ -1,259 +1,143 @@
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="ne" >
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% trans "Customer Login" %}</title>
 
   <!-- Font Awesome for eye icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
   <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <script src="https://cdn.tailwindcss.com"></script>
 
+  <style>
     body {
       font-family: 'Mukta', sans-serif;
       background: url("{% static 'accounts/images/back1.jpg' %}") no-repeat center center/cover;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .login-container {
-      display: flex;
-      max-width: 960px;
-      width: 100%;
-      height: 550px;
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.8s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .image-side {
-      flex: 1;
-      background: url("{% static 'accounts/images/realcustomer.jpg' %}") no-repeat center center/cover;
-    }
-
-    .form-side {
-      flex: 1;
-      padding: 50px 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #ffffff;
-    }
-
-    .form-area {
-      width: 100%;
-    }
-
-    .form-area h2 {
-      text-align: center;
-      color: #2e7d32;
-      font-size: 32px;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #2e7d32;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      margin-bottom: 20px;
-      font-size: 16px;
-      background-color: #f8f8f8;
-      transition: border 0.3s ease;
-    }
-
-    input:focus {
-      border-color: #2e7d32;
-      outline: none;
-      background-color: #fff;
-    }
-
-    .form-field {
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .toggle-eye {
-      position: absolute;
-      top: 50%;
-      right: 16px;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: #666;
-      padding-top: 20px;
-    }
-
-    .error {
-      color: red;
-      font-size: 14px;
-      margin: -10px 0 12px;
-      text-align: center;
-    }
-
-    .message {
-      color: green;
-      text-align: center;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      background-color: #2e7d32;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #256328;
-    }
-
-    .note {
-      margin-top: 25px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .note a {
-      color: #2e7d32;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .note a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      .login-container {
-        flex-direction: column;
-        height: auto;
-      }
-
-      .image-side {
-        height: 200px;
-        flex: none;
-      }
-
-      .form-side {
-        padding: 30px 20px;
-      }
-
-      .form-area h2 {
-        font-size: 26px;
-      }
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-5">
 
-<div class="login-container">
-  <div class="image-side" aria-hidden="true"></div>
+  <div
+    class="flex max-w-5xl w-full h-[550px] bg-white rounded-2xl shadow-lg overflow-hidden animate-fadeIn"
+  >
+    <!-- Image side -->
+    <div
+      class="flex-1 bg-center bg-cover"
+      style="background-image: url('{% static 'accounts/images/realcustomer.jpg' %}');"
+      aria-hidden="true"
+    ></div>
 
-  <div class="form-side">
-    <div class="form-area">
-      <h2>{% trans "Customer Login" %}</h2>
+    <!-- Form side -->
+    <div
+      class="flex-1 bg-white p-12 flex justify-center items-center"
+    >
+      <div class="w-full max-w-md">
+        <h2 class="text-center text-green-800 text-3xl font-semibold mb-6">
+          {% trans "Customer Login" %}
+        </h2>
 
-      {% if messages %}
-        {% for message in messages %}
-          <p class="message">{{ message }}</p>
-        {% endfor %}
-      {% endif %}
+        {% if messages %}
+          {% for message in messages %}
+            <p class="text-red-600 text-center mb-4">{{ message }}</p>
+          {% endfor %}
+        {% endif %}
 
-      {% if form.errors %}
-        <p class="error">{% trans "Invalid username or password. Please try again." %}</p>
-      {% endif %}
+        {% if form.errors %}
+          <p class="text-red-600 text-center mb-4">
+            {% trans "Invalid username or password. Please try again." %}
+          </p>
+        {% endif %}
 
-      <form method="post" novalidate autocomplete="off">
-        {% csrf_token %}
-        {% for field in form %}
-          {% if field.name == 'username' %}
-            <div class="form-field">
-              <label for="{{ field.id_for_label }}">{% trans "Username" %}</label>
+        <form method="post" novalidate autocomplete="off" class="space-y-6">
+          {% csrf_token %}
+          {% for field in form %}
+            {% if field.name == 'username' %}
+              <div>
+                <label for="{{ field.id_for_label }}" class="block mb-2 font-semibold text-green-800">
+                  {% trans "Username" %}
+                </label>
+                {{ field|add_class:"w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:bg-white" }}
+                {% if field.errors %}
+                  <p class="text-red-600 mt-1 text-sm">{{ field.errors|striptags }}</p>
+                {% endif %}
+              </div>
+            {% elif field.name == 'password' %}
+              <div class="relative">
+                <label for="{{ field.id_for_label }}" class="block mb-2 font-semibold text-green-800">
+                  {% trans "Password" %}
+                </label>
+                {{ field|add_class:"w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:bg-white" }}
+                <span
+                  class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                  onclick="togglePassword()"
+                >
+                  <i id="eyeIcon" class="fa fa-eye"></i>
+                </span>
+                {% if field.errors %}
+                  <p class="text-red-600 mt-1 text-sm">{{ field.errors|striptags }}</p>
+                {% endif %}
+              </div>
+            {% else %}
               {{ field }}
-              {% if field.errors %}
-                <p class="error">{{ field.errors|striptags }}</p>
-              {% endif %}
-            </div>
-          {% elif field.name == 'password' %}
-            <div class="form-field">
-              <label for="{{ field.id_for_label }}">{% trans "Password" %}</label>
-              {{ field }}
-              <span class="toggle-eye" onclick="togglePassword()">
-                <i id="eyeIcon" class="fa fa-eye"></i>
-              </span>
-              {% if field.errors %}
-                <p class="error">{{ field.errors|striptags }}</p>
-              {% endif %}
-            </div>
-          {% else %}
-            {{ field }}
-          {% endif %}
-        {% endfor %}
+            {% endif %}
+          {% endfor %}
 
-        <button type="submit">{% trans "Login" %}</button>
+          <button
+            type="submit"
+            class="w-full py-4 bg-green-700 hover:bg-green-800 text-white font-bold text-lg rounded-lg transition"
+          >
+            {% trans "Login" %}
+          </button>
 
-        <div class="note">
-          <p><a href="{% url 'password_reset' %}">{% trans "Forgot Password?" %}</a></p>
-          <p>{% trans "No account?" %} <a href="{% url 'signup' %}">{% trans "Register" %}</a></p>
-          <p>{% trans "Are you a farmer?" %} <a href="{% url 'switch_to_farmer' %}">{% trans "Login as Farmer" %}</a></p>
-          <p><a href="{% url 'landing' %}">← {% trans "Return to Homepage" %}</a></p>
-        </div>
-      </form>
+          <div class="text-center mt-6 space-y-2 text-sm text-green-800">
+            <p><a href="{% url 'password_reset' %}" class="underline hover:text-green-900">{% trans "Forgot Password?" %}</a></p>
+            <p>{% trans "No account?" %} <a href="{% url 'signup' %}" class="underline hover:text-green-900">{% trans "Register" %}</a></p>
+            <p>{% trans "Are you a farmer?" %} <a href="{% url 'switch_to_farmer' %}" class="underline hover:text-green-900">{% trans "Login as Farmer" %}</a></p>
+            <p><a href="{% url 'landing' %}" class="underline hover:text-green-900">← {% trans "Return to Homepage" %}</a></p>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Password visibility toggle -->
-<script>
-  function togglePassword() {
-    const passwordField = document.getElementById("id_password");
-    const eyeIcon = document.getElementById("eyeIcon");
+  <script>
+    function togglePassword() {
+      const passwordField = document.getElementById("id_password");
+      const eyeIcon = document.getElementById("eyeIcon");
 
-    if (passwordField.type === "password") {
-      passwordField.type = "text";
-      eyeIcon.classList.remove("fa-eye");
-      eyeIcon.classList.add("fa-eye-slash");
-    } else {
-      passwordField.type = "password";
-      eyeIcon.classList.remove("fa-eye-slash");
-      eyeIcon.classList.add("fa-eye");
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.classList.remove("fa-eye");
+        eyeIcon.classList.add("fa-eye-slash");
+      } else {
+        passwordField.type = "password";
+        eyeIcon.classList.remove("fa-eye-slash");
+        eyeIcon.classList.add("fa-eye");
+      }
     }
-  }
-</script>
+  </script>
 
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+  </style>
 </body>
 </html>

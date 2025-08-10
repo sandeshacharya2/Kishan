@@ -380,9 +380,10 @@
 
   <!-- Leaflet CSS/JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 
-<script>
+  </script>
+  <script>
 const wardCoordinates = {
   "Ward 1 – Ratnechaur": [28.3076959, 83.5858405],
   "Ward 2 – Jyamrukot": [28.3300181, 83.5497002],
@@ -508,14 +509,24 @@ function validatePhone() {
 
 function validatePassword() {
   const val = passwordInput.value;
+  const uppercaseRegex = /[A-Z]/;
+  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
   if (val.length < 8) {
     setError(passwordInput, 'पासवर्ड कम्तिमा ८ क्यारेक्टर लामो हुनुपर्छ।');
+    return false;
+  } else if (!uppercaseRegex.test(val)) {
+    setError(passwordInput, 'पासवर्डमा कम्तिमा एक ठुलो अक्षर हुनुपर्छ।');
+    return false;
+  } else if (!specialCharRegex.test(val)) {
+    setError(passwordInput, 'पासवर्डमा कम्तिमा एक विशेष चिन्ह (!@#$%) हुनुपर्छ।');
     return false;
   } else {
     clearError(passwordInput);
     return true;
   }
 }
+
 
 function validateConfirmPassword() {
   const passVal = passwordInput.value;
@@ -554,6 +565,75 @@ passwordInput.addEventListener('input', () => {
     validateConfirmPassword();
   }
 });
+
+// Debounce helper function
+function debounce(func, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+// AJAX check for availability
+function checkFieldAvailability(fieldName, inputElem, errorMessage) {
+  const value = inputElem.value.trim();
+  if (value.length === 0) {
+    clearError(inputElem);
+    return;
+  }
+
+  // Basic validation before AJAX for username & phone
+  if (fieldName === 'username' && !/^[a-zA-Z0-9_]+$/.test(value)) {
+    setError(inputElem, 'प्रयोगकर्ता नाममा केवल अक्षर, संख्या र अन्डरस्कोर मात्र हुनसक्छ।');
+    return;
+  }
+  if (fieldName === 'phonenumber' && !/^[0-9]{10}$/.test(value)) {
+    setError(inputElem, 'फोन नम्बर १० अंकको हुनुपर्छ।');
+    return;
+  }
+  if (fieldName === 'email') {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      setError(inputElem, 'कृपया मान्य इमेल ठेगाना लेख्नुहोस्।');
+      return;
+    }
+  }
+
+  fetch(`/accounts/ajax/check-availability/?field=${fieldName}&value=${encodeURIComponent(value)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.exists) {
+        setError(inputElem, errorMessage);
+      } else {
+        clearError(inputElem);
+      }
+    })
+    .catch(() => {
+      clearError(inputElem);
+    });
+}
+
+// Debounced versions to avoid too many requests while typing
+const debouncedCheckUsername = debounce(() => {
+  checkFieldAvailability('username', usernameInput, 'यो प्रयोगकर्ता नाम पहिले नै लिइसकिएको छ। कृपया अर्को छान्नुहोस्।');
+}, 500);
+
+usernameInput.addEventListener('input', debouncedCheckUsername);
+
+
+const debouncedCheckEmail = debounce(() => {
+  checkFieldAvailability('email', emailInput, 'यो इमेल पहिले नै प्रयोग भइसकेको छ। कृपया अर्को इमेल छान्नुहोस्।');
+}, 500);
+
+const debouncedCheckPhone = debounce(() => {
+  checkFieldAvailability('phonenumber', phoneInput, 'यो फोन नम्बर पहिले नै प्रयोग भइसकेको छ। कृपया अर्को नम्बर छान्नुहोस्।');
+}, 500);
+
+// Attach event listeners for instant availability check
+usernameInput.addEventListener('input', debouncedCheckUsername);
+emailInput.addEventListener('input', debouncedCheckEmail);
+phoneInput.addEventListener('input', debouncedCheckPhone);
 
 function openMapModal() {
   const wardName = wardSelect.value;
@@ -670,7 +750,7 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
     e.preventDefault();
   }
 });
-</script>
+  </script>
 
 </body>
 </html>

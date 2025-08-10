@@ -4,9 +4,9 @@ from .models import Product
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Sum, Avg, Count
-from django.utils.translation import gettext_lazy as _
 import requests
+from django.conf import settings
+from django.db.models import Sum, Count, Min, Max, OuterRef, Subquery
 
 @login_required
 def add_product(request):
@@ -31,6 +31,8 @@ def edit_product(request, product_id):
         return HttpResponseForbidden(_("You are not allowed to edit this product."))
 
     if request.method == 'POST':
+        """(instance= product) # Create a form pre-filled with the existing product data so the user can edit it
+"""
         form = ProductForm(request.POST, request.FILES, instance=product)  # include request.FILES here
         if form.is_valid():
             updated_product = form.save(commit=False)
@@ -41,6 +43,9 @@ def edit_product(request, product_id):
     else:
         form = ProductForm(instance=product)
     return render(request, 'products/edit_product.html', {'form': form, 'product': product})
+
+
+    
 
 @login_required
 def delete_product(request, product_id):
@@ -55,22 +60,11 @@ def delete_product(request, product_id):
 
     return render(request, 'products/confirm_delete.html', {'product': product})
 
-@login_required
-def farmer_dashboard_view(request):
-    products = Product.objects.filter(farmer=request.user).order_by('-date_posted')
-    return render(request, 'accounts/farmer_dashboard.html', {'products': products})
 
 
-# def marketplace_view(request):
-#     products = Product.objects.all().order_by('-date_posted')  # 🛠️ FIXED
-#     return render(request, 'products/marketplace.html', {'products': products})
 
-def category_list_view(request):
-    # Get distinct main categories only that have products
-    main_categories = Product.objects.values_list('main_category', flat=True).distinct()
-    return render(request, 'landingpage/products.html', {
-        'main_categories': main_categories
-    })
+
+
 
 def krishi_news(request):
     return render(request, 'landingpage/krishi_news.html')
@@ -145,12 +139,35 @@ def weather_view(request):
         weather = None
     return render(request, 'landingpage/weather_info.html', {'weather': weather, 'city': city})
 
+"""This line queries the database to retrieve all Product objects 
+where the farmer field matches the current logged-in user (request.user).
+This means each farmer sees only their own products.
+The results are ordered by date_posted in descending order (-date_posted), 
+so the newest products appear first."""
+# @login_required
+# def farmer_dashboard_view(request):
+#     products = Product.objects.filter(farmer=request.user).order_by('-date_posted')
+#     return render(request, 'accounts/farmer_dashboard.html', {'products': products})
+
+
+# def marketplace_view(request):
+#     products = Product.objects.all().order_by('-date_posted')  # 🛠️ FIXED
+#     return render(request, 'products/marketplace.html', {'products': products})
+
+
+"""Product.objects.values_list('main_category', flat=True) returns a list of values for the main_category 
+field from all products
+.distinct() ensures that the list contains only unique category names, without duplicates.
+So, main_categories will contain a list of all unique main categories that have at least one product"""
+def category_list_view(request):
+    # Get distinct main categories only that have products
+    main_categories = Product.objects.values_list('main_category', flat=True).distinct()
+    return render(request, 'landingpage/products.html', {
+        'main_categories': main_categories
+    })
 
 
 
-
-from django.conf import settings
-from django.db.models import Sum, Count, Min, Max, OuterRef, Subquery
 def fruits(request):
     selected_subcategory = request.GET.get('subcategory', '')
 

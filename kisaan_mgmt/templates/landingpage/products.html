@@ -5,103 +5,42 @@
   <meta charset="UTF-8" />
   <title>Product Categories</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <style>
-  body {
-  background: linear-gradient(135deg, #edf6e5, #f7ffe5, #e2f3d8);
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
-  padding: 0;
-  color: #374151;
-}
-
-.heading {
-  text-align: center;
-  font-size: 3rem;
-  margin-bottom: 2rem;
-  color: #2e4600; /* dark green matching header */
-}
-
-.heading span {
-  color: #4caf50;
-}
-
-.categories .box-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
-  gap: 1.5rem;
-}
-
-.categories .box-container .box {
-  padding: 3rem 2rem;
-  border-radius: .5rem;
-  background: #fff;
-  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.1);
-  outline: .1rem solid rgba(0, 0, 0, 0.1);
-  outline-offset: -1rem;
-  text-align: center;
-  transition: 0.3s ease;
-  font-family: 'Segoe UI', sans-serif;
-  color: #222;
-}
-
-.categories .box-container .box:hover {
-  outline: .2rem solid #4caf50;
-  outline-offset: 0rem;
-}
-
-.categories .box-container .box img {
-  margin: 1rem 0;
-  height: 13rem;
-  object-fit: cover;
-  width: 100%;
-}
-
-.categories .box-container .box h3 {
-  font-size: 2rem;
-  color: #2e4600;
-  line-height: 1.8;
-  text-transform: capitalize;
-}
-
-.categories .box-container .box p {
-  font-size: 1.5rem;
-  color: #4b5320;
-  line-height: 1.8;
-  padding: 1rem 0;
-}
-</style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-[#edf6e5] via-[#f7ffe5] to-[#e2f3d8] min-h-screen font-sans text-gray-700">
+
   {% include 'landingpage/header.html' %}
 
-  <main class="container bg-white rounded-3 shadow p-5 my-5">
+  <main class="container bg-white rounded-3xl shadow-lg p-8 my-10 mx-auto max-w-7xl">
     <section class="categories" id="categories">
-      <h1 class="heading">product <span>categories</span></h1>
+      <h1 class="text-center text-5xl mb-8 font-extrabold text-[#2e4600]">
+        product <span class="text-green-500">categories</span>
+      </h1>
 
-      <div class="box-container">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for category in main_categories %}
           {% if category == "तरकारी" %}
-            <a href="{% url 'vegetables' %}" class="box">
-              <img src="https://corporatenepalcdn.prixacdn.net/media/gallery_folder/vegitable-tarkari-bazar_61xvMTPAP2..jpg" alt="Vegetables" />
-              <h3>{{ category }}</h3>
-              <p>Fresh vegetables, straight from the farm to your table.</p>
+            <a href="{% url 'vegetables' %}" class="block bg-white rounded-lg p-12 shadow-md outline outline-1 outline-gray-200 hover:outline-green-500 hover:outline-2 hover:outline-offset-0 transition text-center">
+              <img src="https://corporatenepalcdn.prixacdn.net/media/gallery_folder/vegitable-tarkari-bazar_61xvMTPAP2..jpg" alt="Vegetables" class="my-4 h-52 w-full object-cover rounded" />
+              <h3 class="text-3xl text-[#2e4600] capitalize leading-tight">{{ category }}</h3>
+              <p class="text-xl text-[#4b5320] leading-relaxed mt-4">Fresh vegetables, straight from the farm to your table.</p>
             </a>
           {% elif category == "फलफुल" %}
-            <a href="{% url 'fruits' %}" class="box">
-              <img src="https://risingnepaldaily.com/storage/media/65027/Untitled-1.jpg" alt="Fresh Fruits" />
-              <h3>{{ category }}</h3>
-              <p>Fresh fruits, picked from the farm and delivered to your doorstep.</p>
+            <a href="{% url 'fruits' %}" class="block bg-white rounded-lg p-12 shadow-md outline outline-1 outline-gray-200 hover:outline-green-500 hover:outline-2 hover:outline-offset-0 transition text-center">
+              <img src="https://risingnepaldaily.com/storage/media/65027/Untitled-1.jpg" alt="Fresh Fruits" class="my-4 h-52 w-full object-cover rounded" />
+              <h3 class="text-3xl text-[#2e4600] capitalize leading-tight">{{ category }}</h3>
+              <p class="text-xl text-[#4b5320] leading-relaxed mt-4">Fresh fruits, picked from the farm and delivered to your doorstep.</p>
             </a>
           {% elif category == "खाद्यान्न" %}
-            <a href="{% url 'grains' %}" class="box">
-              <img src="https://www.maritimegateway.com/wp-content/uploads/2025/01/Nepal.jpg" alt="Grains" />
-              <h3>{{ category }}</h3>
-              <p>Essential grains grown across local Nepali fields.</p>
+            <a href="{% url 'grains' %}" class="block bg-white rounded-lg p-12 shadow-md outline outline-1 outline-gray-200 hover:outline-green-500 hover:outline-2 hover:outline-offset-0 transition text-center">
+              <img src="https://www.maritimegateway.com/wp-content/uploads/2025/01/Nepal.jpg" alt="Grains" class="my-4 h-52 w-full object-cover rounded" />
+              <h3 class="text-3xl text-[#2e4600] capitalize leading-tight">{{ category }}</h3>
+              <p class="text-xl text-[#4b5320] leading-relaxed mt-4">Essential grains grown across local Nepali fields.</p>
             </a>
           {% else %}
-            <a href="#" class="box">
-              <h3>{{ category }}</h3>
-              <p>Description not available.</p>
+            <a href="#" class="block bg-white rounded-lg p-12 shadow-md outline outline-1 outline-gray-200 hover:outline-green-500 hover:outline-2 hover:outline-offset-0 transition text-center">
+              <h3 class="text-3xl text-[#2e4600] capitalize leading-tight">{{ category }}</h3>
+              <p class="text-xl text-[#4b5320] leading-relaxed mt-4">Description not available.</p>
             </a>
           {% endif %}
         {% endfor %}
@@ -111,5 +50,4 @@
 
   {% include 'landingpage/footer.html' %}
 </body>
-
 </html>

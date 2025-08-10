@@ -2,218 +2,214 @@
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>उत्पादन सम्पादन गर्नुहोस्</title>
-  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Mukta', sans-serif;
-      background: linear-gradient(120deg, #e6ffe6 0%, #b2ff59 100%);
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .form-card {
-      background: rgba(255,255,255,0.98);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px 0 rgba(44, 62, 80, 0.13);
-      padding: 32px 28px;
-      max-width: 480px;
-      width: 100%;
-      border: 2px solid #b2dfdb;
-      margin: 40px 0;
-    }
-    h2 {
-      color: #2e7d32;
-      font-size: 24px;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    label {
-      display: block;
-      margin-top: 14px;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #236d2c;
-      font-size: 1rem;
-    }
-    select, input[type="number"], input[type="text"], input[type="file"], textarea {
-      padding: 11px 12px;
-      width: 100%;
-      border-radius: 10px;
-      border: 1.5px solid #b2dfdb;
-      font-size: 16px;
-      background: #f7fff7;
-      margin-bottom: 8px;
-      box-shadow: 0 1px 4px #e0f2f1;
-      resize: vertical;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #43a047;
-      background: #fff;
-    }
-    #other-subcategory {
-      display: none;
-    }
-    .errorlist {
-      color: red;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-    .total-price {
-      margin-top: 10px;
-      font-weight: 600;
-      color: #388e3c;
-    }
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 18px;
-    }
-    button[type="submit"] {
-      width: 48%;
-      padding: 14px;
-      background: linear-gradient(90deg, #43a047 0%, #66bb6a 100%);
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
-    }
-    .cancel-link {
-      text-align: center;
-      color: #2e7d32;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    .cancel-link:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="form-card">
-    <h2>उत्पादन सम्पादन गर्नुहोस्: {{ product.name }}</h2>
+<body class="bg-gradient-to-tr from-green-50 to-green-200 min-h-screen flex flex-col items-center p-4">
 
-    <form method="post" enctype="multipart/form-data">
+  <!-- Title -->
+  <h1 class="flex items-center gap-2 text-2xl sm:text-3xl font-bold text-green-700 mt-6 mb-2">
+    🌾 उत्पादन सम्पादन गर्नुहोस्: {{ product.name }}
+  </h1>
+  <p class="bg-green-100 text-green-800 px-4 py-2 rounded-xl shadow text-center text-sm sm:text-base max-w-md">
+    किसान साथी, यहाँबाट आफ्नो उत्पादन सजिलै सम्पादन गर्न सक्नुहुन्छ।
+  </p>
+
+  <!-- Form Card with Close Button -->
+  <div class="relative bg-white shadow-lg rounded-2xl p-6 w-full max-w-md lg:max-w-3xl mt-6 border border-green-200">
+
+  
+    
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <label for="id_main_category">मुख्य श्रेणी</label>
-      {{ form.main_category.errors }}
-      <select id="id_main_category" name="main_category" required>
-        <option value="">-- छान्नुहोस् --</option>
-        <option value="तरकारी" {% if form.main_category.value == 'तरकारी' %}selected{% endif %}>तरकारी</option>
-        <option value="फलफुल" {% if form.main_category.value == 'फलफुल' %}selected{% endif %}>फलफुल</option>
-        <option value="खाद्यान्न" {% if form.main_category.value == 'खाद्यान्न' %}selected{% endif %}>खाद्यान्न</option>
-      </select>
-
-      <label for="id_sub_category">उप-श्रेणी</label>
-      {{ form.sub_category.errors }}
-      <select id="id_sub_category" name="sub_category" required>
-        <option value="">-- उप-श्रेणी छान्नुहोस् --</option>
-      </select>
-
-      <label for="id_other_subcategory">अन्य विवरण</label>
-      {{ form.other_subcategory.errors }}
-      <input type="text" name="other_subcategory" id="other-subcategory" value="{{ form.other_subcategory.value }}" placeholder="अन्य विवरण लेख्नुहोस्">
-
-      <label for="id_quantity">परिमाण</label>
-      {{ form.quantity.errors }}
-      <input type="number" name="quantity" id="id_quantity" value="{{ form.quantity.value }}" min="1" required>
-
-      <label for="id_unit">इकाइ</label>
-      {{ form.unit.errors }}
-      {{ form.unit }}
-
-      <label for="id_price">प्रति इकाइ मूल्य</label>
-      {{ form.price.errors }}
-      <input type="number" name="price" id="id_price" value="{{ form.price.value }}" min="0" step="0.01" required>
-
-      <!-- New Description Field -->
-      <label for="id_description">विवरण</label>
-      {{ form.description.errors }}
-      <textarea name="description" id="id_description" rows="4" placeholder="उत्पादनको छोटकरीमा विवरण लेख्नुहोस्">{{ form.description.value }}</textarea>
-
-      <div id="total-price" class="total-price"></div>
-
-      <label for="id_image">उत्पादनको फोटो</label>
-      {{ form.image.errors }}
-      {{ form.image }}
-
-      <div class="actions">
-        <button type="submit">✅ सेभ गर्नुहोस्</button>
-        <a href="{% url 'farmer-dashboard' %}" class="cancel-link">❌ रद्द गर्नुहोस्</a>
+      <!-- Main Category -->
+      <div>
+        <label for="main-category" class="block font-semibold text-green-800">प्रकार छान्नुहोस् 🌱:</label>
+        <select id="main-category" name="main_category" required
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+          <option value="">-- छान्नुहोस् --</option>
+          <option value="तरकारी" {% if form.main_category.value == 'तरकारी' %}selected{% endif %}>तरकारी</option>
+          <option value="फलफुल" {% if form.main_category.value == 'फलफुल' %}selected{% endif %}>फलफुल</option>
+          <option value="खाद्यान्न" {% if form.main_category.value == 'खाद्यान्न' %}selected{% endif %}>खाद्यान्न</option>
+        </select>
+        {{ form.main_category.errors }}
       </div>
+
+      <!-- Sub Category -->
+      <div>
+        <label for="sub-category" class="block font-semibold text-green-800">विवरण (उप-प्रकार) 📝:</label>
+        <select id="sub-category" name="sub_category" required
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+          <option value="">-- कृपया प्रकार छान्नुहोस् --</option>
+        </select>
+        {{ form.sub_category.errors }}
+
+        <input type="text" id="other-subcategory" name="other_subcategory" placeholder="अन्य विवरण लेख्नुहोस्"
+          value="{{ form.other_subcategory.value }}"
+          class="w-full mt-2 p-2 rounded-lg border border-green-200 hidden focus:border-green-500 focus:ring focus:ring-green-200">
+        {{ form.other_subcategory.errors }}
+      </div>
+
+      <!-- Quantity & Unit -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="quantity" class="block font-semibold text-green-800">परिमाण 📦:</label>
+          <input type="number" name="quantity" min="1" required id="quantity" value="{{ form.quantity.value }}"
+            class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+          {{ form.quantity.errors }}
+        </div>
+        <div>
+          <label for="unit" class="block font-semibold text-green-800">इकाइ ⚖️:</label>
+          <select name="unit" required
+            class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+            <option value="किलो" {% if form.unit.value == 'किलो' %}selected{% endif %}>किलो</option>
+            <option value="क्विन्टल" {% if form.unit.value == 'क्विन्टल' %}selected{% endif %}>क्विन्टल</option>
+            <option value="दर्जन" {% if form.unit.value == 'दर्जन' %}selected{% endif %}>दर्जन</option>
+            <option value="मुरी" {% if form.unit.value == 'मुरी' %}selected{% endif %}>मुरी</option>
+          </select>
+          {{ form.unit.errors }}
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label for="price" class="block font-semibold text-green-800">प्रति इकाइ मूल्य 💵:</label>
+        <input type="number" name="price" id="price" min="0" step="0.01" required
+          value="{{ form.price.value }}"
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200"
+          placeholder="प्रति इकाइ मूल्य">
+        {{ form.price.errors }}
+        <p id="total-price" class="text-green-700 font-semibold mt-1"></p>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block font-semibold text-green-800">विवरण 📝:</label>
+        <textarea name="description" id="description" rows="4" maxlength="150"
+          placeholder="उत्पादनको छोटकरीमा विवरण लेख्नुहोस् (अधिकतम 150 अक्षर)"
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200 resize-y">{{ form.description.value }}</textarea>
+        {{ form.description.errors }}
+        <p id="char-count" class="text-sm text-gray-500 mt-1">0 / 150 अक्षर</p>
+      </div>
+
+      <!-- Image -->
+      <div>
+        <label for="image" class="block font-semibold text-green-800">उत्पादनको फोटो 🖼️:</label>
+        <input type="file" name="image" id="image" accept="image/*"
+          class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+        {{ form.image.errors }}
+
+        <!-- Image Preview Container -->
+        <div id="image-preview-container" class="relative mt-4 hidden max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
+          <img id="image-preview" src="#" alt="Image Preview" class="rounded-lg w-full object-contain max-h-80" />
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"
+        class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition-transform transform hover:scale-[1.02]">
+        ✅ सेभ गर्नुहोस्
+      </button>
+      <div class="mb-6">
+      <a href="{% url 'farmer-dashboard' %}"
+         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+        ← Dashboard मा फर्कनुहोस्
+      </a>
+    </div>
     </form>
   </div>
 
   <script>
+    // Subcategory logic
     const subcategories = {
       "तरकारी": ["आलु", "प्याज", "लसुन", "टमाटर", "बन्दा", "काउली", "मुला", "गाजर", "साग", "काक्रो", "भेनता", "सिमि", "बोडी", "लौका", "करेला", "खुर्सानी", "धनिया", "अदुवा", "फर्सी", "चिचिँडो", "अन्य"],
       "फलफुल": ["स्याउ", "केरा", "सुन्तला", "मेवा", "आँप", "नासपाती", "कागती", "भुइँकटहर", "अन्य"],
       "खाद्यान्न": ["धान", "गहुँ", "मकै", "जौ", "कोदो", "फापर", "चना", "मुसुरो", "मास", "बोडी", "सिमी", "स्याल्टुङ", "केराउ", "तोरी", "अन्य"]
     };
 
-    const mainCategory = document.getElementById('id_main_category');
-    const subCategory = document.getElementById('id_sub_category');
-    const otherInput = document.getElementById('other-subcategory');
+    const mainCategorySelect = document.getElementById("main-category");
+    const subCategorySelect = document.getElementById("sub-category");
+    const otherInput = document.getElementById("other-subcategory");
 
-    function populateSubcategories(selectedMain, selectedSub) {
-      subCategory.innerHTML = "<option value=''>-- उप-श्रेणी छान्नुहोस् --</option>";
-      otherInput.style.display = 'none';
-
-      if (subcategories[selectedMain]) {
-        subcategories[selectedMain].forEach(item => {
-          const option = document.createElement('option');
+    mainCategorySelect.addEventListener("change", function () {
+      const mainCat = this.value;
+      subCategorySelect.innerHTML = "<option value=''>-- छान्नुहोस् --</option>";
+      otherInput.classList.add("hidden");
+      if (subcategories[mainCat]) {
+        subcategories[mainCat].forEach(item => {
+          const option = document.createElement("option");
           option.value = item;
-          option.textContent = item;
-          if (item === selectedSub) option.selected = true;
-          subCategory.appendChild(option);
+          option.text = item;
+          subCategorySelect.appendChild(option);
         });
       }
+    });
+
+    subCategorySelect.addEventListener("change", function () {
+      otherInput.classList.toggle("hidden", this.value !== "अन्य");
+    });
+
+    // Total price calculation
+    function updateTotalPrice() {
+      const qty = parseFloat(document.getElementById("quantity").value) || 0;
+      const price = parseFloat(document.getElementById("price").value) || 0;
+      const total = qty * price;
+      document.getElementById("total-price").textContent =
+        (qty && price) ? `कुल मूल्य: रु ${total.toFixed(2)}` : "";
     }
+    document.getElementById("quantity").addEventListener("input", updateTotalPrice);
+    document.getElementById("price").addEventListener("input", updateTotalPrice);
 
-    mainCategory.addEventListener('change', function () {
-      populateSubcategories(this.value, '');
+    // Character counter
+    const desc = document.getElementById("description");
+    const charCount = document.getElementById("char-count");
+    desc.addEventListener("input", function () {
+      charCount.textContent = `${this.value.length} / 150 अक्षर`;
     });
 
-    subCategory.addEventListener('change', function () {
-      otherInput.style.display = this.value === 'अन्य' ? 'block' : 'none';
+    // Image preview logic
+    const imageInput = document.getElementById("image");
+    const previewContainer = document.getElementById("image-preview-container");
+    const previewImage = document.getElementById("image-preview");
+
+    imageInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;
+          previewContainer.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewImage.src = "#";
+        previewContainer.classList.add("hidden");
+      }
     });
 
-    // Pre-select subcategory if form is pre-filled
-    window.onload = () => {
+    // On page load: If main category preselected, populate subcategories
+    window.addEventListener("load", () => {
       const selectedMain = "{{ form.main_category.value|default_if_none:'' }}";
       const selectedSub = "{{ form.sub_category.value|default_if_none:'' }}";
-      if (selectedMain) populateSubcategories(selectedMain, selectedSub);
-      if (selectedSub === "अन्य") otherInput.style.display = 'block';
-    };
-
-    // Calculate total price
-    const qtyInput = document.getElementById('id_quantity');
-    const priceInput = document.getElementById('id_price');
-    const totalPriceDiv = document.getElementById('total-price');
-
-    function updateTotalPrice() {
-      const qty = parseFloat(qtyInput.value) || 0;
-      const price = parseFloat(priceInput.value) || 0;
-      const total = qty * price;
-      totalPriceDiv.textContent = (qty && price) ? `कुल मूल्य: रु ${total.toFixed(2)}` : "";
-    }
-
-    qtyInput.addEventListener("input", updateTotalPrice);
-    priceInput.addEventListener("input", updateTotalPrice);
-    window.addEventListener("load", updateTotalPrice);
+      if(selectedMain) {
+        // populate subcategories options
+        subCategorySelect.innerHTML = "<option value=''>-- छान्नुहोस् --</option>";
+        if(subcategories[selectedMain]) {
+          subcategories[selectedMain].forEach(item => {
+            const option = document.createElement("option");
+            option.value = item;
+            option.text = item;
+            if(item === selectedSub) option.selected = true;
+            subCategorySelect.appendChild(option);
+          });
+        }
+        if(selectedSub === "अन्य") otherInput.classList.remove("hidden");
+      }
+    });
   </script>
 </body>
 </html>

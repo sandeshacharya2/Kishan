@@ -93,17 +93,28 @@ class CustomerLoginView(LoginView):
             logout(self.request)
             messages.error(self.request, "तपाईं ग्राहक होइन। कृपया सही login पृष्ठ प्रयोग गर्नुहोस्।")
             return redirect('customer-login')
+        
+        
 
+def farmer_required(view_func):              # 1. Accepts a view function as input
+    @login_required                           # 2. Decorator that ensures user is logged in before proceeding
+    def wrapper(request, *args, **kwargs):  # 3. Wrapper function to execute extra checks before calling view_func
 
-def farmer_required(view_func):
-    @login_required
-    def wrapper(request, *args, **kwargs):
+        # 4. Check if user has a 'profile' attribute and if their role is 'farmer'
         if hasattr(request.user, 'profile') and request.user.profile.role == 'farmer':
+            # 5. If yes, call the original view function with the same arguments
             return view_func(request, *args, **kwargs)
+
         else:
+            # 6. Otherwise, add an error message that only farmers can access this page
             messages.error(request, "यो पृष्ठमा किसान मात्र पहुँच गर्न सक्छन्।")
+
+            # 7. Redirect the user to the farmer login page
             return redirect('farmer-login')
+
+    # 8. Return the wrapper function as the new decorated view
     return wrapper
+
 
 
 def customer_required(view_func):
@@ -119,10 +130,10 @@ def customer_required(view_func):
 
 # ------------------- Customer Views -------------------
 
-@customer_required
-def customer_dashboard(request):
-    # Add any customer-specific data to context here if needed
-    return render(request, 'customer/dashboard.html')
+# @customer_required
+# def customer_dashboard(request):
+#     # Add any customer-specific data to context here if needed
+#     return render(request, 'customer/dashboard.html')
 
 
 # @customer_required
