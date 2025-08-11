@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from ..forms import CustomerProfileForm
 from ..models import CustomerProfile
 from django.utils.translation import gettext_lazy as _
+from accounts.views.role_based_redirect import farmer_required, customer_required
+
+@farmer_required
 @login_required
 def update_farmer_profile(request):
     user = request.user
@@ -37,6 +40,7 @@ def update_farmer_profile(request):
     return render(request, 'accounts/update_farmer_profile.html', context)
 
 @login_required
+@customer_required
 def update_customer_profile(request):
     user = request.user
 
