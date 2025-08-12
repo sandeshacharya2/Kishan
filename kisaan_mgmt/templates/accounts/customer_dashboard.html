@@ -178,28 +178,29 @@
         </div>
 
         <!-- Distance Range Inputs -->
-        <div id="distance-filter" class="filter-inputs hidden space-y-2">
-          <select id="distance-option" name="distance_option" class="w-full border border-green-300 rounded px-3 py-2 mb-2">
-          <select id="distance-option" name="distance_filter" class="w-full border border-green-300 rounded px-3 py-2 mb-2">
-            <option value="nearest" {% if request.GET.distance_option == 'nearest' %}selected{% endif %}>{% trans "Nearest" %}</option>
-            <option value="farthest" {% if request.GET.distance_option == 'farthest' %}selected{% endif %}>{% trans "Farthest" %}</option>
-            <option value="enter_range" {% if request.GET.distance_option == 'enter_range' %}selected{% endif %}>{% trans "Enter Range" %}</option>
-          </select>
+      <!-- Distance Range Inputs -->
+<div id="distance-filter" class="filter-inputs hidden space-y-2">
+  <select id="distance-option" name="distance_filter" class="w-full border border-green-300 rounded px-3 py-2 mb-2">
+    <option value="nearest" {% if request.GET.distance_filter == 'nearest' %}selected{% endif %}>{% trans "Nearest" %}</option>
+    <option value="farthest" {% if request.GET.distance_filter == 'farthest' %}selected{% endif %}>{% trans "Farthest" %}</option>
+    <option value="enter_range" {% if request.GET.distance_filter == 'enter_range' %}selected{% endif %}>{% trans "Enter Range" %}</option>
+  </select>
 
-          <!-- Show only if Enter Range is selected -->
-          <div id="enter-range-inputs" class="hidden space-y-2">
-            <div class="flex gap-2 items-center">
-              <input type="number" step="any" name="min_distance" placeholder="{% trans 'Min Distance' %}" value="{{ request.GET.min_distance }}" class="flex-grow border border-green-300 rounded px-3 py-2" />
-              <select name="distance_unit" class="w-24 border border-green-300 rounded px-3 py-2">
-                <option value="km" {% if request.GET.distance_unit == 'km' %}selected{% endif %}>km</option>
-                <option value="meter" {% if request.GET.distance_unit == 'meter' %}selected{% endif %}>meter</option>
-              </select>
-            </div>
-            <div>
-              <input type="number" step="any" name="max_distance" placeholder="{% trans 'Max Distance' %}" value="{{ request.GET.max_distance }}" class="w-full border border-green-300 rounded px-3 py-2" />
-            </div>
-          </div>
-        </div>
+  <!-- Show only if Enter Range is selected -->
+  <div id="enter-range-inputs" class="hidden space-y-2">
+    <div class="flex gap-2 items-center">
+      <input type="number" step="any" name="min_distance" placeholder="{% trans 'Min Distance' %}" value="{{ request.GET.min_distance }}" class="flex-grow border border-green-300 rounded px-3 py-2" />
+      <select name="distance_unit" class="w-24 border border-green-300 rounded px-3 py-2">
+        <option value="km" {% if request.GET.distance_unit == 'km' %}selected{% endif %}>km</option>
+        <option value="meter" {% if request.GET.distance_unit == 'meter' %}selected{% endif %}>meter</option>
+      </select>
+    </div>
+    <div>
+      <input type="number" step="any" name="max_distance" placeholder="{% trans 'Max Distance' %}" value="{{ request.GET.max_distance }}" class="w-full border border-green-300 rounded px-3 py-2" />
+    </div>
+  </div>
+</div>
+
 
         <button type="submit" class="mt-4 w-full bg-green-600 text-white rounded-lg py-2 hover:bg-green-700 transition">
           {% trans "Apply Filters" %}
