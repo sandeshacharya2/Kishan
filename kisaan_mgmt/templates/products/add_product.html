@@ -16,12 +16,8 @@
     किसान साथी, यहाँबाट आफ्नो उत्पादन सजिलै थप्न सक्नुहुन्छ।
   </p>
 
-  <!-- Form Card with Close Button -->
+  <!-- Form Card -->
   <div class="relative bg-white shadow-lg rounded-2xl p-6 w-full max-w-md lg:max-w-3xl mt-6 border border-green-200">
-
-    <!-- Close button top right -->
- 
-
     <form method="post" enctype="multipart/form-data" class="space-y-4">
       {% csrf_token %}
 
@@ -90,8 +86,6 @@
         <label for="image" class="block font-semibold text-green-800">उत्पादनको फोटो 🖼️:</label>
         <input type="file" name="image" id="image" accept="image/*"
           class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
-
-        <!-- Image Preview Container -->
         <div id="image-preview-container" class="relative mt-4 hidden max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
           <img id="image-preview" src="#" alt="Image Preview" class="rounded-lg w-full object-contain max-h-80" />
         </div>
@@ -103,11 +97,11 @@
         ✅ सेभ गर्नुहोस्
       </button>
       <div class="mb-6">
-      <a href="{% url 'farmer-dashboard' %}"
-         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
-        ← Dashboard मा फर्कनुहोस्
-      </a>
-    </div>
+        <a href="{% url 'farmer-dashboard' %}"
+           class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+          ← Dashboard मा फर्कनुहोस्
+        </a>
+      </div>
     </form>
   </div>
 
@@ -159,11 +153,10 @@
       charCount.textContent = `${this.value.length} / 150 अक्षर`;
     });
 
-    // Image preview logic
+    // Image preview
     const imageInput = document.getElementById("image");
     const previewContainer = document.getElementById("image-preview-container");
     const previewImage = document.getElementById("image-preview");
-
     imageInput.addEventListener("change", function () {
       const file = this.files[0];
       if (file) {
@@ -177,6 +170,26 @@
         previewImage.src = "#";
         previewContainer.classList.add("hidden");
       }
+    });
+
+    // Roman → Nepali search mapping (for search input)
+    const romanToNepali = {
+      'aalu': 'आलु', 'pyaaj': 'प्याज', 'lasun': 'लसुन', 'tamatar': 'टमाटर',
+      'bandaa': 'बन्दा', 'kauli': 'काउली', 'mula': 'मुला', 'gajar': 'गाजर',
+      'saag': 'साग', 'kakro': 'काक्रो', 'syaau': 'स्याउ', 'keraa': 'केरा',
+      'suntala': 'सुन्तला', 'mawa': 'मेवा', 'aamp': 'आँप', 'kaagati': 'कागती',
+      'naaspati': 'नासपाती'
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.querySelector('input[name="q"]');
+      if (!searchInput) return;
+      searchInput.addEventListener('input', function () {
+        const query = this.value.trim().toLowerCase();
+        if (romanToNepali[query]) {
+          this.value = romanToNepali[query];
+        }
+      });
     });
   </script>
 </body>

@@ -18,7 +18,6 @@ class Product(models.Model):
     farmer = models.ForeignKey(User, on_delete=models.CASCADE)
     main_category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     sub_category = models.CharField(max_length=100)
-    sub_category_roman = models.CharField(max_length=100, blank=True, null=True)
 
     quantity = models.FloatField()
     unit = models.CharField(max_length=20, choices=UNIT_CHOICES)

@@ -173,9 +173,12 @@ def verify_otp_view(request):
                 return redirect('login')
 
             user = User.objects.create_user(
+                first_name=signup_data.get('first_name', ''),
+                last_name=signup_data.get('last_name', ''),
                 username=signup_data['username'],
                 email=email,
                 password=signup_data['password1']
+
             )
 
             profile = user.profile

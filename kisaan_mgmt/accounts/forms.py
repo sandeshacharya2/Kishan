@@ -32,6 +32,19 @@ class SignUpForm(UserCreationForm):
         required=True,
         error_messages={'required': 'कृपया वडा छान्नुहोस्।'}
     )
+    first_name = forms.CharField(
+        required=True,
+        max_length=30,
+        label="First Name",
+        error_messages={'required': 'कृपया पहिलो नाम अनिवार्य रूपमा लेख्नुहोस्।'}
+    )
+    last_name = forms.CharField(
+        required=True,
+        max_length=30,
+        label="Last Name",
+        error_messages={'required': 'कृपया अन्तिम नाम अनिवार्य रूपमा लेख्नुहोस्।'}
+    )   
+
     tole = forms.CharField(
         required=True,
         max_length=100,
@@ -56,7 +69,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'phonenumber', 'ward', 'tole', 'role', 'password1', 'password2')
+        fields = ('first_name', 'last_name','username', 'email', 'phonenumber', 'ward', 'tole', 'role', 'password1', 'password2')
         error_messages = {
             'username': {
                 'required': 'कृपया प्रयोगकर्ता नाम लेख्नुहोस्।'
@@ -89,15 +102,15 @@ class SignUpForm(UserCreationForm):
 class FarmerProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FarmerProfileForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].required = True
-        self.fields['last_name'].required = True
+        # self.fields['first_name'].required = True
+        # self.fields['last_name'].required = True
 
     class Meta:
         model = FarmerProfile
-        fields = ['first_name', 'last_name', 'profile_picture']
+        fields = [ 'profile_picture']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
@@ -105,14 +118,14 @@ class FarmerProfileForm(forms.ModelForm):
 class CustomerProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomerProfileForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].required = True
-        self.fields['last_name'].required = True
+        # self.fields['first_name'].required = True
+        # self.fields['last_name'].required = True
 
     class Meta:
         model = CustomerProfile
-        fields = ['first_name', 'last_name', 'profile_picture']
+        fields = ['profile_picture']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }

@@ -30,9 +30,8 @@
       <!-- Products -->
       <div class="min-w-[120px] text-center sm:text-left">
         <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Products" %}</h3>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Fruits" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Vegetables" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Seeds" %}</p>
+        <a href="{% url 'fruits' %}" class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Fruits" %}</a> 
+        <a href="{% url 'vegetables' %}"class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Vegetables" %} </a>        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Seeds" %}</p>
         <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm">{% trans "Organic Goods" %}</p>
       </div>
 

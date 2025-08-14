@@ -60,8 +60,8 @@ def update_customer_profile(request):
             form.save()
 
             # Save names and profile picture in CustomerProfile
-            customer_profile.first_name = request.POST.get('first_name', customer_profile.first_name)
-            customer_profile.last_name = request.POST.get('last_name', customer_profile.last_name)
+            # customer_profile.first_name = request.POST.get('first_name', customer_profile.first_name)
+            # customer_profile.last_name = request.POST.get('last_name', customer_profile.last_name)
 
             if 'profile_picture' in request.FILES:
                 customer_profile.profile_picture = request.FILES['profile_picture']

@@ -137,7 +137,7 @@
               <img src="{% static 'default_profile.jpg' %}" alt="Farmer" class="w-12 h-12 rounded-full border-4 border-green-700 object-cover shadow"/>
             {% endif %}
             <div>
-              <p class="text-green-900 font-semibold flex items-center gap-1 mb-0">👨‍🌾 {{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</p>
+              <p class="text-green-900 font-semibold flex items-center gap-1 mb-0">👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
               <small class="text-green-700">@{{ user.username }}</small>
             </div>
           </div>
