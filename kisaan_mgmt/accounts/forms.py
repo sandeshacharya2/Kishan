@@ -33,11 +33,13 @@ class SignUpForm(UserCreationForm):
         error_messages={'required': 'कृपया वडा छान्नुहोस्।'}
     )
     first_name = forms.CharField(
-        required=True,
-        max_length=30,
-        label="First Name",
-        error_messages={'required': 'कृपया पहिलो नाम अनिवार्य रूपमा लेख्नुहोस्।'}
-    )
+    required=True,
+    max_length=30,
+    label="First Name",
+    widget=forms.TextInput(attrs={'autofocus': True}),
+    error_messages={'required': 'कृपया पहिलो नाम अनिवार्य रूपमा लेख्नुहोस्।'}
+)
+
     last_name = forms.CharField(
         required=True,
         max_length=30,
@@ -69,7 +71,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name','username', 'email', 'phonenumber', 'ward', 'tole', 'role', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'username', 'email', 'phonenumber', 'ward', 'tole', 'role', 'password1', 'password2')
         error_messages = {
             'username': {
                 'required': 'कृपया प्रयोगकर्ता नाम लेख्नुहोस्।'
