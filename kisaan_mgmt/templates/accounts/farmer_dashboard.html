@@ -48,8 +48,25 @@
       {% else %}
         <img src="{% static 'default_profile.jpg' %}" alt="No Profile" class="mx-auto rounded-full border-4 border-green-700 shadow-lg w-20 h-20 object-cover mb-2" />
       {% endif %}
-      <h2 class="text-green-900 font-bold text-xl flex justify-center items-center gap-1 mb-0">👨‍🌾 @{{ user.username }}</h2>
-      <p class="text-green-900 font-semibold mb-0">{{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</p>
+
+      <!-- Average Rating Stars -->
+      <div class="text-center mt-2 flex justify-center items-center gap-1">
+        {% for i in "12345" %}
+            {% if i|add:"0" <= avg_rating %}
+                <span class="text-yellow-400 text-xl">★</span>
+            {% elif i|add:"-0.5" <= avg_rating %}
+                <span class="text-yellow-400 text-xl">★</span>
+            {% else %}
+                <span class="text-gray-300 text-xl">★</span>
+            {% endif %}
+        {% endfor %}
+        <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
+      </div>
+
+      <h2 class="text-green-900 font-bold text-xl flex justify-center items-center gap-1 mb-0">
+        👨‍🌾 @{{ user.username }}
+      </h2>
+      <p class="text-green-900 font-semibold mb-0">{{ user.first_name }} {{ user.last_name }}</p>
       <p class="text-green-800 text-sm mb-2">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
     </div>
 
@@ -75,8 +92,23 @@
       {% else %}
         <img src="{% static 'default_profile.jpg' %}" alt="No Profile" class="mx-auto rounded-full border-4 border-green-700 shadow-lg w-20 h-20 object-cover mb-2" />
       {% endif %}
+
+      <!-- Average Rating Stars -->
+      <div class="text-center mt-2 flex justify-center items-center gap-1">
+        {% for i in "12345" %}
+            {% if i|add:"0" <= avg_rating %}
+                <span class="text-yellow-400 text-xl">★</span>
+            {% elif i|add:"-0.5" <= avg_rating %}
+                <span class="text-yellow-400 text-xl">★</span>
+            {% else %}
+                <span class="text-gray-300 text-xl">★</span>
+            {% endif %}
+        {% endfor %}
+        <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
+      </div>
+
       <h2 class="text-green-900 font-bold text-xl flex justify-center items-center gap-1 mb-0">👨‍🌾 @{{ user.username }}</h2>
-      <p class="text-green-900 font-semibold mb-0">{{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</p>
+      <p class="text-green-900 font-semibold mb-0">{{ user.first_name }} {{ user.last_name }}</p>
       <p class="text-green-800 text-sm mb-0">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
     </div>
 
@@ -123,74 +155,73 @@
     </div>
 
     <!-- Product cards -->
-   <div class="container mx-auto px-0">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-    {% if products %}
-      {% for product in products %}
-        <div class="bg-green-100 rounded-xl border-2 border-green-600 shadow-lg flex flex-col overflow-hidden hover:shadow-2xl transition-shadow duration-300 h-full">
-          
-          <!-- Farmer Info -->
-          <div class="flex items-center gap-3 bg-green-300 px-4 py-3 rounded-t-xl border-b border-green-500">
-            {% if user.farmerprofile.profile_picture %}
-              <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Farmer" class="w-12 h-12 rounded-full border-4 border-green-700 object-cover shadow"/>
-            {% else %}
-              <img src="{% static 'default_profile.jpg' %}" alt="Farmer" class="w-12 h-12 rounded-full border-4 border-green-700 object-cover shadow"/>
-            {% endif %}
-            <div>
-              <p class="text-green-900 font-semibold flex items-center gap-1 mb-0">👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
-              <small class="text-green-700">@{{ user.username }}</small>
+    <div class="container mx-auto px-0">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% if products %}
+          {% for product in products %}
+            <div class="bg-green-100 rounded-xl border-2 border-green-600 shadow-lg flex flex-col overflow-hidden hover:shadow-2xl transition-shadow duration-300 h-full">
+
+              <!-- Farmer Info -->
+              <div class="flex items-center gap-3 bg-green-300 px-4 py-3 rounded-t-xl border-b border-green-500">
+                {% if user.farmerprofile.profile_picture %}
+                  <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Farmer" class="w-12 h-12 rounded-full border-4 border-green-700 object-cover shadow"/>
+                {% else %}
+                  <img src="{% static 'default_profile.jpg' %}" alt="Farmer" class="w-12 h-12 rounded-full border-4 border-green-700 object-cover shadow"/>
+                {% endif %}
+                <div>
+                  <p class="text-green-900 font-semibold flex items-center gap-1 mb-0">👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
+                  <small class="text-green-700">@{{ user.username }}</small>
+                </div>
+              </div>
+
+              <!-- Product Image -->
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="object-cover h-56 w-full" />
+              {% else %}
+                <img src="{% static 'default_product.png' %}" alt="{{ product.sub_category }}" class="object-cover h-56 w-full" />
+              {% endif %}
+
+              <!-- Product Details -->
+              <div class="p-4 flex flex-col flex-grow">
+                <h5 class="text-green-800 text-xl font-semibold flex items-center gap-1 mb-2">🌾 {{ product.sub_category }}</h5>
+
+                <p class="mb-1 flex items-center gap-2">
+                  📦 <span>मात्रा: <span class="font-bold text-green-900">{{ product.quantity }}</span> {{ product.unit }}</span>
+                </p>
+
+                <p class="mb-1 flex items-center gap-2">
+                  💰 <span>मूल्य प्रति एकाइ: <span class="font-bold text-green-900">Rs. {{ product.price }}</span></span>
+                </p>
+
+                <p class="mb-1 flex items-center gap-2">
+                  💵 <span>कुल मूल्य: <span class="font-bold text-green-900">Rs. {{ product.total_price }}</span></span>
+                </p>
+
+                <p class="mb-2 flex items-center gap-2">
+                  📍 <span>स्थान: <span class="font-bold text-green-900">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></span>
+                </p>
+
+                <p class="mt-2 flex-grow flex items-start gap-2">
+                  📝 <span><strong>विवरण:</strong> {{ product.description }}</span>
+                </p>
+
+                <p class="text-green-700 text-sm mt-2 flex items-center gap-2">
+                  📅 <span>पोस्ट गरिएको मिति: {{ product.date_posted|date:"Y-m-d" }}</span>
+                </p>
+
+                <!-- Actions -->
+                <div class="flex justify-end gap-3 mt-4">
+                  <a href="{% url 'edit-product' product.id %}" class="bg-green-400 hover:bg-green-500 text-green-900 font-semibold px-3 py-1 rounded shadow transition">✏️ सम्पादन</a>
+                  <a href="{% url 'delete-product' product.id %}" onclick="return confirm('पक्का हटाउन चाहनुहुन्छ?')" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1 rounded shadow transition">🗑️ हटाउनुहोस्</a>
+                </div>
+              </div>
             </div>
-          </div>
-
-          <!-- Product Image -->
-          {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="object-cover h-56 w-full" />
-          {% else %}
-            <img src="{% static 'default_product.png' %}" alt="{{ product.sub_category }}" class="object-cover h-56 w-full" />
-          {% endif %}
-
-          <!-- Product Details -->
-          <div class="p-4 flex flex-col flex-grow">
-            <h5 class="text-green-800 text-xl font-semibold flex items-center gap-1 mb-2">🌾 {{ product.sub_category }}</h5>
-
-            <p class="mb-1 flex items-center gap-2">
-              📦 <span>मात्रा: <span class="font-bold text-green-900">{{ product.quantity }}</span> {{ product.unit }}</span>
-            </p>
-
-            <p class="mb-1 flex items-center gap-2">
-              💰 <span>मूल्य प्रति एकाइ: <span class="font-bold text-green-900">Rs. {{ product.price }}</span></span>
-            </p>
-
-            <p class="mb-1 flex items-center gap-2">
-              💵 <span>कुल मूल्य: <span class="font-bold text-green-900">Rs. {{ product.total_price }}</span></span>
-            </p>
-
-            <p class="mb-2 flex items-center gap-2">
-              📍 <span>स्थान: <span class="font-bold text-green-900">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></span>
-            </p>
-
-            <p class="mt-2 flex-grow flex items-start gap-2">
-              📝 <span><strong>विवरण:</strong> {{ product.description }}</span>
-            </p>
-
-            <p class="text-green-700 text-sm mt-2 flex items-center gap-2">
-              📅 <span>पोस्ट गरिएको मिति: {{ product.date_posted|date:"Y-m-d" }}</span>
-            </p>
-
-            <!-- Actions -->
-            <div class="flex justify-end gap-3 mt-4">
-              <a href="{% url 'edit-product' product.id %}" class="bg-green-400 hover:bg-green-500 text-green-900 font-semibold px-3 py-1 rounded shadow transition">✏️ सम्पादन</a>
-              <a href="{% url 'delete-product' product.id %}" onclick="return confirm('पक्का हटाउन चाहनुहुन्छ?')" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1 rounded shadow transition">🗑️ हटाउनुहोस्</a>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p class="text-center text-green-800 col-span-full">तपाईंले अहिलेसम्म कुनै उत्पादन थप्नुभएको छैन।</p>
-    {% endif %}
-  </div>
-</div>
-
+          {% endfor %}
+        {% else %}
+          <p class="text-center text-green-800 col-span-full">तपाईंले अहिलेसम्म कुनै उत्पादन थप्नुभएको छैन।</p>
+        {% endif %}
+      </div>
+    </div>
 
     <!-- Pending chats -->
     <h3 class="mt-10 mb-4 text-green-900 font-bold text-2xl">📩 Pending Chat Requests</h3>

@@ -70,7 +70,7 @@
         <img src="{% static 'default_profile.jpg' %}" class="w-20 h-20 mx-auto rounded-full border-4 border-green-500 shadow-md" alt="{% trans 'No Profile' %}">
       {% endif %}
       <h2 class="mt-2 font-bold text-green-900 flex items-center justify-center gap-1">🧑‍💼 @{{ user.username }}</h2>
-      <p class="text-sm font-semibold text-green-800">{{ user.customerprofile.first_name }} {{ user.customerprofile.last_name }}</p>
+      <p class="text-sm font-semibold text-green-800">{{ user.first_name }} {{ user.last_name }}</p>
       <!-- <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p> -->
       <!-- <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "थप विवरण हेर्नुहोस्" %}</button> -->
       <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, Ward No. {{ user.profile.ward }}</p>
@@ -134,6 +134,7 @@
         <input
       type="text"
       name="q"
+      id="search-input"
       value="{{ query|default_if_none:'' }}"
       placeholder="{% trans 'Search items like (जस्तै: आलु, अदुवा, आ...)' %}"
       class="w-full sm:w-1/2 px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
@@ -226,24 +227,54 @@
         {% for product in products %}
           <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-green-300 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
             <!-- Farmer Info -->
-            <div class="flex items-center gap-4 p-4 bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
-              {% if product.farmer.farmerprofile.profile_picture %}
-                <img src="{{ product.farmer.farmerprofile.profile_picture.url }}"
-                     alt="{% trans 'Farmer Picture' %}"
-                     class="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-sm" />
-              {% else %}
-                <img src="{% static 'default_profile.jpg' %}"
-                     alt="{% trans 'Default Picture' %}"
-                     class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
-              {% endif %}
-              <div class="flex flex-col">
-                <span class="font-semibold text-green-900 text-base flex items-center gap-1">
-                  👨‍🌾 {{ product.farmer.first_name }} {{ product.farmer.last_name }}
-                </span>
-                <span class="text-xs text-green-700">@{{ product.farmer.username }}</span>
-                <span class="text-xs text-green-600 mt-1">📅 {% trans "पोस्ट गरिएको मिति" %}: {{ product.date_posted|date:"Y-m-d" }}</span>
-              </div>
-            </div>
+       <!-- Farmer Info -->
+<!-- Farmer Info -->
+<div class="flex items-start gap-4 p-4 bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
+  
+  <!-- Farmer Profile Picture -->
+  <div class="flex flex-col items-center">
+    {% if product.farmer.farmerprofile.profile_picture %}
+      <img src="{{ product.farmer.farmerprofile.profile_picture.url }}"
+           alt="{% trans 'Farmer Picture' %}"
+           class="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-sm" />
+    {% else %}
+      <img src="{% static 'default_profile.jpg' %}"
+           alt="{% trans 'Default Picture' %}"
+           class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
+    {% endif %}
+
+    <!-- Rating Stars as Clickable Link -->
+    <a href="{% url 'submit-farmer-review' product.farmer.id %}"
+       class="flex mt-1 text-yellow-500 text-xs hover:scale-110 transition">
+      {% for i in "12345" %}
+        {% if i|add:"0" <= product.farmer_avg_rating %}
+          ⭐
+        {% elif i|add:"-0.5" <= product.farmer_avg_rating %}
+          ⭐️
+        {% else %}
+          ☆
+        {% endif %}
+      {% endfor %}
+    </a>
+
+    <!-- Rating Text -->
+    <!-- <span class="text-[10px] text-gray-600">
+      ({{ product.farmer_avg_rating|floatformat:1 }}/5)
+    </span> -->
+  </div>
+
+  <!-- Farmer Details -->
+  <div class="flex flex-col">
+    <span class="font-semibold text-green-900 text-base flex items-center gap-1">
+      👨‍🌾 {{ product.farmer.first_name }} {{ product.farmer.last_name }}
+    </span>
+    <span class="text-xs text-green-700">@{{ product.farmer.username }}</span>
+    <span class="text-xs text-green-600 mt-1">
+      📅 {% trans "पोस्ट गरिएको मिति" %}: {{ product.date_posted|date:"Y-m-d" }}
+    </span>
+  </div>
+</div>
+
 
             <!-- Product Image -->
             {% if product.image %}
@@ -334,66 +365,170 @@
 
 
   </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const synonymsDict = {
+    "आलु": { "roman": ["aalu", "alu"], "english": ["potato"] },
+    "प्याज": { "roman": ["pyaaj", "pyaj"], "english": ["onion"] },
+    "लसुन": { "roman": ["lasun"], "english": ["garlic"] },
+    "टमाटर": { "roman": ["tamatar"], "english": ["tomato"] },
+    "बन्दा": { "roman": ["banda"], "english": ["cabbage"] },
+    "काउली": { "roman": ["kauli"], "english": ["cauliflower"] },
+    "मुला": { "roman": ["mula"], "english": ["radish"] },
+    "गाजर": { "roman": ["gajar"], "english": ["carrot"] },
+    "साग": { "roman": ["saag"], "english": ["spinach"] },
+    "काक्रो": { "roman": ["kakro"], "english": ["cucumber"] },
+    "भेनता": { "roman": ["bheneta"], "english": ["eggplant"] },
+    "सिमि": { "roman": ["simi"], "english": ["bean"] },
+    "बोडी": { "roman": ["bodi"], "english": ["long bean"] },
+    "लौका": { "roman": ["lauka"], "english": ["bottle gourd"] },
+    "करेला": { "roman": ["karela"], "english": ["bitter gourd"] },
+    "खुर्सानी": { "roman": ["khursani"], "english": ["chili"] },
+    "धनिया": { "roman": ["dhaniya"], "english": ["coriander"] },
+    "अदुवा": { "roman": ["aduwa"], "english": ["ginger"] },
+    "फर्सी": { "roman": ["pharsi"], "english": ["pumpkin"] },
+    "चिचिँडो": { "roman": ["chichindo"], "english": ["sponge gourd"] },
+    "स्याउ": { "roman": ["syaau", "syau"], "english": ["apple"] },
+    "केरा": { "roman": ["kera"], "english": ["banana"] },
+    "सुन्तला": { "roman": ["suntala"], "english": ["orange"] },
+    "मेवा": { "roman": ["mewa"], "english": ["nuts"] },
+    "आँप": { "roman": ["aamp"], "english": ["mango"] },
+    "नासपाती": { "roman": ["naspati"], "english": ["pear"] },
+    "कागती": { "roman": ["kagati"], "english": ["lemon"] },
+    "भुइँकटहर": { "roman": ["bhui katihar"], "english": ["guava"] },
+    "धान": { "roman": ["dhan"], "english": ["rice"] },
+    "गहुँ": { "roman": ["gahu"], "english": ["wheat"] },
+    "मकै": { "roman": ["makai"], "english": ["corn"] },
+    "जौ": { "roman": ["jau"], "english": ["barley"] },
+    "कोदो": { "roman": ["kodo"], "english": ["millet"] },
+    "फापर": { "roman": ["phapar"], "english": ["buckwheat"] },
+    "चना": { "roman": ["chana"], "english": ["chickpea"] },
+    "मुसुरो": { "roman": ["musuro"], "english": ["lentil"] },
+    "मास": { "roman": ["maas"], "english": ["meat"] },
+    "स्याल्टुङ": { "roman": ["syaltung"], "english": ["soybean"] },
+    "केराउ": { "roman": ["kerau"], "english": ["mustard seed"] },
+    "तोरी": { "roman": ["tori"], "english": ["rapeseed"] }
+  };
 
-  <!-- Minimal JS -->
-  <script>
-    const filterToggle = document.getElementById('filter-toggle');
-    const filterDropdown = document.getElementById('filter-dropdown');
-    const filterTypeSelect = document.getElementById('filter-type');
-    const distanceFilterSelect = document.getElementById('distance-filter');
-    const filterInputs = document.querySelectorAll('.filter-inputs');
-    const distanceRangeInputs = document.getElementById('distance-range-inputs');
+  const searchInput = document.getElementById('search-input');
+  const productCards = Array.from(document.querySelectorAll('main .grid > div'));
+  const itemsPerPage = 15;
+  let currentPage = 1;
 
-    filterToggle.addEventListener('click', () => {
-      filterDropdown.classList.toggle('hidden');
+  // --- Main Filter + Pagination Function ---
+  function filterAndPaginate() {
+    const query = searchInput.value.toLowerCase().trim();
+
+    const filteredCards = productCards.filter(card => {
+      const name = card.querySelector('h3')?.innerText.toLowerCase() || '';
+      const farmer = card.querySelector('span.font-semibold')?.innerText.toLowerCase() || '';
+      const desc = card.querySelector('div.text-sm.mt-2')?.innerText.toLowerCase() || '';
+
+      let matchesSynonym = false;
+      for (const nepali in synonymsDict) {
+        const { roman, english } = synonymsDict[nepali];
+        const allNames = [nepali, ...roman, ...english].map(n => n.toLowerCase());
+        if (allNames.some(n => n.includes(query))) {
+          if (name.includes(nepali.toLowerCase())) {
+            matchesSynonym = true;
+            break;
+          }
+        }
+      }
+
+      return !query || name.includes(query) || farmer.includes(query) || desc.includes(query) || matchesSynonym;
     });
 
-    function showFilterInputs(type) {
-      filterInputs.forEach(div => div.classList.add('hidden'));
-      if (type) {
-        const el = document.getElementById(type + '-filter');
-        if (el) el.classList.remove('hidden');
-      }
+    productCards.forEach(card => card.style.display = 'none');
+
+    const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+    if (currentPage > totalPages) currentPage = totalPages || 1;
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    filteredCards.slice(start, end).forEach(card => card.style.display = '');
+
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    let paginationContainer = document.getElementById('pagination');
+    if (!paginationContainer) {
+      paginationContainer = document.createElement('div');
+      paginationContainer.id = 'pagination';
+      paginationContainer.className = 'flex justify-center mt-4 gap-2';
+      document.querySelector('main').appendChild(paginationContainer);
+    }
+    paginationContainer.innerHTML = '';
+
+    if (currentPage > 1) {
+      const prevBtn = document.createElement('button');
+      prevBtn.innerText = 'Prev';
+      prevBtn.className = 'px-3 py-1 border rounded';
+      prevBtn.addEventListener('click', () => { currentPage--; filterAndPaginate(); });
+      paginationContainer.appendChild(prevBtn);
     }
 
-    filterTypeSelect.addEventListener('change', (e) => {
-      showFilterInputs(e.target.value);
-    });
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.innerText = i;
+      btn.className = `px-3 py-1 border rounded ${i === currentPage ? 'bg-green-500 text-white' : ''}`;
+      btn.addEventListener('click', () => { currentPage = i; filterAndPaginate(); });
+      paginationContainer.appendChild(btn);
+    }
 
-    distanceFilterSelect.addEventListener('change', (e) => {
-      // Show distance range inputs only if distance_filter is 'nearest' or 'farthest'
-      if (e.target.value === 'nearest' || e.target.value === 'farthest') {
-        distanceRangeInputs.classList.remove('hidden');
-      } else {
-        distanceRangeInputs.classList.add('hidden');
-      }
-    });
+    if (currentPage < totalPages) {
+      const nextBtn = document.createElement('button');
+      nextBtn.innerText = 'Next';
+      nextBtn.className = 'px-3 py-1 border rounded';
+      nextBtn.addEventListener('click', () => { currentPage++; filterAndPaginate(); });
+      paginationContainer.appendChild(nextBtn);
+    }
+  }
 
-    // On page load: initialize filters and distance input visibility
-    document.addEventListener('DOMContentLoaded', () => {
-      showFilterInputs(filterTypeSelect.value);
+  // --- Trigger on typing ---
+ searchInput.addEventListener('input', () => {
+  currentPage = 1;
+  filterAndPaginate();
+});
+  // --- Trigger on form submit (server-side fetch) ---
+  const searchForm = searchInput.closest('form');
+  if (searchForm) {
+    searchForm.addEventListener('submit', (e) => {
+      // e.preventDefault();  // prevents reload, JS handles client-side search
+      // currentPage = 1;
+      // filterAndPaginate();
+    });
+  }
 
-      if (distanceFilterSelect.value === 'nearest' || distanceFilterSelect.value === 'farthest') {
-        distanceRangeInputs.classList.remove('hidden');
-      } else {
-        distanceRangeInputs.classList.add('hidden');
-      }
-    });
+  // --- Initial render ---
+  filterAndPaginate();
 
-    // Hamburger sidebar toggle
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    sidebarToggle && sidebarToggle.addEventListener('click', function() {
-      sidebar.classList.toggle('open');
-      sidebarOverlay.classList.toggle('active');
-    });
-    sidebarOverlay && sidebarOverlay.addEventListener('click', function() {
-      sidebar.classList.remove('open');
-      sidebarOverlay.classList.remove('active');
-    });
-  </script>
-  <script>
+  // --- Filter Dropdown ---
+  const filterToggle = document.getElementById('filter-toggle');
+  const filterDropdown = document.getElementById('filter-dropdown');
+  const filterTypeSelect = document.getElementById('filter-type');
+  const filterInputs = document.querySelectorAll('.filter-inputs');
+
+  filterToggle.addEventListener('click', () => {
+    filterDropdown.classList.toggle('hidden');
+  });
+
+  function showFilterInputs(type) {
+    filterInputs.forEach(div => div.classList.add('hidden'));
+    if (type) {
+      const el = document.getElementById(type + '-filter');
+      if (el) el.classList.remove('hidden');
+    }
+  }
+
+  filterTypeSelect.addEventListener('change', (e) => {
+    showFilterInputs(e.target.value);
+  });
+
+  showFilterInputs(filterTypeSelect.value);
+
+  // --- Distance Filter ---
   const distanceOptionSelect = document.getElementById('distance-option');
   const enterRangeInputs = document.getElementById('enter-range-inputs');
 
@@ -405,13 +540,30 @@
     }
   }
 
-  distanceOptionSelect.addEventListener('change', toggleEnterRangeInputs);
+  distanceOptionSelect?.addEventListener('change', toggleEnterRangeInputs);
+  toggleEnterRangeInputs();
 
-  // On page load
-  document.addEventListener('DOMContentLoaded', () => {
-    toggleEnterRangeInputs();
+  // --- Mobile Sidebar Toggle ---
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+  sidebarToggle?.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    sidebarOverlay.classList.toggle('active');
   });
+
+  sidebarOverlay?.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+  });
+});
 </script>
+
+
+
+
+
 
 </body>
 </html>

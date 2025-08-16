@@ -17,6 +17,13 @@ from .views import (
 )
 
 urlpatterns = [
+    
+    # Farmer review submission by customer
+    path('farmer/<int:farmer_id>/rate/', views.submit_farmer_review, name='submit-farmer-review'),
+
+    # View farmer reviews & average rating
+    # path('farmer/<int:farmer_id>/reviews/', views.view_farmer_reviews, name='view-farmer-reviews'),
+
     path('signup/', signup_view, name='signup'),
     path('verify-otp/', verify_otp_view, name='verify-otp'),
     path('redirect/', role_based_redirect, name='role-redirect'),

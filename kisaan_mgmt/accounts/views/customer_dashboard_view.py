@@ -7,6 +7,11 @@ from django.contrib.auth.models import User
 import math
 from django.utils.translation import gettext_lazy as _
 from accounts.views.role_based_redirect import farmer_required, customer_required
+from accounts.models import FarmerReview, CustomerProfile
+from django.db.models import Avg
+from products.models import ProductSynonym
+import json
+from products.views import synonyms_dict
 
 
 
@@ -34,7 +39,29 @@ def customer_dashboard_view(request):
     products = Product.objects.all().order_by('-date_posted')
 
     if query:
-        products = products.filter(sub_category__istartswith=query)
+        # Filter by sub_category, including Nepali, Roman, and English synonyms
+        matching_products = set()
+        query_lower = query.lower()
+        for product in products:
+            # Check Nepali sub_category
+            if product.sub_category.lower().startswith(query_lower):
+                matching_products.add(product.id)
+                continue
+            # Check ProductSynonym
+            synonyms = ProductSynonym.objects.filter(product=product)
+            for syn in synonyms:
+                if query_lower in syn.synonym.lower():
+                    matching_products.add(product.id)
+                    break
+        products = products.filter(id__in=matching_products)
+
+    farmer_avg_ratings = FarmerReview.objects.values('farmer') \
+        .annotate(avg_rating=Avg('rating'))
+    farmer_avg_dict = {item['farmer']: round(item['avg_rating'] or 0, 1) for item in farmer_avg_ratings}
+
+    # Attach average rating to each product's farmer
+    for product in products:
+        product.farmer_avg_rating = farmer_avg_dict.get(product.farmer.id, 0)
 
     if filter_type == 'price':
         min_price = request.GET.get('min_price')
@@ -142,22 +169,23 @@ def customer_dashboard_view(request):
             product.display_distance = None
 
     # Pagination
-    page = request.GET.get('page', 1)
-    paginator = Paginator(products, 9)
-    try:
-        products_page = paginator.page(page)
-    except PageNotAnInteger:
-        products_page = paginator.page(1)
-    except EmptyPage:
-        products_page = paginator.page(paginator.num_pages)
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(products, 9)
+    # try:
+    #     products_page = paginator.page(page)
+    # except PageNotAnInteger:
+    #     products_page = paginator.page(1)
+    # except EmptyPage:
+    #     products_page = paginator.page(paginator.num_pages)
 
     return render(request, 'accounts/customer_dashboard.html', {
-        'products': products_page,
-        'customer_profile': customer_profile,
-        'query': query,
-        'filter_type': filter_type,
-        'distance_filter': distance_filter,
-    })
+    'products': products,
+    'customer_profile': customer_profile,
+    'query': query,
+    'filter_type': filter_type,
+    'distance_filter': distance_filter,
+    'synonyms_dict': json.dumps(synonyms_dict, ensure_ascii=False)
+})
 
 
 @login_required

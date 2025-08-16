@@ -8,19 +8,83 @@ import requests
 from django.conf import settings
 from django.db.models import Sum, Count, Min, Max, OuterRef, Subquery
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import ProductForm
+from .models import Product, ProductSynonym  # Make sure ProductSynonym exists
+from django.utils.translation import gettext_lazy as _
+
+# Define Roman and English synonyms
+synonyms_dict = {
+    "आलु": {"roman": ["aalu", "alu"], "english": ["potato"]},
+    "प्याज": {"roman": ["pyaaj", "pyaj"], "english": ["onion"]},
+    "लसुन": {"roman": ["lasun"], "english": ["garlic"]},
+    "टमाटर": {"roman": ["tamatar"], "english": ["tomato"]},
+    "बन्दा": {"roman": ["banda"], "english": ["cabbage"]},
+    "काउली": {"roman": ["kauli"], "english": ["cauliflower"]},
+    "मुला": {"roman": ["mula"], "english": ["radish"]},
+    "गाजर": {"roman": ["gajar"], "english": ["carrot"]},
+    "साग": {"roman": ["saag"], "english": ["spinach"]},
+    "काक्रो": {"roman": ["kakro"], "english": ["cucumber"]},
+    "भेनता": {"roman": ["bheneta"], "english": ["eggplant"]},
+    "सिमि": {"roman": ["simi"], "english": ["bean"]},
+    "बोडी": {"roman": ["bodi"], "english": ["long bean"]},
+    "लौका": {"roman": ["lauka"], "english": ["bottle gourd"]},
+    "करेला": {"roman": ["karela"], "english": ["bitter gourd"]},
+    "खुर्सानी": {"roman": ["khursani"], "english": ["chili"]},
+    "धनिया": {"roman": ["dhaniya"], "english": ["coriander"]},
+    "अदुवा": {"roman": ["aduwa"], "english": ["ginger"]},
+    "फर्सी": {"roman": ["pharsi"], "english": ["pumpkin"]},
+    "चिचिँडो": {"roman": ["chichindo"], "english": ["sponge gourd"]},
+    "स्याउ": {"roman": ["syaau", "syau"], "english": ["apple"]},
+    "केरा": {"roman": ["kera"], "english": ["banana"]},
+    "सुन्तला": {"roman": ["suntala"], "english": ["orange"]},
+    "मेवा": {"roman": ["mewa"], "english": ["nuts"]},
+    "आँप": {"roman": ["aamp"], "english": ["mango"]},
+    "नासपाती": {"roman": ["naspati"], "english": ["pear"]},
+    "कागती": {"roman": ["kagati"], "english": ["lemon"]},
+    "भुइँकटहर": {"roman": ["bhui katihar"], "english": ["guava"]},
+    "धान": {"roman": ["dhan"], "english": ["rice"]},
+    "गहुँ": {"roman": ["gahu"], "english": ["wheat"]},
+    "मकै": {"roman": ["makai"], "english": ["corn"]},
+    "जौ": {"roman": ["jau"], "english": ["barley"]},
+    "कोदो": {"roman": ["kodo"], "english": ["millet"]},
+    "फापर": {"roman": ["phapar"], "english": ["buckwheat"]},
+    "चना": {"roman": ["chana"], "english": ["chickpea"]},
+    "मुसुरो": {"roman": ["musuro"], "english": ["lentil"]},
+    "मास": {"roman": ["maas"], "english": ["meat"]},
+    "स्याल्टुङ": {"roman": ["syaltung"], "english": ["soybean"]},
+    "केराउ": {"roman": ["kerau"], "english": ["mustard seed"]},
+    "तोरी": {"roman": ["tori"], "english": ["rapeseed"]}
+    # Add more as needed
+}
+
 @login_required
 def add_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)  # include request.FILES here
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
+            
+            # Handle 'अन्य' subcategory
             if product.sub_category == 'अन्य':
                 product.sub_category = request.POST.get('other_subcategory')
+            
             product.farmer = request.user
             product.save()
+
+            # Add synonyms automatically
+            ProductSynonym.objects.create(product=product, language="nepali", synonym=product.sub_category)
+            if product.sub_category in synonyms_dict:
+                for roman_name in synonyms_dict[product.sub_category]["roman"]:
+                    ProductSynonym.objects.create(product=product, language="roman", synonym=roman_name)
+                for eng_name in synonyms_dict[product.sub_category]["english"]:
+                    ProductSynonym.objects.create(product=product, language="english", synonym=eng_name)
+
             return redirect('farmer-dashboard')
     else:
         form = ProductForm()
+    
     return render(request, 'products/add_product.html', {'form': form})
 
 @login_required

@@ -129,3 +129,13 @@ class CustomerProfileForm(forms.ModelForm):
             # 'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+from django import forms
+from .models import FarmerReview
+
+class FarmerReviewForm(forms.ModelForm):
+    class Meta:
+        model = FarmerReview
+        fields = ['rating']
+        widgets = {
+            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5})
+        }

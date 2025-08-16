@@ -107,3 +107,18 @@ def create_or_update_user_profiles(sender, instance, created, **kwargs):
                 instance.customerprofile.save()
             except CustomerProfile.DoesNotExist:
                 CustomerProfile.objects.create(user=instance)
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class FarmerReview(models.Model):
+    farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(default=5)  # 1-5 stars
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('farmer', 'customer')  # One review per customer per farmer
+
+    def __str__(self):
+        return f"{self.customer.username} → {self.farmer.username}: {self.rating}⭐"

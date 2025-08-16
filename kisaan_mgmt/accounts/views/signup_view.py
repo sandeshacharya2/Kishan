@@ -213,40 +213,44 @@ def verify_otp_view(request):
         'can_resend': can_resend,
     })
 
+from django.db.models import Avg
+from accounts.models import FarmerReview  # make sure this import exists
+
+from django.db.models import Avg
+from accounts.models import FarmerReview
+from accounts.models import FarmerReview
+from django.db.models import Avg
 
 @login_required
 @farmer_required
 def farmer_dashboard_view(request):
     user = request.user
-    print(f"[DEBUG] Logged in user: {user}")
 
     products = Product.objects.filter(farmer=user)
-    print(f"[DEBUG] Products count for farmer '{user}': {products.count()}")
 
     try:
         farmer_profile = user.farmerprofile
-        print(f"[DEBUG] FarmerProfile found for user '{user}'")
     except FarmerProfile.DoesNotExist:
         farmer_profile = None
-        print(f"[DEBUG] FarmerProfile NOT found for user '{user}'")
 
     try:
         accounts_profile = user.profile
-        print(f"[DEBUG] Accounts Profile found for user '{user}'")
     except Profile.DoesNotExist:
         accounts_profile = None
-        print(f"[DEBUG] Accounts Profile NOT found for user '{user}'")
 
-    # Fetch pending chat requests (not accepted, not rejected)
     pending_chats = ChatRoom.objects.filter(
         farmer=user, 
         farmer_accepted=False,
-        farmer_rejected=False  # remove this if you don't have this field
+        farmer_rejected=False
     )
-    print(f"[DEBUG] Pending chat requests count for farmer '{user}': {pending_chats.count()}")
-    print(f"[DEBUG] Pending chat requests IDs: {[chat.id for chat in pending_chats]}")
 
     form = FarmerProfileForm(instance=farmer_profile)
+
+    avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
 
     context = {
         'products': products,
@@ -254,9 +258,14 @@ def farmer_dashboard_view(request):
         'farmerprofile': farmer_profile,
         'accounts_profile': accounts_profile,
         'pending_chats': pending_chats,
+        'avg_rating': avg_rating,
+        'reviews': reviews,  # <-- must be passed here
     }
 
     return render(request, 'accounts/farmer_dashboard.html', context)
+
+
+
 # @login_required
 # def customer_dashboard_view(request):
 #     products = Product.objects.all().order_by('-date_posted')
@@ -269,4 +278,45 @@ def farmer_dashboard_view(request):
 #     return render(request, 'accounts/customer_dashboard.html', {
 #         'products': products,
 #         'customer_profile': customer_profile,
+#     })
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from accounts.models import FarmerReview
+from accounts.forms import FarmerReviewForm
+from django.contrib.auth.models import User
+from accounts.views.role_based_redirect import customer_required
+
+
+@login_required
+@customer_required
+def submit_farmer_review(request, farmer_id):
+    farmer = get_object_or_404(User, id=farmer_id)
+    
+    review, created = FarmerReview.objects.get_or_create(
+        farmer=farmer,
+        customer=request.user,
+        defaults={'rating': 5}
+    )
+
+    if request.method == 'POST':
+        form = FarmerReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('customer-dashboard')  # Redirect to customer dashboard after saving
+    else:
+        form = FarmerReviewForm(instance=review)
+
+    return render(request, 'accounts/submit_farmer_review.html', {'form': form, 'farmer': farmer})
+
+# @login_required
+# def view_farmer_reviews(request, farmer_id):
+#     farmer = get_object_or_404(User, id=farmer_id)
+#     reviews = FarmerReview.objects.filter(farmer=farmer)
+#     avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+
+#     return render(request, 'accounts/view_farmer_reviews.html', {
+#         'farmer': farmer,
+#         'reviews': reviews,
+#         'avg_rating': round(avg_rating, 2),
 #     })

@@ -31,3 +31,16 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.sub_category} - {self.quantity} {self.unit}"
+# products/models.py
+class ProductSynonym(models.Model):
+    LANGUAGE_CHOICES = [
+        ('nepali', 'Nepali'),
+        ('roman', 'Roman'),
+        ('english', 'English'),
+    ]
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
+    synonym = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.synonym} ({self.language})"
