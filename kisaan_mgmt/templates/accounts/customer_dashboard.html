@@ -138,6 +138,7 @@
       value="{{ query|default_if_none:'' }}"
       placeholder="{% trans 'Search items like (जस्तै: आलु, अदुवा, आ...)' %}"
       class="w-full sm:w-1/2 px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+      autocomplete="off"
     />
 
     <!-- Filter Button and Dropdown -->
@@ -222,7 +223,7 @@
 
       <!-- Product Cards -->
     <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {% if products %}
         {% for product in products %}
           <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-green-300 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
@@ -365,201 +366,104 @@
 
 
   </div>
-<script>
+ <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const synonymsDict = {
-    "आलु": { "roman": ["aalu", "alu"], "english": ["potato"] },
-    "प्याज": { "roman": ["pyaaj", "pyaj"], "english": ["onion"] },
-    "लसुन": { "roman": ["lasun"], "english": ["garlic"] },
-    "टमाटर": { "roman": ["tamatar"], "english": ["tomato"] },
-    "बन्दा": { "roman": ["banda"], "english": ["cabbage"] },
-    "काउली": { "roman": ["kauli"], "english": ["cauliflower"] },
-    "मुला": { "roman": ["mula"], "english": ["radish"] },
-    "गाजर": { "roman": ["gajar"], "english": ["carrot"] },
-    "साग": { "roman": ["saag"], "english": ["spinach"] },
-    "काक्रो": { "roman": ["kakro"], "english": ["cucumber"] },
-    "भेनता": { "roman": ["bheneta"], "english": ["eggplant"] },
-    "सिमि": { "roman": ["simi"], "english": ["bean"] },
-    "बोडी": { "roman": ["bodi"], "english": ["long bean"] },
-    "लौका": { "roman": ["lauka"], "english": ["bottle gourd"] },
-    "करेला": { "roman": ["karela"], "english": ["bitter gourd"] },
-    "खुर्सानी": { "roman": ["khursani"], "english": ["chili"] },
-    "धनिया": { "roman": ["dhaniya"], "english": ["coriander"] },
-    "अदुवा": { "roman": ["aduwa"], "english": ["ginger"] },
-    "फर्सी": { "roman": ["pharsi"], "english": ["pumpkin"] },
-    "चिचिँडो": { "roman": ["chichindo"], "english": ["sponge gourd"] },
-    "स्याउ": { "roman": ["syaau", "syau"], "english": ["apple"] },
-    "केरा": { "roman": ["kera"], "english": ["banana"] },
-    "सुन्तला": { "roman": ["suntala"], "english": ["orange"] },
-    "मेवा": { "roman": ["mewa"], "english": ["nuts"] },
-    "आँप": { "roman": ["aamp"], "english": ["mango"] },
-    "नासपाती": { "roman": ["naspati"], "english": ["pear"] },
-    "कागती": { "roman": ["kagati"], "english": ["lemon"] },
-    "भुइँकटहर": { "roman": ["bhui katihar"], "english": ["guava"] },
-    "धान": { "roman": ["dhan"], "english": ["rice"] },
-    "गहुँ": { "roman": ["gahu"], "english": ["wheat"] },
-    "मकै": { "roman": ["makai"], "english": ["corn"] },
-    "जौ": { "roman": ["jau"], "english": ["barley"] },
-    "कोदो": { "roman": ["kodo"], "english": ["millet"] },
-    "फापर": { "roman": ["phapar"], "english": ["buckwheat"] },
-    "चना": { "roman": ["chana"], "english": ["chickpea"] },
-    "मुसुरो": { "roman": ["musuro"], "english": ["lentil"] },
-    "मास": { "roman": ["maas"], "english": ["meat"] },
-    "स्याल्टुङ": { "roman": ["syaltung"], "english": ["soybean"] },
-    "केराउ": { "roman": ["kerau"], "english": ["mustard seed"] },
-    "तोरी": { "roman": ["tori"], "english": ["rapeseed"] }
-  };
+    const productsContainer = document.getElementById('products-container');
+    const searchInput = document.getElementById('search-input');
 
-  const searchInput = document.getElementById('search-input');
-  const productCards = Array.from(document.querySelectorAll('main .grid > div'));
-  const itemsPerPage = 15;
-  let currentPage = 1;
+    let debounceTimeout;
 
-  // --- Main Filter + Pagination Function ---
-  function filterAndPaginate() {
-    const query = searchInput.value.toLowerCase().trim();
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout);
 
-    const filteredCards = productCards.filter(card => {
-      const name = card.querySelector('h3')?.innerText.toLowerCase() || '';
-      const farmer = card.querySelector('span.font-semibold')?.innerText.toLowerCase() || '';
-      const desc = card.querySelector('div.text-sm.mt-2')?.innerText.toLowerCase() || '';
+        const query = searchInput.value.trim();
 
-      let matchesSynonym = false;
-      for (const nepali in synonymsDict) {
-        const { roman, english } = synonymsDict[nepali];
-        const allNames = [nepali, ...roman, ...english].map(n => n.toLowerCase());
-        if (allNames.some(n => n.includes(query))) {
-          if (name.includes(nepali.toLowerCase())) {
-            matchesSynonym = true;
-            break;
-          }
-        }
-      }
-
-      return !query || name.includes(query) || farmer.includes(query) || desc.includes(query) || matchesSynonym;
+        debounceTimeout = setTimeout(() => {
+            fetch(`?q=${encodeURIComponent(query)}`, {
+                headers: { 'x-requested-with': 'XMLHttpRequest' }
+            })
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newProducts = doc.getElementById('products-container');
+                if (newProducts && productsContainer) {
+                    productsContainer.innerHTML = newProducts.innerHTML;
+                }
+            });
+        }, 300); // wait 300ms after typing stops
     });
-
-    productCards.forEach(card => card.style.display = 'none');
-
-    const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
-    if (currentPage > totalPages) currentPage = totalPages || 1;
-
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    filteredCards.slice(start, end).forEach(card => card.style.display = '');
-
-    renderPagination(totalPages);
-  }
-
-  function renderPagination(totalPages) {
-    let paginationContainer = document.getElementById('pagination');
-    if (!paginationContainer) {
-      paginationContainer = document.createElement('div');
-      paginationContainer.id = 'pagination';
-      paginationContainer.className = 'flex justify-center mt-4 gap-2';
-      document.querySelector('main').appendChild(paginationContainer);
-    }
-    paginationContainer.innerHTML = '';
-
-    if (currentPage > 1) {
-      const prevBtn = document.createElement('button');
-      prevBtn.innerText = 'Prev';
-      prevBtn.className = 'px-3 py-1 border rounded';
-      prevBtn.addEventListener('click', () => { currentPage--; filterAndPaginate(); });
-      paginationContainer.appendChild(prevBtn);
-    }
-
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement('button');
-      btn.innerText = i;
-      btn.className = `px-3 py-1 border rounded ${i === currentPage ? 'bg-green-500 text-white' : ''}`;
-      btn.addEventListener('click', () => { currentPage = i; filterAndPaginate(); });
-      paginationContainer.appendChild(btn);
-    }
-
-    if (currentPage < totalPages) {
-      const nextBtn = document.createElement('button');
-      nextBtn.innerText = 'Next';
-      nextBtn.className = 'px-3 py-1 border rounded';
-      nextBtn.addEventListener('click', () => { currentPage++; filterAndPaginate(); });
-      paginationContainer.appendChild(nextBtn);
-    }
-  }
-
-  // --- Trigger on typing ---
- searchInput.addEventListener('input', () => {
-  currentPage = 1;
-  filterAndPaginate();
 });
-  // --- Trigger on form submit (server-side fetch) ---
-  const searchForm = searchInput.closest('form');
-  if (searchForm) {
-    searchForm.addEventListener('submit', (e) => {
-      // e.preventDefault();  // prevents reload, JS handles client-side search
-      // currentPage = 1;
-      // filterAndPaginate();
-    });
-  }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const filterToggleBtn = document.getElementById("filter-toggle");
+  const filterDropdown = document.getElementById("filter-dropdown");
+  const filterTypeSelect = document.getElementById("filter-type");
+  const filterInputs = document.querySelectorAll(".filter-inputs");
+  const distanceOption = document.getElementById("distance-option");
+  const enterRangeInputs = document.getElementById("enter-range-inputs");
+  const applyFiltersBtn = filterDropdown.querySelector("button[type='submit']");
 
-  // --- Initial render ---
-  filterAndPaginate();
-
-  // --- Filter Dropdown ---
-  const filterToggle = document.getElementById('filter-toggle');
-  const filterDropdown = document.getElementById('filter-dropdown');
-  const filterTypeSelect = document.getElementById('filter-type');
-  const filterInputs = document.querySelectorAll('.filter-inputs');
-
-  filterToggle.addEventListener('click', () => {
-    filterDropdown.classList.toggle('hidden');
+  // Toggle filter dropdown
+  filterToggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // prevent outside click from immediately closing
+    filterDropdown.classList.toggle("hidden");
   });
 
-  function showFilterInputs(type) {
-    filterInputs.forEach(div => div.classList.add('hidden'));
-    if (type) {
-      const el = document.getElementById(type + '-filter');
-      if (el) el.classList.remove('hidden');
+  // Show/hide filter inputs based on selected filter type
+  function updateFilterInputs() {
+    filterInputs.forEach(input => input.classList.add("hidden")); // hide all
+    const selected = filterTypeSelect.value;
+
+    if (selected === "price") {
+      document.getElementById("price-filter").classList.remove("hidden");
+    } else if (selected === "date") {
+      document.getElementById("date-filter").classList.remove("hidden");
+    } else if (selected === "quantity") {
+      document.getElementById("quantity-filter").classList.remove("hidden");
+    } else if (selected === "distance") {
+      document.getElementById("distance-filter").classList.remove("hidden");
+      updateDistanceInputs(); // show/hide enter-range inputs if needed
     }
   }
 
-  filterTypeSelect.addEventListener('change', (e) => {
-    showFilterInputs(e.target.value);
-  });
+  filterTypeSelect.addEventListener("change", updateFilterInputs);
 
-  showFilterInputs(filterTypeSelect.value);
-
-  // --- Distance Filter ---
-  const distanceOptionSelect = document.getElementById('distance-option');
-  const enterRangeInputs = document.getElementById('enter-range-inputs');
-
-  function toggleEnterRangeInputs() {
-    if (distanceOptionSelect.value === 'enter_range') {
-      enterRangeInputs.classList.remove('hidden');
+  // Show/hide enter-range inputs for distance
+  function updateDistanceInputs() {
+    if (distanceOption.value === "enter_range") {
+      enterRangeInputs.classList.remove("hidden");
     } else {
-      enterRangeInputs.classList.add('hidden');
+      enterRangeInputs.classList.add("hidden");
     }
   }
 
-  distanceOptionSelect?.addEventListener('change', toggleEnterRangeInputs);
-  toggleEnterRangeInputs();
+  distanceOption.addEventListener("change", updateDistanceInputs);
 
-  // --- Mobile Sidebar Toggle ---
-  const sidebarToggle = document.getElementById('sidebar-toggle');
-  const sidebar = document.getElementById('sidebar');
-  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  // Initialize on page load
+  updateFilterInputs();
 
-  sidebarToggle?.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-    sidebarOverlay.classList.toggle('active');
+  // Close filter dropdown when clicking outside
+  document.addEventListener("click", function(e) {
+    if (!filterDropdown.contains(e.target) && e.target !== filterToggleBtn) {
+      filterDropdown.classList.add("hidden");
+    }
   });
 
-  sidebarOverlay?.addEventListener('click', () => {
-    sidebar.classList.remove('open');
-    sidebarOverlay.classList.remove('active');
+  // Reset all inputs when Apply Filters is clicked
+  applyFiltersBtn.addEventListener("click", function() {
+    setTimeout(() => { // delay to let form submit
+      filterInputs.forEach(inputDiv => {
+        const inputs = inputDiv.querySelectorAll("input, select");
+        inputs.forEach(i => i.value = ""); // clear inputs
+      });
+      filterTypeSelect.value = ""; // reset filter dropdown
+      updateFilterInputs();         // hide all sub-inputs
+    }, 100);
   });
 });
 </script>
-
 
 
 

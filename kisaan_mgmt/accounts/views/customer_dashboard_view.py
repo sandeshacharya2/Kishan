@@ -12,6 +12,8 @@ from django.db.models import Avg
 from products.models import ProductSynonym
 import json
 from products.views import synonyms_dict
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 
 
@@ -51,23 +53,33 @@ def customer_dashboard_view(request):
     distance_filter = request.GET.get('distance_filter')  # expected values: 'nearest', 'farthest', 'enter_range', or None
 
     products = Product.objects.all().order_by('-date_posted')
+    products = Product.objects.all().order_by('-date_posted')
 
-    if query:
-        # Filter by sub_category, including Nepali, Roman, and English synonyms
+    products = Product.objects.all().order_by('-date_posted')
+
+    try:
+      if query:  # only run if query is not None or empty
         matching_products = set()
         query_lower = query.lower()
         for product in products:
             # Check Nepali sub_category
-            if product.sub_category.lower().startswith(query_lower):
-                matching_products.add(product.id)  #adding product id to matching_products set
-                continue
-            # Check ProductSynonym
+            if query_lower in product.sub_category.lower():
+                matching_products.add(product.id)
+                continue  # found match, skip synonyms
+
+            # Check all synonyms
             synonyms = ProductSynonym.objects.filter(product=product)
             for syn in synonyms:
                 if query_lower in syn.synonym.lower():
                     matching_products.add(product.id)
-                    break
+                    break  # stop checking other synonyms for this product
+
         products = products.filter(id__in=matching_products)
+    except Exception:
+    # If any error occurs (e.g., query is None), just show all products
+        products = Product.objects.all().order_by('-date_posted')
+
+
 
     farmer_avg_ratings = FarmerReview.objects.values('farmer') \
         .annotate(avg_rating=Avg('rating'))
@@ -183,23 +195,32 @@ def customer_dashboard_view(request):
             product.display_distance = None
 
     # Pagination
-    # page = request.GET.get('page', 1)
-    # paginator = Paginator(products, 9)
-    # try:
-    #     products_page = paginator.page(page)
-    # except PageNotAnInteger:
-    #     products_page = paginator.page(1)
-    # except EmptyPage:
-    #     products_page = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(products, 9)
+    try:
+        products_page = paginator.page(page)
+    except PageNotAnInteger:
+        products_page = paginator.page(1)
+    except EmptyPage:
+        products_page = paginator.page(paginator.num_pages)
 
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return render(request, "accounts/customer_dashboard.html", {
+        'products': products_page,
+    })
+
+
+    # -----------------
+    # Normal page load
+    # -----------------
     return render(request, 'accounts/customer_dashboard.html', {
-    'products': products,
-    'customer_profile': customer_profile,
-    'query': query,
-    'filter_type': filter_type,
-    'distance_filter': distance_filter,
-    'synonyms_dict': json.dumps(synonyms_dict, ensure_ascii=False)
-})
+        'products': products_page,
+        'customer_profile': customer_profile,
+        'query': query,
+        'filter_type': filter_type,
+        'distance_filter': distance_filter,
+        'synonyms_dict': json.dumps(synonyms_dict, ensure_ascii=False)
+    })
 
 
 @login_required

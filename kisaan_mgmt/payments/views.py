@@ -21,7 +21,7 @@ def choose_quantity(request, product_id):
 
 
 @csrf_exempt
-@login_required
+# @login_required
 def payment_request(request, product_id):
     try:
         product = get_object_or_404(Product, pk=product_id)
@@ -61,7 +61,7 @@ def payment_request(request, product_id):
 
 
 @csrf_exempt
-@login_required
+# @login_required
 
 def payment_success(request):
     try:
@@ -169,7 +169,7 @@ def payment_success(request):
 
 
 @csrf_exempt
-@login_required
+# @login_required
 def payment_failure(request):
     try:
         return render(request, 'payments/failure.html')
