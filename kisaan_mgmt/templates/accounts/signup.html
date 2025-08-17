@@ -265,20 +265,16 @@
     {% for field in form %}
       {% if field.name not in 'ward tole role' %}
         <div>
-          {% if field.name == 'first_name' %}
-            <label for="{{ field.id_for_label }}">First Name</label>
-          {% elif field.name == 'last_name' %}
-            <label for="{{ field.id_for_label }}">Last Name</label>
-          {% elif field.name == 'username' %}
-            <label for="{{ field.id_for_label }}">Username</label>
+          {% if field.name == 'username' %}
+            <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम (username)</label>
           {% elif field.name == 'email' %}
-            <label for="{{ field.id_for_label }}">Email</label>
+            <label for="{{ field.id_for_label }}">इमेल (email)</label>
           {% elif field.name == 'phonenumber' %}
-            <label for="{{ field.id_for_label }}">Phone Number</label>
+            <label for="{{ field.id_for_label }}">फोन नम्बर (phone number)</label>
           {% elif field.name == 'password1' %}
-            <label for="{{ field.id_for_label }}">Password</label>
+            <label for="{{ field.id_for_label }}">पासवर्ड (password)</label>
           {% elif field.name == 'password2' %}
-            <label for="{{ field.id_for_label }}">Confirm Password</label>
+            <label for="{{ field.id_for_label }}">पासवर्ड दोहोराउनुहोस् (confirm password)</label>
           {% else %}
             {{ field.label_tag }}
           {% endif %}
@@ -297,51 +293,74 @@
   <!-- ROLE -->
   <div class="form-row full-width">
     <div>
-      <label for="id_role">Role</label>
-      <select name="role" id="id_role" required aria-required="true">
-        <option value="">-- Choose your role --</option>
-        <option value="farmer" {% if request.POST.role == "farmer" %}selected{% endif %}>Farmer</option>
-        <option value="customer" {% if request.POST.role == "customer" %}selected{% endif %}>Customer</option>
+      <label for="id_role">भूमिका (Role)</label>
+      <select name="role" id="id_role" required aria-required="true" aria-describedby="roleHelp">
+        <option value="">-- भूमिका छान्नुहोस् (choose your role) --</option>
+        <option value="farmer" {% if request.POST.role == "farmer" %}selected{% endif %}>किसान (farmer)</option>
+        <option value="customer" {% if request.POST.role == "customer" %}selected{% endif %}>ग्राहक (customer)</option>
       </select>
+      <!-- <small id="roleHelp" class="sr-only">Choose</small> -->
       {% if form.role.errors %}
         <div class="form-errors" role="alert" aria-live="assertive">{{ form.role.errors|striptags }}</div>
       {% endif %}
     </div>
   </div>
 
-  <!-- ADDRESS, WARD, TOLE as before -->
+  <!-- ADDRESS STATIC -->
   <div class="form-row full-width">
-    <label for="address">Address</label>
-    <select id="address" name="address" required>
-      <option value="" {% if not request.POST.address %}selected{% endif %}>-- Choose your address --</option>
-      <option value="Beni Municipality" {% if request.POST.address == 'Beni Municipality' %}selected{% endif %}>Beni Municipality</option>
-    </select>
+    <div>
+      <label for="address">ठेगाना (address)</label>
+   <select id="address" name="address" required>
+  <option value="" {% if not request.POST.address %}selected{% endif %}>-- ठेगाना छान्नुहोस् (choose your address) --</option>
+  <option value="Beni Municipality" {% if request.POST.address == 'Beni Municipality' %}selected{% endif %}>वेनी नगरपालिका (Beni Municipality)</option>
+</select>
+
+
+
+      <!-- <small id="addressHelp" class="sr-only">Choose your address</small> -->
+    </div>
   </div>
 
+  <!-- WARD -->
   <div class="form-row full-width" id="wardDiv" style="display:none;">
-    <label for="ward">Ward</label>
-    <select id="ward" name="ward" required>
-      <option value="">-- Choose ward --</option>
-      {% for w in form.fields.ward.choices %}
-        <option value="{{ w.0 }}" {% if request.POST.ward == w.0 %}selected{% endif %}>{{ w.1 }}</option>
-      {% endfor %}
-    </select>
+    <div>
+      <label for="ward">वडा (ward)</label>
+      <select id="ward" name="ward" required aria-required="true" aria-describedby="wardHelp">
+        <option value="">-- वडा छान्नुहोस् (choose ward) --</option>
+        {% for w in form.fields.ward.choices %}
+          <option value="{{ w.0 }}" {% if request.POST.ward == w.0 %}selected{% endif %}>{{ w.1 }}</option>
+        {% endfor %}
+      </select>
+      <!-- <small id="wardHelp" class="sr-only">Choose your ward</small> -->
+    </div>
   </div>
 
+  <!-- TOLE -->
   <div class="form-row full-width" id="toleDiv" style="display:block;">
-    <label for="tole">Tole</label>
-    {{ form.tole }}
-    {{ form.latitude }}
-    {{ form.longitude }}
+    <div>
+      <label for="tole">टोल (tole)</label>
+      <input
+        type="text"
+        id="tole"
+        name="tole"
+        placeholder="तपाइको टोल को नाम लेख्नुहोस्"
+        required
+        aria-required="true"
+        value="{{ request.POST.tole }}"
+      >
+      <input type="hidden" id="latitude" name="latitude" value="{{ request.POST.latitude }}">
+      <input type="hidden" id="longitude" name="longitude" value="{{ request.POST.longitude }}">
+    </div>
   </div>
 
   <div class="form-row full-width" id="mapButtonDiv" style="display: none;">
-    <button type="button" onclick="openMapModal()" aria-label="Select location on map">Select Location on Map</button>
+    <div>
+      <button type="button" onclick="openMapModal()" aria-label="Select location on map">स्थान छान्नुहोस् (Select Location on Map)</button>
+    </div>
   </div>
 
-  <button type="submit">Sign Up</button>
+  <button type="submit">साइन अप (Sign Up)</button>
 </form>
-
 
 
 

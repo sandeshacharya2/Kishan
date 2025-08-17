@@ -28,12 +28,26 @@ def haversine(lat1, lon1, lat2, lon2):
     return R * c
 
 
+# def haversine(lat1, lon1, lat2, lon2):
+
+#     R= 6371 
+#     d_lat= math.radians(lat2-lat1)
+#     d_lon =math.radians(lon2-lon1)
+#     a= (math.sin(d_lat/2)**2 +
+#         math.cos(math.radians(lat1)) *
+#         math.cos(math.radians(lat2)) *
+#         math.sin(d_lon/2)**2)
+#     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+#     return R * c    
+
+
+
 @login_required
 @customer_required
 def customer_dashboard_view(request):
     query = request.GET.get('q')
     filter_type = request.GET.get('filter_type')
-    distance_filter = request.GET.get('distance_filter')  # expected values: 'nearest', 'farthest', or None
+    # distance_filter = request.GET.get('distance_filter')  # expected values: 'nearest', 'farthest', or None
     distance_filter = request.GET.get('distance_filter')  # expected values: 'nearest', 'farthest', 'enter_range', or None
 
     products = Product.objects.all().order_by('-date_posted')
@@ -45,7 +59,7 @@ def customer_dashboard_view(request):
         for product in products:
             # Check Nepali sub_category
             if product.sub_category.lower().startswith(query_lower):
-                matching_products.add(product.id)
+                matching_products.add(product.id)  #adding product id to matching_products set
                 continue
             # Check ProductSynonym
             synonyms = ProductSynonym.objects.filter(product=product)

@@ -246,7 +246,7 @@ def fruits(request):
 
     subcategory_data = (
         Product.objects.filter(main_category='फलफुल')
-        .values('sub_category', 'sub_category_roman', 'unit')
+        .values('sub_category', 'unit')
         .annotate(
             total_quantity=Sum('quantity'),
             min_price=Min('price'),

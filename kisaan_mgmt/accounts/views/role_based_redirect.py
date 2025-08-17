@@ -20,8 +20,9 @@ def role_based_redirect(request):
     if profile.role == 'farmer':
         try:
             farmer_profile = request.user.farmerprofile
+            if not farmer_profile.profile_picture:
             # if not farmer_profile.first_name or not farmer_profile.last_name:
-            return redirect('update-farmer-profile')
+              return redirect('update-farmer-profile')
         except FarmerProfile.DoesNotExist:
             FarmerProfile.objects.create(user=request.user)
             return redirect('update-farmer-profile')

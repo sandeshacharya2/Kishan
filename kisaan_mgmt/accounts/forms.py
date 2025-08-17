@@ -120,15 +120,13 @@ class FarmerProfileForm(forms.ModelForm):
 class CustomerProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomerProfileForm, self).__init__(*args, **kwargs)
-        # self.fields['first_name'].required = True
-        # self.fields['last_name'].required = True
+   
 
     class Meta:
         model = CustomerProfile
         fields = ['profile_picture']
         widgets = {
-            # 'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+          
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 from django import forms
