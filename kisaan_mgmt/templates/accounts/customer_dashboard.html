@@ -466,6 +466,25 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarToggle = document.getElementById("sidebar-toggle");
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebar-overlay");
+
+  // Open/close sidebar on hamburger click
+  sidebarToggle.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("active");
+  });
+
+  // Close sidebar when clicking overlay
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("active");
+  });
+});
+</script>
 
 
 
