@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html lang="ne">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Farmer Income Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen text-gray-800">
+{% extends "accounts/farmer_base.html" %}
+{% load static %}
+{% load i18n %}
 
-  <main class="max-w-5xl mx-auto p-4 sm:p-8">
-<div class="mb-6">
+{% block title %}Farmer Income Dashboard{% endblock %}
+
+
+{% block content %}
+  <div class="max-w-5xl mx-auto p-4 sm:p-8 lg:ml-64">
+
       <a href="{% url 'farmer-dashboard' %}"
-         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base mt-20">
         ← Dashboard मा फर्कनुहोस्
       </a>
-    </div>
+
     <!-- Summary Cards -->
     <section class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6 text-center">
       <div id="cardTotal" class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
@@ -83,7 +81,9 @@
       </table>
     </section>
 
-  </main>
+
+ </div>
+
 
 <script>
 // Your Django-passed data here (for example)
@@ -223,5 +223,4 @@ window.onload = () => {
 };
 </script>
 
-</body>
-</html>
+{% endblock %}

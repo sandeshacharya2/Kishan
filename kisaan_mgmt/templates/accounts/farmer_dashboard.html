@@ -1,274 +1,103 @@
+{% extends "accounts/farmer_base.html" %}
 {% load static %}
 {% load i18n %}
 
-<!DOCTYPE html>
-<html lang="ne">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% trans 'किसान ड्याशबोर्ड' %}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-green-50 text-green-900">
+{% block title %}ड्याशबोर्ड{% endblock %}
 
-  <!-- Mobile navbar -->
-  <nav class="bg-green-900 shadow sticky top-0 z-40 lg:hidden">
-    <div class="container mx-auto flex justify-between items-center px-4 py-2">
-      <button 
-        class="text-green-300 text-3xl p-0"
-        type="button"
-        aria-label="Toggle sidebar"
-        id="mobile-sidebar-toggle"
-      >&#9776;</button>
-      <span class="flex items-center gap-2 text-green-200 font-extrabold text-xl select-none">
-        किसान <span class="text-green-400 text-lg">🌱</span>
-      </span>
-    </div>
-  </nav>
+{% block content %}
 
-  <!-- Offcanvas sidebar (mobile) -->
-  <div 
-    id="sidebar-mobile" 
-    class="fixed inset-y-0 left-0 w-3/4 max-w-xs bg-gradient-to-br from-green-100 to-green-300 shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden"
-    aria-hidden="true"
-  >
-    <div class="flex justify-between items-center border-b border-green-700 p-4">
-      <h5 class="text-green-900 font-bold text-lg select-none">किसान 🌱</h5>
-      <button 
-        type="button" 
-        class="text-green-700 text-2xl font-bold"
-        aria-label="Close"
-        id="mobile-sidebar-close"
-      >&times;</button>
-    </div>
 
-    <div class="p-4 text-center border-b border-green-700">
-      {% if user.farmerprofile.profile_picture %}
-        <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Profile" class="mx-auto rounded-full border-4 border-green-700 shadow-lg w-20 h-20 object-cover mb-2" />
-      {% else %}
-        <img src="{% static 'default_profile.jpg' %}" alt="No Profile" class="mx-auto rounded-full border-4 border-green-700 shadow-lg w-20 h-20 object-cover mb-2" />
-      {% endif %}
+ 
+   
+<main class="lg:ml-60">
+ 
+  <!-- Greeting -->
+ <div class=" text-center mb-5 mt-12 tracking-wide font-medium  text-green-900 text-lg italic">{% trans " नमस्ते किसान साथी! यहाँबाट तपाईंले आफ्ना उत्पादनहरू सजिलै व्यवस्थापन गर्न सक्नुहुन्छ।" %}</div>
 
-      <!-- Average Rating Stars -->
-      <div class="text-center mt-2 flex justify-center items-center gap-1">
-        {% for i in "12345" %}
-            {% if i|add:"0" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
-            {% elif i|add:"-0.5" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
+
+  <!-- Product cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {% if products %}
+      {% for product in products %}
+        <div class="bg-gradient-to-br from-green-50 via-green-150 to-green-200 rounded-xl border border-green-700 shadow-md hover:shadow-2xl hover:-translate-y-1 duration-300 transition p-0 flex flex-col overflow-hidden">
+
+          <!-- Farmer Info -->
+          <div class="flex items-center gap-3 bg-green-200 px-4 py-3 border-b border-green-200 rounded-t-lg">
+            {% if user.farmerprofile.profile_picture %}
+              <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Farmer" class="w-12 h-12 rounded-full border-2 border-teal-400 object-cover" />
             {% else %}
-                <span class="text-gray-300 text-xl">★</span>
+              <img src="{% static 'default_profile.jpg' %}" alt="Farmer" class="w-12 h-12 rounded-full border-2 border-teal-400 object-cover" />
             {% endif %}
-        {% endfor %}
-        <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
-      </div>
+            <div>
 
-      <h2 class="text-green-900 font-bold text-xl flex justify-center items-center gap-1 mb-0">
-        👨‍🌾 @{{ user.username }}
-      </h2>
-      <p class="text-green-900 font-semibold mb-0">{{ user.first_name }} {{ user.last_name }}</p>
-      <p class="text-green-800 text-sm mb-2">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
-    </div>
+              
+              <p class="text-green-900 font-semibold tracking-wide">👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
+              <small class="text-green-700 font-medium tracking-wide">@{{ user.username }}</small>
+            </div>
+          </div>
 
-    <nav class="flex flex-col gap-3 px-4 pb-4 font-semibold text-green-900">
-      <a href="{% url 'farmer-dashboard' %}" class="hover:text-green-700 hover:underline transition">📋 ड्याशबोर्ड</a>
-      <a href="{% url 'payments:income_summary' %}" class="hover:text-green-700 hover:underline transition">💰 आम्दानी सारांश</a>
-      <a href="#" class="hover:text-green-700 hover:underline transition">🌿 कृषि सम्बन्धी जानकारी</a>
-      <a href="{% url 'add-product' %}" class="hover:text-green-700 hover:underline transition">➕ नयाँ उत्पादन थप्नुहोस्</a>
-      <a href="{% url 'update-farmer-profile' %}" class="hover:text-green-700 hover:underline transition">✏️ प्रोफाइल सम्पादन</a>
-    </nav>
+          <!-- Product Image -->
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="object-cover h-48 w-full rounded-lg border-green-200" />
+          {% else %}
+            <img src="{% static 'default_product.png' %}" alt="{{ product.sub_category }}" class="object-cover h-48 w-full rounded-lg border-green-200" />
+          {% endif %}
 
-    <form method="post" action="{% url 'logout' %}" class="px-4 pb-4 border-t border-green-700">
-      {% csrf_token %}
-      <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-semibold w-full py-2 rounded transition">🚪 लगआउट</button>
-    </form>
+          <!-- Product Details -->
+          <div class="p-4 flex flex-col flex-grow">
+            <h5 class="text-green-900 text-xl font-bold mb-2 tracking-wide">🌾 {{ product.sub_category }}</h5>
+            <p class="font-medium text-green-800">📦 मात्रा: <span class="font-semibold">{{ product.quantity }} {{ product.unit }}</span></p>
+            <p class="font-medium text-green-800">💰 मूल्य प्रति एकाइ: <span class="font-semibold">Rs. {{ product.price }}</span></p>
+            <p class="font-medium text-green-800">💵 कुल मूल्य: <span class="font-semibold">Rs. {{ product.total_price }}</span></p>
+            <p class="font-medium text-green-800">📍 स्थान: <span class="font-semibold">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></p>
+            <p class="text-green-700 text-sm mt-2 font-medium">📅 पोस्ट मिति: {{ product.date_posted|date:"Y-m-d" }}</p>
+            <p class="mt-2 text-green-700 font-medium">📝 विवरण: {{ product.description }}</p>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-3 mt-4">
+              <a href="{% url 'edit-product' product.id %}" class="bg-teal-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">✏️ सम्पादन</a>
+              <a href="{% url 'delete-product' product.id %}" onclick="return confirm('पक्का हटाउन चाहनुहुन्छ?')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">🗑️ हटाउनुहोस्</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center text-green-700 col-span-full font-medium tracking-wide">तपाईंले कुनै उत्पादन थप्नुभएको छैन।</p>
+    {% endif %}
   </div>
 
-  <!-- Sidebar (desktop) -->
-  <aside class="hidden lg:flex fixed top-0 left-0 h-full w-72 flex-col bg-gradient-to-br from-green-100 to-green-300 border-r border-green-700 shadow-lg p-6 z-40">
-    <div class="text-center border-b border-green-700 pb-6 mb-6">
-      {% if user.farmerprofile.profile_picture %}
-        <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Profile" class="mx-auto rounded-full border-4 border-green-700 shadow-lg w-20 h-20 object-cover mb-2" />
-      {% else %}
-        <img src="{% static 'default_profile.jpg' %}" alt="No Profile" class="mx-auto rounded-full border-4 border-green-700 shadow-lg w-20 h-20 object-cover mb-2" />
-      {% endif %}
+  <!-- Pending chats -->
+  <h3 class="mt-12 mb-4 text-green-900 font-bold text-2xl tracking-wide">📩 Pending Chat Requests</h3>
+  {% if pending_chats %}
+    <ul class="space-y-4">
+      {% for chat in pending_chats %}
+        <li class="border border-green-400 rounded-lg p-4 shadow bg-green-100 hover:bg-green-200 transition">
+          <p class="font-medium text-green-800">Chat request from <strong>{{ chat.customer.username }}</strong> for product <strong>{{ chat.product.name }}</strong></p>
+          <div class="flex gap-4 mt-2">
+            <form method="post" action="{% url 'chat:accept_chat' chat.id %}">{% csrf_token %}<button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-lg font-semibold tracking-wide shadow-sm">✅ Accept</button></form>
+            <form method="post" action="{% url 'chat:reject_chat' chat.id %}">{% csrf_token %}<button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-lg font-semibold tracking-wide shadow-sm">❌ Reject</button></form>
+          </div>
+          <p class="mt-2 text-green-700 font-medium">Waiting for your response...</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-green-700 font-medium tracking-wide">No pending chat requests.</p>
+  {% endif %}
 
-      <!-- Average Rating Stars -->
-      <div class="text-center mt-2 flex justify-center items-center gap-1">
-        {% for i in "12345" %}
-            {% if i|add:"0" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
-            {% elif i|add:"-0.5" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
-            {% else %}
-                <span class="text-gray-300 text-xl">★</span>
-            {% endif %}
-        {% endfor %}
-        <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
-      </div>
+</main>
 
-      <h2 class="text-green-900 font-bold text-xl flex justify-center items-center gap-1 mb-0">👨‍🌾 @{{ user.username }}</h2>
-      <p class="text-green-900 font-semibold mb-0">{{ user.first_name }} {{ user.last_name }}</p>
-      <p class="text-green-800 text-sm mb-0">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p>
-    </div>
+{% endblock content %}
 
-    <nav class="flex flex-col gap-4 font-semibold text-green-900">
-      <a href="{% url 'farmer-dashboard' %}" class="hover:text-green-700 hover:underline transition">📋 ड्याशबोर्ड</a>
-      <a href="{% url 'payments:income_summary' %}" class="hover:text-green-700 hover:underline transition">💰 आम्दानी सारांश</a>
-      <a href="#" class="hover:text-green-700 hover:underline transition">🌿 कृषि सम्बन्धी जानकारी</a>
-      <a href="{% url 'add-product' %}" class="hover:text-green-700 hover:underline transition">➕ नयाँ उत्पादन थप्नुहोस्</a>
-      <a href="{% url 'update-farmer-profile' %}" class="hover:text-green-700 hover:underline transition">✏️ प्रोफाइल सम्पादन</a>
-    </nav>
+<!-- Sidebar toggle script -->
+<script>
+  const sidebar = document.getElementById('sidebar-mobile');
+  const openBtn = document.getElementById('mobile-sidebar-toggle');
+  const closeBtn = document.getElementById('mobile-sidebar-close');
+  openBtn.addEventListener('click', () => {sidebar.classList.remove('-translate-x-full');});
+  closeBtn.addEventListener('click', () => {sidebar.classList.add('-translate-x-full');});
+</script>
 
-    <form method="post" action="{% url 'logout' %}" class="mt-auto pt-6 border-t border-green-700">
-      {% csrf_token %}
-      <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-semibold w-full py-2 rounded transition">🚪 लगआउट</button>
-    </form>
-  </aside>
-
-  <!-- Main content -->
-  <main class="pt-4 px-4 lg:ml-72">
-
-    <!-- Desktop header -->
-    <header class="hidden lg:flex justify-between items-center bg-green-100 shadow sticky top-0 z-30 p-4 rounded-lg mb-6">
-      <div class="flex items-center gap-4 pl-3">
-        <img src="{% static 'accounts/images/download.jpg' %}" alt="Logo" class="rounded-full border-4 border-green-700 shadow w-12 h-12 object-cover" />
-        <span class="text-green-900 font-extrabold text-3xl flex items-center gap-2">
-          किसान <span class="text-green-600 text-lg">🌱</span>
-        </span>
-      </div>
-      <h2 class="text-green-700 font-semibold flex items-center gap-2 text-lg">🛒 तपाईंका पोस्ट गरिएका वस्तुहरू</h2>
-    </header>
-
-    <!-- Divider -->
-    <div class="flex justify-center items-center my-6">
-      <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8">
-        <path d="M10 16 Q 30 0, 60 16 Q 90 32, 110 16" stroke="#4a7c2d" stroke-width="3" fill="none"/>
-        <ellipse cx="10" cy="16" rx="4" ry="8" fill="#3b5e2d"/>
-        <ellipse cx="110" cy="16" rx="4" ry="8" fill="#3b5e2d"/>
-      </svg>
-    </div>
-
-    <!-- Message -->
-    <div class="text-center text-green-900 font-semibold mb-8 text-lg">
-      नमस्ते किसान साथी! यहाँबाट तपाईंले आफ्ना उत्पादनहरू सजिलै व्यवस्थापन गर्न सक्नुहुन्छ।
-    </div>
-
-    <!-- Product cards -->
-    <div class="container mx-auto px-0">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {% if products %}
-          {% for product in products %}
-            <div class="bg-green-100 rounded-xl border-2 border-green-600 shadow-lg flex flex-col overflow-hidden transition hover:shadow-2xl hover:-translate-y-1 duration-300 h-full">
-
-              <!-- Farmer Info -->
-              <div class="flex items-center gap-3 bg-green-300 px-4 py-3 rounded-t-xl border-b border-green-500">
-                {% if user.farmerprofile.profile_picture %}
-                  <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Farmer" class="w-12 h-12 rounded-full border-4 border-green-700 object-cover shadow"/>
-                {% else %}
-                  <img src="{% static 'default_profile.jpg' %}" alt="Farmer" class="w-12 h-12 rounded-full border-4 border-green-700 object-cover shadow"/>
-                {% endif %}
-                <div>
-                  <p class="text-green-900 font-semibold flex items-center gap-1 mb-0">👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
-                  <small class="text-green-700">@{{ user.username }}</small>
-                </div>
-              </div>
-
-              <!-- Product Image -->
-              {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="object-cover h-56 w-full" />
-              {% else %}
-                <img src="{% static 'default_product.png' %}" alt="{{ product.sub_category }}" class="object-cover h-56 w-full" />
-              {% endif %}
-
-              <!-- Product Details -->
-              <div class="p-4 flex flex-col flex-grow">
-                <h5 class="text-green-800 text-xl font-semibold flex items-center gap-1 mb-2">🌾 {{ product.sub_category }}</h5>
-
-                <p class="mb-1 flex items-center gap-2">
-                  📦 <span>मात्रा: <span class="font-bold text-green-900">{{ product.quantity }}</span> {{ product.unit }}</span>
-                </p>
-
-                <p class="mb-1 flex items-center gap-2">
-                  💰 <span>मूल्य प्रति एकाइ: <span class="font-bold text-green-900">Rs. {{ product.price }}</span></span>
-                </p>
-
-                <p class="mb-1 flex items-center gap-2">
-                  💵 <span>कुल मूल्य: <span class="font-bold text-green-900">Rs. {{ product.total_price }}</span></span>
-                </p>
-
-                <p class="mb-2 flex items-center gap-2">
-                  📍 <span>स्थान: <span class="font-bold text-green-900">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></span>
-                </p>
-
-                <p class="mt-2 flex-grow flex items-start gap-2">
-                  📝 <span><strong>विवरण:</strong> {{ product.description }}</span>
-                </p>
-
-                <p class="text-green-700 text-sm mt-2 flex items-center gap-2">
-                  📅 <span>पोस्ट गरिएको मिति: {{ product.date_posted|date:"Y-m-d" }}</span>
-                </p>
-
-                <!-- Actions -->
-                <div class="flex justify-end gap-3 mt-4">
-                  <a href="{% url 'edit-product' product.id %}" class="bg-green-400 hover:bg-green-500 text-green-900 font-semibold px-3 py-1 rounded shadow transition">✏️ सम्पादन</a>
-                  <a href="{% url 'delete-product' product.id %}" onclick="return confirm('पक्का हटाउन चाहनुहुन्छ?')" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1 rounded shadow transition">🗑️ हटाउनुहोस्</a>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        {% else %}
-          <p class="text-center text-green-800 col-span-full">तपाईंले अहिलेसम्म कुनै उत्पादन थप्नुभएको छैन।</p>
-        {% endif %}
-      </div>
-    </div>
-
-    <!-- Pending chats -->
-    <h3 class="mt-10 mb-4 text-green-900 font-bold text-2xl">📩 Pending Chat Requests</h3>
-
-    {% if pending_chats %}
-      <ul class="space-y-4 text-green-900 font-semibold">
-        {% for chat in pending_chats %}
-          <li class="border border-green-400 rounded-lg p-4 shadow bg-green-200">
-            <p>
-              Chat request from <strong>{{ chat.customer.username }}</strong> for product <strong>{{ chat.product.name }}</strong>
-            </p>
-            <div class="flex gap-4 mt-2">
-              <form method="post" action="{% url 'chat:accept_chat' chat.id %}">
-                {% csrf_token %}
-                <button type="submit" class="bg-green-700 hover:bg-green-800 text-white font-semibold px-4 py-1 rounded shadow transition">✅ Accept</button>
-              </form>
-              <form method="post" action="{% url 'chat:reject_chat' chat.id %}">
-                {% csrf_token %}
-                <button type="submit" class="bg-rose-700 hover:bg-rose-800 text-white font-semibold px-4 py-1 rounded shadow transition">❌ Reject</button>
-              </form>
-            </div>
-            <p class="mt-2 italic text-green-700">Waiting for your response...</p>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p class="text-green-700">No pending chat requests.</p>
-    {% endif %}
-
-  </main>
-
-  <!-- Sidebar toggle script -->
-  <script>
-    const sidebar = document.getElementById('sidebar-mobile');
-    const openBtn = document.getElementById('mobile-sidebar-toggle');
-    const closeBtn = document.getElementById('mobile-sidebar-close');
-
-    openBtn.addEventListener('click', () => {
-      sidebar.classList.remove('-translate-x-full');
-      sidebar.setAttribute('aria-hidden', 'false');
-    });
-
-    closeBtn.addEventListener('click', () => {
-      sidebar.classList.add('-translate-x-full');
-      sidebar.setAttribute('aria-hidden', 'true');
-    });
-  </script>
-
+{% comment %} {% include "accounts/farmer_footer.html" %} {% endcomment %}
 </body>
 </html>

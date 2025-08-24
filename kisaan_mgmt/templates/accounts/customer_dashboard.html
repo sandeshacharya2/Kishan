@@ -222,26 +222,28 @@
     </div>
 
       <!-- Product Cards -->
-    <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
+  <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
     <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {% if products %}
         {% for product in products %}
           <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-green-300 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
             <!-- Farmer Info -->
-       <!-- Farmer Info -->
-<!-- Farmer Info -->
 <div class="flex items-start gap-4 p-4 bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
   
   <!-- Farmer Profile Picture -->
   <div class="flex flex-col items-center">
     {% if product.farmer.farmerprofile.profile_picture %}
-      <img src="{{ product.farmer.farmerprofile.profile_picture.url }}"
-           alt="{% trans 'Farmer Picture' %}"
-           class="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-sm" />
+      <a href="{{ product.farmer.farmerprofile.profile_picture.url }}" target="_blank">
+        <img src="{{ product.farmer.farmerprofile.profile_picture.url }}"
+             alt="{% trans 'Farmer Picture' %}"
+             class="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-sm" />
+      </a>
     {% else %}
-      <img src="{% static 'default_profile.jpg' %}"
-           alt="{% trans 'Default Picture' %}"
-           class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
+      <a href="{% static 'default_profile.jpg' %}" target="_blank">
+        <img src="{% static 'default_profile.jpg' %}"
+             alt="{% trans 'Default Picture' %}"
+             class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
+      </a>
     {% endif %}
 
     <!-- Rating Stars as Clickable Link -->
@@ -257,17 +259,15 @@
         {% endif %}
       {% endfor %}
     </a>
-
-    <!-- Rating Text -->
-    <!-- <span class="text-[10px] text-gray-600">
-      ({{ product.farmer_avg_rating|floatformat:1 }}/5)
-    </span> -->
   </div>
 
   <!-- Farmer Details -->
   <div class="flex flex-col">
     <span class="font-semibold text-green-900 text-base flex items-center gap-1">
-      👨‍🌾 {{ product.farmer.first_name }} {{ product.farmer.last_name }}
+      👨‍🌾 <a href="{% url 'farmer_detail' product.farmer.id %}" 
+   class="font-semibold text-green-900 text-base flex items-center gap-1">
+  👨‍🌾 {{ product.farmer.first_name }} {{ product.farmer.last_name }}
+</a>
     </span>
     <span class="text-xs text-green-700">@{{ product.farmer.username }}</span>
     <span class="text-xs text-green-600 mt-1">
@@ -276,10 +276,11 @@
   </div>
 </div>
 
-
             <!-- Product Image -->
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover" />
+              <a href="{{ product.image.url }}" target="_blank">
+                <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover" />
+              </a>
             {% else %}
               <img src="{% static 'default_product.png' %}" alt="{% trans 'Default Product' %}" class="w-full h-48 object-cover" />
             {% endif %}
@@ -316,7 +317,7 @@
       </div>
     {% else %}
       <div class="text-sm mt-2 text-red-600 font-semibold">
-        ⚠️ {% trans "दूरी उपलब्ध छैन" %}
+        ⚠️ {% trans "दूरी उपलब्ध छैन" %}}
       </div>
     {% endif %}
     <a href="{% url 'view_farmer_location' product.farmer.id %}" class="text-blue-600 underline text-sm">
@@ -362,10 +363,12 @@
   {% endif %}
 </div>
 
-  </main>
+</main>
+
 
 
   </div>
+  
  <script>
 document.addEventListener('DOMContentLoaded', () => {
     const productsContainer = document.getElementById('products-container');

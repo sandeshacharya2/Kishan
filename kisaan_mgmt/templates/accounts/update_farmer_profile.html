@@ -1,181 +1,68 @@
+{% extends "accounts/farmer_base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ne">
-<head>
-  <meta charset="UTF-8" />
-  <title>किसान प्रोफाइल अद्यावधिक गर्नुहोस्</title>
-  <style>
-    body {
-      background-color: #e6f2e6;
-      color: #065f46;
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 500px;
-      width: 100%;
-    }
-    h1 {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    form > div {
-      margin-bottom: 18px;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    input[type="text"],
-    input[type="file"],
-    input[type="email"] {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #6ee7b7; /* light green */
-      border-radius: 4px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-    input[type="text"]:read-only,
-    input[type="email"]:read-only {
-      background-color: #f0fdf4;
-      border-color: #a7f3d0;
-      cursor: not-allowed;
-    }
-    .error {
-      color: #dc2626; /* red-600 */
-      font-size: 13px;
-      margin-top: 4px;
-    }
-    button {
-      background-color: #16a34a; /* green-600 */
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-      font-weight: 600;
-    }
-    button:hover {
-      background-color: #15803d; /* green-700 */
-    }
-    .profile-pic {
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
-    }
-    .profile-pic img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 4px solid #16a34a;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-      object-fit: cover;
-    }
-    .back-link {
-      display: block;
-      margin-top: 20px;
-      text-align: center;
-      color: #15803d;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .back-link:hover {
-      text-decoration: underline;
-    }
-    .non-field-errors {
-      background-color: #fee2e2;
-      border: 1px solid #fca5a5;
-      padding: 10px;
-      margin-bottom: 15px;
-      color: #b91c1c;
-      border-radius: 4px;
-      font-size: 14px;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>किसान प्रोफाइल अद्यावधिक गर्नुहोस्</h1>
 
-    <form method="post" enctype="multipart/form-data" novalidate>
-      {% csrf_token %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white shadow-md rounded-xl p-6 mt-16">
+  <h1 class="text-2xl font-bold text-green-700 text-center mb-6">
+    किसान प्रोफाइल अद्यावधिक गर्नुहोस्
+  </h1>
 
-      {% if form.non_field_errors %}
-      <div class="non-field-errors">
+  <form method="post" enctype="multipart/form-data" class="space-y-5">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="bg-red-100 border border-red-300 text-red-700 p-3 rounded text-center">
         {{ form.non_field_errors }}
       </div>
+    {% endif %}
+
+    <!-- First Name -->
+    <div>
+      <label for="{{ form.first_name.id_for_label }}" class="block font-semibold text-green-700 mb-1">📝 पहिलो नाम *</label>
+      <input type="text" name="{{ form.first_name.name }}" value="{{ form.first_name.value }}" class="w-full border border-green-300 rounded-lg p-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
+      {% if form.first_name.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.first_name.errors.0 }}</p>
       {% endif %}
+    </div>
 
-      <!-- <div>
-        <label for="{{ form.first_name.id_for_label }}">📝 पहिलो नाम *</label>
-        {{ form.first_name }}
-        {% if form.first_name.errors %}
-          <div class="error">{{ form.first_name.errors.0 }}</div>
-        {% endif %}
-      </div>
+    <!-- Last Name -->
+    <div>
+      <label for="{{ form.last_name.id_for_label }}" class="block font-semibold text-green-700 mb-1">📝 थर *</label>
+      <input type="text" name="{{ form.last_name.name }}" value="{{ form.last_name.value }}" class="w-full border border-green-300 rounded-lg p-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
+      {% if form.last_name.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.last_name.errors.0 }}</p>
+      {% endif %}
+    </div>
 
-      <div>
-        <label for="{{ form.last_name.id_for_label }}">📝 थर *</label>
-        {{ form.last_name }}
-        {% if form.last_name.errors %}
-          <div class="error">{{ form.last_name.errors.0 }}</div>
-        {% endif %}
-      </div> -->
+    <!-- Profile Picture -->
+    <div>
+      <label for="{{ form.profile_picture.id_for_label }}" class="block font-semibold text-green-700 mb-1">🖼️ प्रोफाइल फोटो</label>
+      <input type="file" name="{{ form.profile_picture.name }}" class="w-full border border-green-300 rounded-lg p-2 text-sm">
+      {% if form.profile_picture.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.profile_picture.errors.0 }}</p>
+      {% endif %}
+    </div>
 
-      <div>
-        <label for="{{ form.profile_picture.id_for_label }}">🖼️ प्रोफाइल फोटो</label>
-        {{ form.profile_picture }}
-        {% if form.profile_picture.errors %}
-          <div class="error">{{ form.profile_picture.errors.0 }}</div>
-        {% endif %}
-      </div>
+    <!-- Current Profile Picture -->
+    <div class="flex justify-center mt-2">
+      {% if farmerprofile.profile_picture %}
+        <img src="{{ farmerprofile.profile_picture.url }}" alt="Profile Picture" class="w-28 h-28 rounded-full border-4 border-green-500 object-cover shadow">
+      {% else %}
+        <img src="{% static 'default_profile.jpg' %}" alt="Default Profile Picture" class="w-28 h-28 rounded-full border-4 border-green-500 object-cover shadow">
+      {% endif %}
+    </div>
 
-    <div class="profile-pic">
-  {% if farmerprofile.profile_picture %}
-    <img id="preview-image" src="{{ farmerprofile.profile_picture.url }}" alt="Profile Picture">
-  {% else %}
-    <img id="preview-image" src="{% static 'default_profile.jpg' %}" alt="Default Profile Picture">
-  {% endif %}
-</div>
+    <!-- Submit Button -->
+    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">
+      💾 प्रोफाइल सुरक्षित गर्नुहोस्
+    </button>
+  </form>
 
-      <button type="submit">💾 प्रोफाइल सुरक्षित गर्नुहोस्</button>
-    </form>
-
-    <a href="{% url 'farmer-dashboard' %}" class="back-link">← ड्यासबोर्डमा फर्कनुहोस्</a>
+  <!-- Back Link -->
+  <div class="text-center mt-4">
+    <a href="{% url 'farmer-dashboard' %}" class="text-green-700 font-semibold hover:underline">
+      ← ड्यासबोर्डमा फर्कनुहोस्
+    </a>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const profilePictureInput = document.querySelector('input[name="profile_picture"]');
-      const previewImage = document.getElementById('preview-image');
-
-      profilePictureInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            previewImage.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        } else {
-          previewImage.src = "{% static 'default_profile.jpg' %}";
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+</div>
+{% endblock %}

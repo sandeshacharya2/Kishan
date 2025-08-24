@@ -9,6 +9,9 @@ import xml.etree.ElementTree as ET
 from products.models import Product  # Adjust if your product model is elsewhere
 from payments.models import Transaction  # 🔸 Import the Transaction model
 from accounts.views.role_based_redirect import farmer_required, customer_required
+from accounts.models import FarmerReview
+from accounts.views.update_farmer_profile import FarmerReview
+from django.db.models import Avg
 
 @customer_required
 def choose_quantity(request, product_id):
@@ -190,8 +193,14 @@ from payments.models import Transaction
 def income_summary(request):
     try:
         user = request.user
+        
         # Filter transactions for products where the logged-in user is the farmer
         transactions = Transaction.objects.filter(product__farmer=user, status='Success').order_by('-created_at')
+        avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
+        avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+        reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
 
         # Calculate total income
         total_income = sum(t.amount for t in transactions)
@@ -199,6 +208,9 @@ def income_summary(request):
         context = {
             'transactions': transactions,
             'total_income': total_income,
+            'reviews': reviews,
+            'avg_rating': avg_rating,
+
         }
         return render(request, 'payments/income_summary.html', context)
     except Exception as e:

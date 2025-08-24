@@ -1,0 +1,36 @@
+{% load static %}
+
+<header class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-green-700 via-emerald-600 to-lime-600 shadow-lg ">
+  <div class="lg:ml-72">
+    <div class="max-w-screen-2xl mx-auto px-4 py-3 flex items-center justify-between">
+
+      <!-- Left side -->
+      <div class="flex items-center gap-3">
+        <img src="{% static 'accounts/images/download.jpg' %}" alt="Logo"
+             class="w-11 h-11 rounded-full border-2 border-white shadow-md object-cover" />
+        <div class="flex flex-col leading-tight">
+          <span class="text-white font-extrabold text-xl tracking-wide">किसान ड्याशबोर्ड</span>
+          <span class="text-sm text-lime-200 italic">“उत्पादन, प्रगति र बजार”</span>
+        </div>
+      </div>
+
+      <!-- Right side -->
+      <div class="flex items-center gap-4">
+        <span class="hidden sm:inline text-white font-medium">नमस्ते, {{ user.farmerprofile.first_name }} {{ user.farmerprofile.last_name }}</span>
+        {% if user.farmerprofile.profile_picture %}
+          <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Profile"
+               class="w-10 h-10 rounded-full border-2 border-white shadow-md" />
+        {% else %}
+          <img src="{% static 'default_profile.jpg' %}" alt="Profile"
+               class="w-10 h-10 rounded-full border-2 border-white shadow-md" />
+        {% endif %}
+
+        <!-- Mobile Menu Button (Hamburger) -->
+
+<button id="mobile-sidebar-toggle" 
+        class="lg:hidden text-white text-3xl focus:outline-none">
+  ☰
+</button>      </div>
+    </div>
+  </div>
+</header>

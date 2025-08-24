@@ -1,24 +1,22 @@
-<!DOCTYPE html>
-<html lang="ne">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>उत्पादन थप्नुहोस्</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-tr from-green-50 to-green-200 min-h-screen flex flex-col items-center p-4">
+{% extends "accounts/farmer_base.html" %}
+{% load static %}
+{% load i18n %}
 
-  <!-- Title -->
-  <h1 class="flex items-center gap-2 text-2xl sm:text-3xl font-bold text-green-700 mt-6 mb-2">
-    🌾 उत्पादन थप्नुहोस्
-  </h1>
-  <p class="bg-green-100 text-green-800 px-4 py-2 rounded-xl shadow text-center text-sm sm:text-base">
-    किसान साथी, यहाँबाट आफ्नो उत्पादन सजिलै थप्न सक्नुहुन्छ।
-  </p>
+{% block title %}उत्पादन थप्नुहोस्{% endblock %}
 
-  <!-- Form Card -->
-  <div class="relative bg-white shadow-lg rounded-2xl p-6 w-full max-w-md lg:max-w-3xl mt-6 border border-green-200">
-    <form method="post" enctype="multipart/form-data" class="space-y-4">
+{% block content %}
+<div class="flex justify-center items-start pt-24 p-4 min-h-[calc(100vh-4rem)]">
+  <!-- Card remains exactly the same -->
+  <div class="relative bg-white shadow-lg rounded-2xl p-6 w-full max-w-md lg:max-w-3xl border border-green-200">
+
+    <h1 class="flex items-center gap-2 text-2xl sm:text-3xl font-bold text-green-700 mt-0 mb-2">
+      🌾 उत्पादन थप्नुहोस्
+    </h1>
+    <p class="bg-green-100 text-green-800 px-4 py-2 rounded-xl shadow text-center text-sm sm:text-base mb-4">
+      किसान साथी, यहाँबाट आफ्नो उत्पादन सजिलै थप्न सक्नुहुन्छ।
+    </p>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4 mt-4">
       {% csrf_token %}
 
       <!-- Main Category -->
@@ -86,6 +84,8 @@
         <label for="image" class="block font-semibold text-green-800">उत्पादनको फोटो 🖼️:</label>
         <input type="file" name="image" id="image" accept="image/*"
           class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
+
+        <!-- Image Preview Container -->
         <div id="image-preview-container" class="relative mt-4 hidden max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
           <img id="image-preview" src="#" alt="Image Preview" class="rounded-lg w-full object-contain max-h-80" />
         </div>
@@ -104,93 +104,75 @@
       </div>
     </form>
   </div>
+</div>
 
-  <script>
-    // Subcategory logic
-    const subcategories = {
-      "तरकारी": ["आलु", "प्याज", "लसुन", "टमाटर", "बन्दा", "काउली", "मुला", "गाजर", "साग", "काक्रो", "भेनता", "सिमि", "बोडी", "लौका", "करेला", "खुर्सानी", "धनिया", "अदुवा", "फर्सी", "चिचिँडो", "अन्य"],
-      "फलफुल": ["स्याउ", "केरा", "सुन्तला", "मेवा", "आँप", "नासपाती", "कागती", "भुइँकटहर", "अन्य"],
-      "खाद्यान्न": ["धान", "गहुँ", "मकै", "जौ", "कोदो", "फापर", "चना", "मुसुरो", "मास", "बोडी", "सिमी", "स्याल्टुङ", "केराउ", "तोरी", "अन्य"]
-    };
 
-    const mainCategorySelect = document.getElementById("main-category");
-    const subCategorySelect = document.getElementById("sub-category");
-    const otherInput = document.getElementById("other-subcategory");
+<script>
+  // Subcategory logic
+  const subcategories = {
+    "तरकारी": ["आलु", "प्याज", "लसुन", "टमाटर", "बन्दा", "काउली", "मुला", "गाजर", "साग", "काक्रो", "भेनता", "सिमि", "बोडी", "लौका", "करेला", "खुर्सानी", "धनिया", "अदुवा", "फर्सी", "चिचिँडो", "अन्य"],
+    "फलफुल": ["स्याउ", "केरा", "सुन्तला", "मेवा", "आँप", "नासपाती", "कागती", "भुइँकटहर", "अन्य"],
+    "खाद्यान्न": ["धान", "गहुँ", "मकै", "जौ", "कोदो", "फापर", "चना", "मुसुरो", "मास", "बोडी", "सिमी", "स्याल्टुङ", "केराउ", "तोरी", "अन्य"]
+  };
 
-    mainCategorySelect.addEventListener("change", function () {
-      const mainCat = this.value;
-      subCategorySelect.innerHTML = "<option value=''>-- छान्नुहोस् --</option>";
-      otherInput.classList.add("hidden");
-      if (subcategories[mainCat]) {
-        subcategories[mainCat].forEach(item => {
-          const option = document.createElement("option");
-          option.value = item;
-          option.text = item;
-          subCategorySelect.appendChild(option);
-        });
-      }
-    });
+  const mainCategorySelect = document.getElementById("main-category");
+  const subCategorySelect = document.getElementById("sub-category");
+  const otherInput = document.getElementById("other-subcategory");
 
-    subCategorySelect.addEventListener("change", function () {
-      otherInput.classList.toggle("hidden", this.value !== "अन्य");
-    });
-
-    // Total price calculation
-    function updateTotalPrice() {
-      const qty = parseFloat(document.getElementById("quantity").value) || 0;
-      const price = parseFloat(document.getElementById("price").value) || 0;
-      const total = qty * price;
-      document.getElementById("total-price").textContent =
-        (qty && price) ? `कुल मूल्य: रु ${total.toFixed(2)}` : "";
-    }
-    document.getElementById("quantity").addEventListener("input", updateTotalPrice);
-    document.getElementById("price").addEventListener("input", updateTotalPrice);
-
-    // Character counter
-    const desc = document.getElementById("description");
-    const charCount = document.getElementById("char-count");
-    desc.addEventListener("input", function () {
-      charCount.textContent = `${this.value.length} / 150 अक्षर`;
-    });
-
-    // Image preview
-    const imageInput = document.getElementById("image");
-    const previewContainer = document.getElementById("image-preview-container");
-    const previewImage = document.getElementById("image-preview");
-    imageInput.addEventListener("change", function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          previewImage.src = e.target.result;
-          previewContainer.classList.remove("hidden");
-        };
-        reader.readAsDataURL(file);
-      } else {
-        previewImage.src = "#";
-        previewContainer.classList.add("hidden");
-      }
-    });
-
-    // Roman → Nepali search mapping (for search input)
-    const romanToNepali = {
-      'aalu': 'आलु', 'pyaaj': 'प्याज', 'lasun': 'लसुन', 'tamatar': 'टमाटर',
-      'bandaa': 'बन्दा', 'kauli': 'काउली', 'mula': 'मुला', 'gajar': 'गाजर',
-      'saag': 'साग', 'kakro': 'काक्रो', 'syaau': 'स्याउ', 'keraa': 'केरा',
-      'suntala': 'सुन्तला', 'mawa': 'मेवा', 'aamp': 'आँप', 'kaagati': 'कागती',
-      'naaspati': 'नासपाती'
-    };
-
-    document.addEventListener('DOMContentLoaded', function () {
-      const searchInput = document.querySelector('input[name="q"]');
-      if (!searchInput) return;
-      searchInput.addEventListener('input', function () {
-        const query = this.value.trim().toLowerCase();
-        if (romanToNepali[query]) {
-          this.value = romanToNepali[query];
-        }
+  mainCategorySelect.addEventListener("change", function () {
+    const mainCat = this.value;
+    subCategorySelect.innerHTML = "<option value=''>-- छान्नुहोस् --</option>";
+    otherInput.classList.add("hidden");
+    if (subcategories[mainCat]) {
+      subcategories[mainCat].forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.text = item;
+        subCategorySelect.appendChild(option);
       });
-    });
-  </script>
-</body>
-</html>
+    }
+  });
+
+  subCategorySelect.addEventListener("change", function () {
+    otherInput.classList.toggle("hidden", this.value !== "अन्य");
+  });
+
+  // Total price calculation
+  function updateTotalPrice() {
+    const qty = parseFloat(document.getElementById("quantity").value) || 0;
+    const price = parseFloat(document.getElementById("price").value) || 0;
+    const total = qty * price;
+    document.getElementById("total-price").textContent =
+      (qty && price) ? `कुल मूल्य: रु ${total.toFixed(2)}` : "";
+  }
+  document.getElementById("quantity").addEventListener("input", updateTotalPrice);
+  document.getElementById("price").addEventListener("input", updateTotalPrice);
+
+  // Character counter
+  const desc = document.getElementById("description");
+  const charCount = document.getElementById("char-count");
+  desc.addEventListener("input", function () {
+    charCount.textContent = `${this.value.length} / 150 अक्षर`;
+  });
+
+  // Image preview logic
+  const imageInput = document.getElementById("image");
+  const previewContainer = document.getElementById("image-preview-container");
+  const previewImage = document.getElementById("image-preview");
+
+  imageInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewImage.src = e.target.result;
+        previewContainer.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      previewImage.src = "#";
+      previewContainer.classList.add("hidden");
+    }
+  });
+</script>
+{% endblock content %}

@@ -1,0 +1,73 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}किसान ड्याशबोर्ड{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="w-full">
+    {% include "accounts/farmer_header.html" %}
+  </header>
+
+  
+
+  <!-- Main Layout (Sidebar + Content) -->
+  <div class="flex flex-1">
+    <!-- Sidebar -->
+    
+      {% include "accounts/farmer_sidebar.html" %}
+    
+
+    <!-- Content -->
+    <main class="flex-1 p-6">
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarMobile = document.getElementById("sidebar-mobile");
+  const overlay = document.getElementById("sidebar-overlay");
+  const openBtn = document.getElementById("mobile-sidebar-toggle");
+  const closeBtn = document.getElementById("mobile-sidebar-close");
+
+  if (openBtn && sidebarMobile && overlay) {
+    openBtn.addEventListener("click", () => {
+      sidebarMobile.classList.remove("-translate-x-full");
+      overlay.classList.remove("hidden");
+    });
+  }
+
+  if (closeBtn && sidebarMobile && overlay) {
+    closeBtn.addEventListener("click", () => {
+      sidebarMobile.classList.add("-translate-x-full");
+      overlay.classList.add("hidden");
+    });
+  }
+
+  // Close when clicking on overlay
+  if (overlay && sidebarMobile) {
+    overlay.addEventListener("click", () => {
+      sidebarMobile.classList.add("-translate-x-full");
+      overlay.classList.add("hidden");
+    });
+  }
+});
+</script>
+
+</body>
+ <!-- Footer -->
+    <footer class="w-full">
+      {% include "accounts/farmer_footer.html" %}
+    </footer>
+</html>
