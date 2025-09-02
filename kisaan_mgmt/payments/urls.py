@@ -4,11 +4,24 @@ from . import views
 app_name = "payments"
 
 urlpatterns = [
-    path('<int:product_id>/buy/', views.choose_quantity, name='choose_quantity'),          # quantity form
-    path('<int:product_id>/payment-request/', views.payment_request, name='payment_request'),  # process payment POST
+    # Customer purchase flow
+    path('<int:product_id>/buy/', views.choose_quantity, name='choose_quantity'),          
+    path('<int:product_id>/payment-request/', views.payment_request, name='payment_request'),  
     path('success/', views.payment_success, name='payment_success'),
     path('failure/', views.payment_failure, name='payment_failure'),
+
+    # Farmer income dashboard
     path('income-summary/', views.income_summary, name='income_summary'),
+
+    # Customer purchases
     path('my-purchases/', views.customer_purchases, name='customer_purchases'),
 
+    # Farmer updates delivery status
+    path('update-delivery-status/<int:transaction_id>/', views.update_delivery_status, name='update_delivery_status'),
+
+    # Customer confirms delivery
+    path('confirm-delivery/<int:transaction_id>/', views.confirm_delivery, name='confirm-delivery'),
+
+    # Customer disputes delivery
+    path('dispute-delivery/<int:transaction_id>/', views.dispute_delivery, name='dispute-delivery'),
 ]

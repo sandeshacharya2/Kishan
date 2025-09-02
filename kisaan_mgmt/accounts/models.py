@@ -57,8 +57,8 @@ class FarmerProfile(models.Model):
     # first_name = models.CharField(max_length=30, blank=True, null=True)
     # last_name = models.CharField(max_length=30, blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
+    # def __str__(self):
+    #     return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
 
 
 # Customer specific profile (नयाँ थपिएको)
@@ -70,8 +70,8 @@ class CustomerProfile(models.Model):
     # थप fields चाहियो भने यहाँ थप्न सक्नुहुन्छ
     
 
-    def __str__(self):
-        return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
+    # def __str__(self):
+    #     return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
 
 
 # Signal to create or update profiles automatically

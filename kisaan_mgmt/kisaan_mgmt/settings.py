@@ -85,6 +85,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ROOT_URLCONF = 'kisaan_mgmt.urls'
 
+ADMIN_EMAIL = 'kisaan.helps@gmail.com'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates', #built in Django template engine

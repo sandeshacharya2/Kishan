@@ -4,223 +4,121 @@
 
 {% block title %}Farmer Income Dashboard{% endblock %}
 
-
 {% block content %}
-  <div class="max-w-5xl mx-auto p-4 sm:p-8 lg:ml-64">
+<div class="max-w-5xl mx-auto p-4 sm:p-8 lg:ml-64">
 
-      <a href="{% url 'farmer-dashboard' %}"
-         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base mt-20">
-        ← Dashboard मा फर्कनुहोस्
-      </a>
+  <a href="{% url 'farmer-dashboard' %}"
+     class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base mt-20">
+    ← Dashboard मा फर्कनुहोस्
+  </a>
 
-    <!-- Summary Cards -->
-    <section class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6 text-center">
-      <div id="cardTotal" class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-        कुल आम्दानी<br>
-        <span class="text-green-700 font-bold text-2xl">रु 0</span>
-      </div>
-      <div id="cardBest" class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-        Best Month Income<br>
-        <span class="text-green-700 font-bold text-2xl">रु 0</span>
-      </div>
-      <div id="cardWorst" class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-        Worst Month Income<br>
-        <span class="text-green-700 font-bold text-2xl">रु 0</span>
-      </div>
-      <div id="cardCount" class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-        Transactions<br>
-        <span class="text-green-700 font-bold text-2xl">0</span>
-      </div>
-    </section>
+  <!-- Summary Cards -->
+  <section class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6 text-center">
+    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
+      कुल आम्दानी<br>
+      <span class="text-green-700 font-bold text-2xl">रु {{ total_income }}</span>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
+      Reviews<br>
+      <span class="text-green-700 font-bold text-2xl">{{ avg_rating }}/5</span>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
+      Completed Orders<br>
+      <span class="text-green-700 font-bold text-2xl">{{ completed_count }}</span>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
+      Pending Orders<br>
+      <span class="text-red-600 font-bold text-2xl">{{ pending_count }}</span>
+    </div>
+  </section>
 
-    <!-- Filter Section -->
-    <section class="bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col sm:flex-row sm:items-center gap-4">
+  <!-- Completed Transactions -->
+  <section class="bg-white rounded-xl shadow p-4 mb-8 overflow-x-auto">
+    <h2 class="text-lg font-semibold mb-3 text-green-700">✅ Completed Transactions</h2>
+    <table class="min-w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
+      <thead class="bg-green-600 text-white">
+        <tr>
+          <th class="px-4 py-2">PID</th>
+          <th class="px-4 py-2">Product</th>
+          <th class="px-4 py-2">Buyer</th>
+          <th class="px-4 py-2">Quantity</th>
+          <th class="px-4 py-2">Amount</th>
+          <th class="px-4 py-2">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% if completed_transactions %}
+          {% for t in completed_transactions %}
+            <tr class="hover:bg-green-50">
+              <td class="px-4 py-2 font-mono text-xs sm:text-sm text-gray-600">{{ t.pid }}</td>
+              <td class="px-4 py-2">{{ t.product.sub_category }}</td>
+              <td class="px-4 py-2">{{ t.user.username }}</td>
+              <td class="px-4 py-2">{{ t.quantity }}</td>
+              <td class="px-4 py-2 text-green-700 font-semibold">रु {{ t.amount }}</td>
+              <td class="px-4 py-2">{{ t.created_at|date:"Y-m-d" }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="6" class="text-center py-4 text-gray-400 italic">हाल कुनै Completed कारोबार छैन।</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </section>
 
-      <label for="filterType" class="font-semibold text-gray-700 whitespace-nowrap">Filter by:</label>
-      <select id="filterType" onchange="onFilterTypeChange()" 
-              class="border border-gray-300 rounded px-3 py-2 max-w-xs w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-green-500 transition">
-        <option value="date">Exact Date</option>
-        <option value="week">Week</option>
-        <option value="month">Month</option>
-        <option value="year">Year</option>
-      </select>
+  <!-- Pending / Dispatched / Delivered Transactions -->
+  <section class="bg-white rounded-xl shadow p-4 overflow-x-auto">
+    <h2 class="text-lg font-semibold mb-3 text-red-600">⌛ Orders In Progress</h2>
+    <table class="min-w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
+      <thead class="bg-gray-600 text-white">
+        <tr>
+          <th class="px-4 py-2">PID</th>
+          <th class="px-4 py-2">Product</th>
+          <th class="px-4 py-2">Buyer</th>
+          <th class="px-4 py-2">Quantity</th>
+          <th class="px-4 py-2">Amount</th>
+          <th class="px-4 py-2">Delivery Status</th>
+          <th class="px-4 py-2">Update Status</th>
+          <th class="px-4 py-2">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% if pending_transactions %}
+          {% for t in pending_transactions %}
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-2 font-mono text-xs sm:text-sm text-gray-600">{{ t.pid }}</td>
+              <td class="px-4 py-2">{{ t.product.sub_category }}</td>
+              <td class="px-4 py-2">{{ t.user.username }}</td>
+              <td class="px-4 py-2">{{ t.quantity }}</td>
+              <td class="px-4 py-2">रु {{ t.amount }}</td>
+              <td class="px-4 py-2">
+                <span class="px-2 py-1 rounded text-xs font-semibold
+                  {% if t.delivery_status == 'Pending' %} bg-yellow-100 text-yellow-700
+                  {% elif t.delivery_status == 'Dispatched' %} bg-blue-100 text-blue-700
+                  {% elif t.delivery_status == 'Delivered' %} bg-purple-100 text-purple-700
+                  {% else %} bg-gray-100 text-gray-600 {% endif %}">
+                  {{ t.delivery_status }}
+                </span>
+              </td>
+              <td class="px-4 py-2">
+                <form method="POST" action="{% url 'payments:update_delivery_status' t.id %}">
+                  {% csrf_token %}
+                  <select name="delivery_status" class="border px-2 py-1 rounded text-xs">
+                    <option value="Pending" {% if t.delivery_status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Dispatched" {% if t.delivery_status == 'Dispatched' %}selected{% endif %}>Dispatched</option>
+                    <option value="Delivered" {% if t.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                  </select>
+                  <button type="submit" class="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">Update</button>
+                </form>
+              </td>
+              <td class="px-4 py-2">{{ t.created_at|date:"Y-m-d" }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="8" class="text-center py-4 text-gray-400 italic">हाल कुनै Pending कारोबार छैन।</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </section>
 
-      <!-- Inputs for filters (only one visible) -->
-      <input id="filterDate" type="date" class="border border-gray-300 rounded px-3 py-2 max-w-xs w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-green-500 transition" onchange="applyFilter()"/>
-
-      <input id="filterWeek" type="week" class="hidden border border-gray-300 rounded px-3 py-2 max-w-xs w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-green-500 transition" onchange="applyFilter()"/>
-
-      <input id="filterMonth" type="month" class="hidden border border-gray-300 rounded px-3 py-2 max-w-xs w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-green-500 transition" onchange="applyFilter()"/>
-
-      <input id="filterYear" type="number" min="2000" max="2100" placeholder="YYYY" maxlength="4"
-             class="hidden border border-gray-300 rounded px-3 py-2 max-w-xs w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-green-500 transition" onchange="applyFilter()"/>
-
-      <button onclick="resetFilter()" 
-              class="bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 text-white px-5 py-3 rounded max-w-xs w-full sm:w-auto transition font-semibold" aria-label="Clear filter">
-        Clear Filter
-      </button>
-
-    </section>
-
-    <!-- Transactions Table -->
-    <section class="bg-white rounded-xl shadow p-4 overflow-x-auto">
-      <table class="min-w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
-        <thead class="bg-green-600 text-white">
-          <tr>
-            <th class="px-4 py-2">PID</th>
-            <th class="px-4 py-2">Product</th>
-            <th class="px-4 py-2">Buyer</th>
-            <th class="px-4 py-2">Quantity</th>
-            <th class="px-4 py-2">Price</th>
-            <th class="px-4 py-2">Date</th>
-          </tr>
-        </thead>
-        <tbody id="transactionsBody" class="divide-y divide-gray-200 bg-white text-gray-800">
-          <!-- JS will populate rows here -->
-        </tbody>
-      </table>
-    </section>
-
-
- </div>
-
-
-<script>
-// Your Django-passed data here (for example)
-const transactions = [
-  {% for t in transactions %}
-    {
-      pid: "{{ t.pid }}",
-      product: "{{ t.product.sub_category|escapejs }}",
-      buyer: "{{ t.user.username|escapejs }}",
-      quantity: "{{ t.quantity }}",
-      price: {{ t.amount }},
-      date: "{{ t.created_at|date:'Y-m-d' }}"
-    }{% if not forloop.last %},{% endif %}
-  {% endfor %}
-];
-
-// Capitalize helper
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-// Show relevant input based on filter type selection
-function onFilterTypeChange() {
-  ['filterDate', 'filterWeek', 'filterMonth', 'filterYear'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
-    document.getElementById(id).value = '';
-  });
-  const type = document.getElementById('filterType').value;
-  document.getElementById('filter' + capitalize(type)).classList.remove('hidden');
-  applyFilter();
-}
-
-// Render table rows with data
-function renderRows(data) {
-  const tbody = document.getElementById('transactionsBody');
-  if(data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400 italic">हाल कुनै कारोबार छैन।</td></tr>`;
-    updateSummary(0, 0, 0, 0);
-    return;
-  }
-
-  let total = 0;
-  let rows = data.map(t => {
-    total += t.price;
-    return `<tr class="hover:bg-green-50">
-      <td class="px-4 py-2 font-mono text-xs sm:text-sm text-gray-600">${t.pid}</td>
-      <td class="px-4 py-2">${t.product}</td>
-      <td class="px-4 py-2">${t.buyer}</td>
-      <td class="px-4 py-2">${t.quantity}</td>
-      <td class="px-4 py-2">रु ${t.price}</td>
-      <td class="px-4 py-2">${t.date}</td>
-    </tr>`;
-  }).join('');
-
-  // Total row
-  rows += `<tr class="font-bold bg-gray-100">
-    <td colspan="4" class="px-4 py-2">Total</td>
-    <td colspan="2" class="px-4 py-2">रु ${total}</td>
-  </tr>`;
-
-  tbody.innerHTML = rows;
-  updateSummary(total, 0, 0, data.length); // best/worst month 0 for now
-}
-
-// Update summary cards
-function updateSummary(total, best, worst, count) {
-  document.getElementById('cardTotal').innerHTML = `कुल आम्दानी<br><span class="text-green-700 font-bold text-2xl">रु ${total}</span>`;
-  document.getElementById('cardBest').innerHTML = `Best Month Income<br><span class="text-green-700 font-bold text-2xl">रु ${best}</span>`;
-  document.getElementById('cardWorst').innerHTML = `Worst Month Income<br><span class="text-green-700 font-bold text-2xl">रु ${worst}</span>`;
-  document.getElementById('cardCount').innerHTML = `Transactions<br><span class="text-green-700 font-bold text-2xl">${count}</span>`;
-}
-
-// Apply filter logic for all types
-function applyFilter() {
-  const type = document.getElementById('filterType').value;
-  const val = document.getElementById('filter' + capitalize(type)).value;
-
-  if (!val) {
-    renderRows(transactions);
-    return;
-  }
-
-  let filtered = [];
-
-  if (type === 'date') {
-    filtered = transactions.filter(t => t.date === val);
-  } 
-  else if (type === 'week') {
-    // val = "YYYY-Www" e.g. 2025-W15
-    const [year, weekStr] = val.split('-W');
-    const week = parseInt(weekStr, 10);
-
-    filtered = transactions.filter(t => {
-      const d = new Date(t.date);
-      const y = d.getFullYear();
-      const w = getWeekNumber(d);
-      return y === parseInt(year, 10) && w === week;
-    });
-  }
-  else if (type === 'month') {
-    // val = "YYYY-MM" e.g. 2025-07
-    filtered = transactions.filter(t => t.date.startsWith(val));
-  }
-  else if (type === 'year') {
-    // val = "YYYY" e.g. 2025
-    filtered = transactions.filter(t => t.date.startsWith(val));
-  }
-
-  renderRows(filtered);
-}
-
-// Clear filters
-function resetFilter() {
-  document.getElementById('filterDate').value = '';
-  document.getElementById('filterWeek').value = '';
-  document.getElementById('filterMonth').value = '';
-  document.getElementById('filterYear').value = '';
-  renderRows(transactions);
-  document.getElementById('filterType').value = 'date';
-  onFilterTypeChange();
-}
-
-// Helper: get ISO week number of a date
-// Source: https://stackoverflow.com/a/6117889/355230
-function getWeekNumber(d) {
-  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
-}
-
-// Initialize table and filter inputs on load
-window.onload = () => {
-  onFilterTypeChange();
-  renderRows(transactions);
-};
-</script>
-
+</div>
 {% endblock %}

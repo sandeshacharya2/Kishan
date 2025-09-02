@@ -118,6 +118,7 @@ def payment_success(request):
                     amount=amt,
                     quantity=qty_num,
                     status='Success',
+                    delivery_status='Pending',
                 )
             except Exception as e:
                 print("❌ Error saving transaction:", e)
@@ -193,39 +194,107 @@ from payments.models import Transaction
 def income_summary(request):
     try:
         user = request.user
-        
-        # Filter transactions for products where the logged-in user is the farmer
-        transactions = Transaction.objects.filter(product__farmer=user, status='Success').order_by('-created_at')
+
+        # Completed transactions (after customer confirms)
+        completed_transactions = Transaction.objects.filter(
+            product__farmer=user,
+            status='Success',
+            delivery_status='Completed'
+        ).order_by('-created_at')
+
+        # Pending transactions (Pending/Dispatched/Delivered but not yet Completed or Dispute)
+        pending_transactions = Transaction.objects.filter(
+    product__farmer=user,
+    status='Success'
+).exclude(delivery_status__in=['Completed']).order_by('-created_at')
+        # Summary
+        total_income = sum(t.amount for t in completed_transactions)
+        completed_count = completed_transactions.count()
+        pending_count = pending_transactions.count()
+
         avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
         avg_rating = round(avg_rating, 1)
 
-    # ✅ Fetch reviews from customers
-        reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
-
-        # Calculate total income
-        total_income = sum(t.amount for t in transactions)
-
         context = {
-            'transactions': transactions,
+            'completed_transactions': completed_transactions,
+            'pending_transactions': pending_transactions,
             'total_income': total_income,
-            'reviews': reviews,
+            'completed_count': completed_count,
+            'pending_count': pending_count,
             'avg_rating': avg_rating,
-
         }
+
         return render(request, 'payments/income_summary.html', context)
+
     except Exception as e:
         print("❌ Error in income_summary:", e)
         return render(request, 'payments/error.html', {'message': 'Error loading income summary.'})
+@login_required
+@farmer_required
+def update_delivery_status(request, transaction_id):
+    try:
+        transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user)
+        if request.method == 'POST':
+            new_status = request.POST.get('delivery_status')
+            if new_status in ['Dispatched', 'Delivered']:
+                transaction.delivery_status = new_status
+                transaction.save()
+        return redirect('payments:income_summary')
+    except Exception as e:
+        print("❌ Error updating delivery status:", e)
+        return render(request, 'payments/error.html', {'message': 'Cannot update delivery status.'})
+@login_required
+@customer_required
+def confirm_delivery(request, transaction_id):
+    transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
+    if request.method == 'POST' and transaction.delivery_status == 'Delivered':
+        transaction.delivery_status = 'Completed'
+        transaction.save()
+    return redirect('payments:customer_purchases')
+
+@login_required
+@customer_required
+def dispute_delivery(request, transaction_id):
+    try:
+        transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
+        if request.method == 'POST' and transaction.delivery_status == 'Delivered':
+            transaction.delivery_status = 'Dispute'
+            transaction.save()
+
+            # ✅ Notify admin
+            try:
+                admin_email = settings.DEFAULT_FROM_EMAIL  # or set a separate ADMIN_EMAIL in settings
+                subject = f"⚠️ Dispute Alert: Transaction {transaction.pid}"
+                message = (
+                    f"Customer {request.user.username} has marked the product "
+                    f"'{transaction.product.sub_category}' (PID: {transaction.pid}) as Not Received.\n\n"
+                    f"Farmer: {transaction.product.farmer.username}\n"
+                    f"Quantity: {transaction.quantity}\n"
+                    f"Amount: Rs. {transaction.amount}\n"
+                    f"Date: {transaction.created_at.strftime('%Y-%m-%d')}\n\n"
+                    f"Please review and take necessary action."
+                )
+
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [admin_email],
+                    fail_silently=True,
+                )
+            except Exception as e:
+                print("❌ Error sending admin notification:", e)
+
+        return redirect('payments:customer_purchases')
+    except Exception as e:
+        print("❌ Error in dispute_delivery:", e)
+        return render(request, 'payments/error.html', {'message': 'Cannot mark as dispute.'})
 
 @customer_required
 def customer_purchases(request):
     try:
-        user = request.user
         transactions = Transaction.objects.filter(user=request.user).select_related('product', 'product__farmer')
-
-        return render(request, 'payments/purchases.html', {
-            'transactions': transactions
-        })
+        return render(request, 'payments/purchases.html', {'transactions': transactions})
     except Exception as e:
         print("❌ Error in customer_purchases:", e)
         return render(request, 'payments/error.html', {'message': 'Error loading purchase history.'})

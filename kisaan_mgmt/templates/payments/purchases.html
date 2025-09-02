@@ -13,17 +13,19 @@
     <h1 class="text-2xl sm:text-3xl font-bold text-green-700">🛒 मेरो किनमेल</h1>
     <p class="text-sm sm:text-base text-gray-600 mt-1">तपाईंले किनेका उत्पादनहरूको विवरण तल छ।</p>
   </header>
-   <div class="mb-6">
+
+  <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <a href="{% url 'customer-dashboard' %}" 
        class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
       ← Dashboard मा फर्कनुहोस्
     </a>
+
+    <button onclick="window.print()" 
+            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm sm:text-base">
+      🖨️ प्रिन्ट गर्नुहोस्
+    </button>
   </div>
-  <button onclick="window.print()" 
-          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm sm:text-base">
-    🖨️ प्रिन्ट गर्नुहोस्
-  </button>
-  <!-- Check if there are transactions -->
+
   {% if transactions %}
   <div class="bg-white rounded-lg shadow overflow-x-auto">
     <table class="min-w-full text-sm sm:text-base">
@@ -36,6 +38,8 @@
           <th class="px-4 py-3 text-right font-semibold whitespace-nowrap">कुल रकम</th>
           <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">मिति</th>
           <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">किसान</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">डेलिभरी स्थिति</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">कार्य</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -48,6 +52,31 @@
           <td class="px-4 py-3 text-right font-semibold text-green-700">रु {{ t.amount }}</td>
           <td class="px-4 py-3 text-center text-gray-500">{{ t.created_at|date:"Y-m-d" }}</td>
           <td class="px-4 py-3">{{ t.product.farmer.username }}</td>
+          <td class="px-4 py-3 text-center">
+            <span class="px-2 py-1 rounded text-xs font-semibold
+              {% if t.delivery_status == 'Pending' %} bg-yellow-100 text-yellow-700
+              {% elif t.delivery_status == 'Dispatched' %} bg-blue-100 text-blue-700
+              {% elif t.delivery_status == 'Delivered' %} bg-purple-100 text-purple-700
+              {% elif t.delivery_status == 'Completed' %} bg-green-100 text-green-700
+              {% elif t.delivery_status == 'Dispute' %} bg-red-100 text-red-700
+              {% else %} bg-gray-100 text-gray-600 {% endif %}">
+              {{ t.delivery_status }}
+            </span>
+          </td>
+          <td class="px-4 py-3 text-center">
+            {% if t.delivery_status == 'Delivered' %}
+              <form method="post" action="{% url 'payments:confirm-delivery' t.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs">Confirm</button>
+              </form>
+              <form method="post" action="{% url 'payments:dispute-delivery' t.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Not Received</button>
+              </form>
+            {% else %}
+              <span class="text-gray-400 text-xs">-</span>
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
       </tbody>
