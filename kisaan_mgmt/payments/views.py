@@ -12,52 +12,90 @@ from accounts.views.role_based_redirect import farmer_required, customer_require
 from accounts.models import FarmerReview
 from accounts.views.update_farmer_profile import FarmerReview
 from django.db.models import Avg
+from django.contrib import messages
 
 @customer_required
 def choose_quantity(request, product_id):
     try:
         product = get_object_or_404(Product, pk=product_id)
-        return render(request, 'payments/choose_quantity.html', {'product': product})
+        if request.method == 'POST':
+            try:
+                qty = float(request.POST.get('quantity', 1))
+            except (TypeError, ValueError):
+                qty = 1
+            if qty < 1 or qty > product.quantity:
+                qty = 1
+            
+            amount = product.price * qty
+            pid = get_random_string(10)  # random payment ID
+
+            # Pass data to payment choice page
+            context = {
+                'product': product,
+                'quantity': qty,
+                'amount': amount,
+                'pid': pid,
+            }
+            return render(request, 'payments/payment_choice.html', context)
+        else:
+            return render(request, 'payments/choose_quantity.html', {'product': product})
     except Exception as e:
         print("❌ Error in choose_quantity:", e)
         return render(request, 'payments/error.html', {'message': 'Unable to load product.'})
 
 
 @csrf_exempt
-# @login_required
 def payment_request(request, product_id):
     try:
         product = get_object_or_404(Product, pk=product_id)
 
         if request.method == 'POST':
-            try:
-                qty = float(request.POST.get('quantity', 1))
-            except (TypeError, ValueError):
+            qty = float(request.POST.get('quantity', 1))
+            if qty < 1 or qty > product.quantity:
                 qty = 1
 
-            # Validate quantity
-            if qty < 1 or qty > product.quantity:
-                qty = 1  # fallback safe value
-
             amount = product.price * qty
-            pid = get_random_string(10)
+            payment_method = request.POST.get('payment_method')  # 'Esewa' or 'COD'
 
-            context = {
-                'amount': amount,
-                'tax': 0,
-                'psc': 0,
-                'pdc': 0,
-                'total': amount,
-                'pid': pid,
-                'success_url': f'http://localhost:8000/payments/success/?pid={pid}&qty={qty}&product_id={product.id}',
-                'failure_url': 'http://localhost:8000/payments/failure/',
-                'merchant_code': 'EPAYTEST',
-                'product': product,
-                'quantity': qty,
-            }
-            return render(request, 'payments/esewa_redirect.html', context)
-        else:
-            return redirect('payments:choose_quantity', product_id=product.id)
+            if payment_method == 'COD':
+                # 🔸 Save transaction immediately
+                transaction = Transaction.objects.create(
+                    user=request.user,
+                    product=product,
+                    amount=amount,
+                    quantity=qty,
+                    payment_method='COD',
+                    payment_status='Pending',   # COD starts as pending
+                    delivery_status='Pending',
+                )
+
+                # Reduce stock immediately
+                product.quantity -= qty
+                if product.quantity < 0:
+                    product.quantity = 0
+                product.save()
+
+                return redirect('payments:customer_purchases')
+
+            else:  # eSewa payment
+                pid = get_random_string(10)
+                context = {
+                    'amount': amount,
+                    'tax': 0,
+                    'psc': 0,
+                    'pdc': 0,
+                    'total': amount,
+                    'pid': pid,
+                    'success_url': f'http://localhost:8000/payments/success/?pid={pid}&qty={qty}&product_id={product.id}',
+                    'failure_url': 'http://localhost:8000/payments/failure/',
+                    'merchant_code': 'EPAYTEST',
+                    'product': product,
+                    'quantity': qty,
+                }
+                return render(request, 'payments/esewa_redirect.html', context)
+
+        return redirect('payments:choose_quantity', product_id=product.id)
+
     except Exception as e:
         print("❌ Error in payment_request:", e)
         return render(request, 'payments/error.html', {'message': 'Error processing payment request.'})
@@ -111,15 +149,18 @@ def payment_success(request):
             # 🔸 Save the transaction
             try:
                 Transaction.objects.create(
-                    user=request.user,
-                    product=product,
-                    pid=pid,
-                    rid=rid,
-                    amount=amt,
-                    quantity=qty_num,
-                    status='Success',
-                    delivery_status='Pending',
-                )
+                user=request.user,
+                product=product,
+                pid=pid,
+                rid=rid,
+                amount=amt,
+                quantity=qty_num,
+                payment_method='eSewa',
+                payment_status='Success',  # ✅ now use payment_status
+                delivery_status='Pending',
+)
+
+                
             except Exception as e:
                 print("❌ Error saving transaction:", e)
                 # Handle or log as needed
@@ -194,41 +235,57 @@ from payments.models import Transaction
 def income_summary(request):
     try:
         user = request.user
+        print("User:", user)
 
-        # Completed transactions (after customer confirms)
+        # Completed: payment done + delivery finished
         completed_transactions = Transaction.objects.filter(
             product__farmer=user,
-            status='Success',
+            payment_status='Success',
             delivery_status='Completed'
+        )
+
+        # Waiting: COD payments not yet confirmed
+        waiting_transactions = Transaction.objects.filter(
+            product__farmer=user,
+            payment_status='Waiting'
+        )
+
+        # Pending: orders not completed/disputed and not waiting COD
+        pending_transactions = Transaction.objects.filter(
+            product__farmer=user
+        ).exclude(
+            delivery_status__in=['Completed', 'Dispute']
+        ).exclude(
+            id__in=waiting_transactions.values_list('id', flat=True)
+        )
+
+        # ✅ Combine all into one table
+        all_transactions = (
+            completed_transactions |
+            waiting_transactions |
+            pending_transactions
         ).order_by('-created_at')
 
-        # Pending transactions (Pending/Dispatched/Delivered but not yet Completed or Dispute)
-        pending_transactions = Transaction.objects.filter(
-    product__farmer=user,
-    status='Success'
-).exclude(delivery_status__in=['Completed']).order_by('-created_at')
-        # Summary
-        total_income = sum(t.amount for t in completed_transactions)
-        completed_count = completed_transactions.count()
-        pending_count = pending_transactions.count()
+        print("Completed:", completed_transactions.count())
+        print("Waiting:", waiting_transactions.count())
+        print("Pending:", pending_transactions.count())
+        print("All combined:", all_transactions.count())
 
+        total_income = sum(t.amount for t in completed_transactions)
         avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
         avg_rating = round(avg_rating, 1)
 
         context = {
-            'completed_transactions': completed_transactions,
-            'pending_transactions': pending_transactions,
+            'all_transactions': all_transactions,
             'total_income': total_income,
-            'completed_count': completed_count,
-            'pending_count': pending_count,
             'avg_rating': avg_rating,
         }
-
         return render(request, 'payments/income_summary.html', context)
 
     except Exception as e:
         print("❌ Error in income_summary:", e)
         return render(request, 'payments/error.html', {'message': 'Error loading income summary.'})
+
 @login_required
 @farmer_required
 def update_delivery_status(request, transaction_id):
@@ -243,14 +300,41 @@ def update_delivery_status(request, transaction_id):
     except Exception as e:
         print("❌ Error updating delivery status:", e)
         return render(request, 'payments/error.html', {'message': 'Cannot update delivery status.'})
+    
+    
 @login_required
 @customer_required
 def confirm_delivery(request, transaction_id):
     transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
+
     if request.method == 'POST' and transaction.delivery_status == 'Delivered':
         transaction.delivery_status = 'Completed'
+
+        if transaction.payment_method == 'COD' and transaction.payment_status == 'Pending':
+            # Customer confirms delivery, now they must pay
+            transaction.payment_status = 'Pay'
+
         transaction.save()
+        # messages.success(request, "Delivery confirmed successfully!")
+
     return redirect('payments:customer_purchases')
+
+
+
+@login_required
+@farmer_required
+def confirm_cod_payment(request, transaction_id):
+    transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user)
+
+    if request.method == 'POST' and transaction.payment_method == 'COD' and transaction.payment_status == 'Waiting':
+        transaction.payment_status = 'Success'
+        transaction.save()
+        # messages.success(request, "COD payment confirmed successfully!")
+
+    return redirect('payments:income_summary')
+
+
+
 
 @login_required
 @customer_required
@@ -294,7 +378,82 @@ def dispute_delivery(request, transaction_id):
 def customer_purchases(request):
     try:
         transactions = Transaction.objects.filter(user=request.user).select_related('product', 'product__farmer')
-        return render(request, 'payments/purchases.html', {'transactions': transactions})
+
+        return render(request, 'payments/purchases.html', {
+            'transactions': transactions,
+        })
     except Exception as e:
         print("❌ Error in customer_purchases:", e)
         return render(request, 'payments/error.html', {'message': 'Error loading purchase history.'})
+
+@customer_required
+def payment_selection(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+
+    if request.method == "POST":
+        qty = int(request.POST.get("quantity", 1))
+        amount = product.price * qty
+
+        # Store quantity in session or pass to template
+        request.session['payment_qty'] = qty
+
+        return render(request, "payments/payment_choice.html", {
+            'product': product,
+            'quantity': qty,
+            'amount': amount
+        })
+    else:
+        return redirect('payments:choose_quantity', product_id=product.id)
+
+@customer_required
+def cod_payment(request, product_id):
+    try:
+        product = get_object_or_404(Product, pk=product_id)
+        qty = float(request.POST.get('quantity', 1))
+        amount = product.price * qty
+        pid = get_random_string(10)  # unique ID for this transaction
+
+        # Reduce product quantity
+        product.quantity -= qty
+        if product.quantity < 0:
+            product.quantity = 0
+        product.save()
+
+        # Save transaction with pending payment
+        Transaction.objects.create(
+            user=request.user,
+            product=product,
+            pid=pid,
+            rid='COD',
+            amount=amount,
+            quantity=qty,
+            payment_method='COD',
+            payment_status='Pending',  # initially pending
+            delivery_status='Pending',
+        )
+
+
+        # Redirect to customer purchase page or success page
+        return redirect('payments:customer_purchases')
+
+    except Exception as e:
+        print("❌ Error in COD payment:", e)
+        return render(request, 'payments/error.html', {'message': 'COD Payment Failed.'})
+@login_required
+@customer_required
+def cod_pay(request, transaction_id):
+    try:
+        transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
+
+        if request.method == 'POST' and transaction.payment_method == 'COD' and transaction.payment_status == 'Pay':
+            # Customer sends payment → farmer must confirm
+            transaction.payment_status = 'Waiting'
+            transaction.save()
+
+            # messages.success(request, "Payment sent. Waiting for farmer confirmation.")
+        return redirect('payments:customer_purchases')
+
+    except Exception as e:
+        print("❌ Error in cod_pay:", e)
+        messages.error(request, "Cannot process COD payment.")
+        return redirect('payments:customer_purchases')

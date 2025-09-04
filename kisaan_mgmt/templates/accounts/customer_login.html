@@ -1,19 +1,22 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ne">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ग्राहक लगइन - Customer Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap" rel="stylesheet" />
+  <title>{% trans "Customer Login" %}</title>
+
+  <!-- ✅ Font Awesome for eye icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
-    body {
+     body {
       font-family: 'Mukta', sans-serif;
       background: url("{% static 'accounts/images/back1.jpg' %}") no-repeat center center/cover;
       min-height: 100vh;
@@ -23,187 +26,292 @@
       padding: 20px;
     }
 
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .login-container {
-      display: flex;
-      max-width: 960px;
+      max-width: 900px;
       width: 100%;
-      height: 550px;
-      background: white;
-      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.2);
+      display: flex;
       overflow: hidden;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      min-height: 480px;
       animation: fadeIn 0.8s ease-in-out;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .image-side {
-      flex: 1;
+    .sidebar {
+      /* width: 40%; */
+     flex: 1;
       background: url("{% static 'accounts/images/realcustomer.jpg' %}") no-repeat center center/cover;
+       }
+
+    .form-area {
+      width: 60%;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .form-side {
-      flex: 1;
-      padding: 50px 40px;
+    .header-logo-text {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 40px;
+      user-select: none;
+    }
+
+    .logo-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #4E944F, #367433);
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #ffffff;
+      box-shadow: 0 5px 14px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
     }
 
-    .form-area {
+    .logo-circle img {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+      background: white;
+      border-radius: 50%;
+      padding: 6px;
+    }
+
+    .logo-circle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+
+    .header-logo-text h2 {
+      font-family: 'Mukta', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #4E944F;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    form {
       width: 100%;
-    }
-
-    .form-area h2 {
-      text-align: center;
-      color: #2e7d32;
-      font-size: 32px;
-      margin-bottom: 25px;
     }
 
     label {
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
-      color: #2e7d32;
+      font-size: 1rem;
+      color: #2e2e2e;
     }
 
     input[type="text"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="email"] {
       width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      margin-bottom: 20px;
-      font-size: 16px;
-      background-color: #f8f8f8;
-      transition: border 0.3s ease;
+      padding: 12px 14px;
+      border: 1.8px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    input:focus {
-      border-color: #2e7d32;
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="email"]:focus {
+      border-color: #4E944F;
+      box-shadow: 0 0 8px rgba(78, 148, 79, 0.4);
       outline: none;
-      background-color: #fff;
     }
 
-    .error {
-      color: red;
-      font-size: 14px;
-      margin: -10px 0 12px;
-      text-align: center;
+    .form-field {
+      margin-bottom: 22px;
+      position: relative;
     }
 
-    .message {
-      color: green;
-      text-align: center;
-      font-size: 14px;
-      margin-bottom: 10px;
+    .toggle-eye {
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+      padding-top: 30px;
     }
 
     button {
       width: 100%;
       padding: 14px;
-      background-color: #2e7d32;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
+      background-color: #4E944F;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
+      color: white;
+      font-size: 1.15rem;
+      font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(78, 148, 79, 0.4);
       transition: background-color 0.3s ease;
+      user-select: none;
     }
 
-    button:hover {
-      background-color: #256328;
+    button:hover,
+    button:focus {
+      background-color: #3c7e3d;
     }
 
-    .note {
-      margin-top: 25px;
+    .message {
+      font-size: 0.9rem;
+      margin-bottom: 16px;
       text-align: center;
-      font-size: 14px;
+      user-select: none;
     }
 
-    .note a {
+    .message.success {
       color: #2e7d32;
-      text-decoration: none;
       font-weight: 600;
     }
 
-    .note a:hover {
+    .message.error {
+      color: #d32f2f;
+      font-weight: 600;
+    }
+
+    .note {
+      margin-top: 24px;
+      font-size: 0.95rem;
+      text-align: center;
+      color: #555;
+      user-select: none;
+      line-height: 1.5;
+    }
+
+    .note a {
+      color: #4E944F;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .note a:hover,
+    .note a:focus {
       text-decoration: underline;
+      color: #3c7e3d;
     }
 
     @media (max-width: 768px) {
       .login-container {
         flex-direction: column;
-        height: auto;
+        min-height: auto;
+        width: 100%;
       }
-
-      .image-side {
+      .sidebar {
+        width: 100%;
         height: 200px;
-        flex: none;
+        background-position: center center;
+        background-size: cover;
       }
-
-      .form-side {
-        padding: 30px 20px;
+      .form-area {
+        width: 100%;
+        padding: 30px 25px;
       }
-
-      .form-area h2 {
-        font-size: 26px;
+      .header-logo-text h2 {
+        font-size: 2rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="login-container">
-    <div class="image-side"></div>
-
-    <div class="form-side">
-      <div class="form-area">
-        <h2>ग्राहक लगइन</h2>
-
-        {% if messages %}
-          {% for message in messages %}
-            <p class="message">{{ message }}</p>
-          {% endfor %}
-        {% endif %}
-
-        {% if form.errors %}
-          <p class="error">तपाईंको प्रयोगकर्ता नाम वा पासवर्ड मिलेन। कृपया फेरि प्रयास गर्नुहोस्।</p>
-        {% endif %}
-
-        <form method="post" novalidate autocomplete="off">
-          {% csrf_token %}
-          {% for field in form %}
-            {% if field.name == 'username' %}
-              <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम</label>
-            {% elif field.name == 'password' %}
-              <label for="{{ field.id_for_label }}">पासवर्ड</label>
-            {% endif %}
-            {{ field }}
-
-            {% if field.errors %}
-              <p class="error">कृपया सबै विवरणहरू सही रूपमा भर्नुहोस्।</p>
-            {% endif %}
-          {% endfor %}
-
-          <button type="submit">लगइन गर्नुहोस्</button>
-
-          <div class="note">
-            <p><a href="{% url 'password_reset' %}">पासवर्ड बिर्सनुभयो?</a></p>
-            <p>खाता छैन? <a href="{% url 'signup' %}">दर्ता गर्नुहोस्</a></p>
-            <p>किसान हुनुहुन्छ? <a href="{% url 'switch_to_farmer' %}">किसानको रूपमा लगइन गर्नुहोस्</a></p>
-            <p><a href="{% url 'landing' %}">← गृहपृष्ठ फर्कनुहोस्</a></p>
-          </div>
-        </form>
+<div class="login-container" role="main" aria-label="{% trans 'Farmer login form' %}">
+  <div class="sidebar" aria-hidden="true"></div>
+  <div class="form-area">
+    <div class="header-logo-text">
+      <div class="logo-circle">
+        <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'किसान लोगो' %}" />
       </div>
+      <h2>{% trans "Customer" %}</h2>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p class="message success" role="alert">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if form.errors %}
+      <p class="message error" role="alert">{% trans "Email or password do not match" %}</p>
+    {% endif %}
+
+    <form method="post" novalidate autocomplete="off" aria-describedby="loginInstructions">
+      {% csrf_token %}
+
+      {% for field in form %}
+        {% if field.name == 'username' %}
+          <div class="form-field">
+            <label for="{{ field.id_for_label }}">{% trans "Email" %}</label>
+            {{ field }}
+            {% if field.errors %}
+              <p class="message error" role="alert">{{ field.errors|striptags }}</p>
+            {% endif %}
+          </div>
+        {% elif field.name == 'password' %}
+          <div class="form-field">
+            <label for="{{ field.id_for_label }}">{% trans "Password" %}</label>
+            {{ field }}
+            <span class="toggle-eye" onclick="togglePassword()">
+              <i id="eyeIcon" class="fa fa-eye"></i>
+            </span>
+            {% if field.errors %}
+              <p class="message error" role="alert">{{ field.errors|striptags }}</p>
+            {% endif %}
+          </div>
+        {% else %}
+          {{ field }}
+        {% endif %}
+      {% endfor %}
+
+      <button type="submit" aria-label="{% trans 'Login to किसान portal' %}">{% trans "लगइन गर्नुहोस् (login)" %}</button>
+    </form>
+
+    <div class="note" id="loginInstructions">
+      <p><a href="{% url 'password_reset' %}">{% trans "Forget Password?" %}</a></p>
+      <p>{% trans "No account?" %} <a href="{% url 'signup' %}">{% trans "Register" %}</a></p>
+      <p>{% trans "Are you farmer?" %} <a href="{% url 'switch_to_farmer' %}">{% trans "Login as Farmer" %}</a></p>
+      <p><a href="{% url 'landing' %}">← {% trans " Return homepage" %}</a></p>
     </div>
   </div>
+</div>
+
+<!-- ✅ Password toggle script -->
+<script>
+  function togglePassword() {
+    const passwordField = document.getElementById("id_password");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIcon.classList.remove("fa-eye");
+      eyeIcon.classList.add("fa-eye-slash");
+    } else {
+      passwordField.type = "password";
+      eyeIcon.classList.remove("fa-eye-slash");
+      eyeIcon.classList.add("fa-eye");
+    }
+  }
+</script>
 
 </body>
 </html>

@@ -195,6 +195,5 @@ LOGOUT_REDIRECT_URL = '/accounts/farmer/login/'
 LOGIN_URL = '/accounts/customer/login/'
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.auth_backend.RoleBasedBackend',
-    'django.contrib.auth.backends.ModelBackend',  # fallback default
+    'accounts.auth_backend.EmailBackend',
 ]

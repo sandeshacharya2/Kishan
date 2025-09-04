@@ -1,23 +1,32 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 
-class RoleBasedBackend(ModelBackend):
+class EmailBackend(ModelBackend):
     """
-    Custom auth backend that checks username/password
-    AND verifies that the user role matches the login page role.
-    Also enforces case-sensitive username.
+    Authenticate using email (strict case-sensitive) and password.
+    Optional role check included.
     """
-
     def authenticate(self, request, username=None, password=None, role=None, **kwargs):
-        if not username or not password or not role:
+        if not username or not password:
             return None
+
         try:
-            # Case-sensitive username check
-            user = User.objects.get(username__exact=username)
-            if user.check_password(password) and hasattr(user, 'profile') and user.profile.role == role:
-                return user
+            user = User.objects.get(email__iexact=username)  # DB may be case-insensitive
         except User.DoesNotExist:
             return None
+
+        # Enforce strict case-sensitive email check in Python
+        if user.email != username:
+            return None
+
+        # Optional role check
+        if role and (not hasattr(user, "profile") or user.profile.role != role):
+            return None
+
+        # Password check
+        if user.check_password(password):
+            return user
+
         return None
 
     def get_user(self, user_id):

@@ -5,15 +5,16 @@
 {% block title %}Farmer Income Dashboard{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto p-4 sm:p-8 lg:ml-64">
+<div class="max-w-6xl mx-auto p-4 sm:p-8 lg:ml-64">
 
+  <!-- Back Button -->
   <a href="{% url 'farmer-dashboard' %}"
      class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base mt-20">
     ← Dashboard मा फर्कनुहोस्
   </a>
 
   <!-- Summary Cards -->
-  <section class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6 text-center">
+  <section class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6 text-center mt-6">
     <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
       कुल आम्दानी<br>
       <span class="text-green-700 font-bold text-2xl">रु {{ total_income }}</span>
@@ -32,44 +33,11 @@
     </div>
   </section>
 
-  <!-- Completed Transactions -->
+  <!-- Unified Transactions Table -->
   <section class="bg-white rounded-xl shadow p-4 mb-8 overflow-x-auto">
-    <h2 class="text-lg font-semibold mb-3 text-green-700">✅ Completed Transactions</h2>
+    <h2 class="text-lg font-semibold mb-3 text-blue-700">📦 All Transactions</h2>
     <table class="min-w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
-      <thead class="bg-green-600 text-white">
-        <tr>
-          <th class="px-4 py-2">PID</th>
-          <th class="px-4 py-2">Product</th>
-          <th class="px-4 py-2">Buyer</th>
-          <th class="px-4 py-2">Quantity</th>
-          <th class="px-4 py-2">Amount</th>
-          <th class="px-4 py-2">Date</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        {% if completed_transactions %}
-          {% for t in completed_transactions %}
-            <tr class="hover:bg-green-50">
-              <td class="px-4 py-2 font-mono text-xs sm:text-sm text-gray-600">{{ t.pid }}</td>
-              <td class="px-4 py-2">{{ t.product.sub_category }}</td>
-              <td class="px-4 py-2">{{ t.user.username }}</td>
-              <td class="px-4 py-2">{{ t.quantity }}</td>
-              <td class="px-4 py-2 text-green-700 font-semibold">रु {{ t.amount }}</td>
-              <td class="px-4 py-2">{{ t.created_at|date:"Y-m-d" }}</td>
-            </tr>
-          {% endfor %}
-        {% else %}
-          <tr><td colspan="6" class="text-center py-4 text-gray-400 italic">हाल कुनै Completed कारोबार छैन।</td></tr>
-        {% endif %}
-      </tbody>
-    </table>
-  </section>
-
-  <!-- Pending / Dispatched / Delivered Transactions -->
-  <section class="bg-white rounded-xl shadow p-4 overflow-x-auto">
-    <h2 class="text-lg font-semibold mb-3 text-red-600">⌛ Orders In Progress</h2>
-    <table class="min-w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
-      <thead class="bg-gray-600 text-white">
+      <thead class="bg-blue-600 text-white">
         <tr>
           <th class="px-4 py-2">PID</th>
           <th class="px-4 py-2">Product</th>
@@ -77,28 +45,54 @@
           <th class="px-4 py-2">Quantity</th>
           <th class="px-4 py-2">Amount</th>
           <th class="px-4 py-2">Delivery Status</th>
+          <th class="px-4 py-2">Payment Status</th>
           <th class="px-4 py-2">Update Status</th>
           <th class="px-4 py-2">Date</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        {% if pending_transactions %}
-          {% for t in pending_transactions %}
+        {% if all_transactions %}
+          {% for t in all_transactions %}
             <tr class="hover:bg-gray-50">
-              <td class="px-4 py-2 font-mono text-xs sm:text-sm text-gray-600">{{ t.pid }}</td>
+              <td class="px-4 py-2 font-mono text-xs sm:text-sm text-gray-600">{{ t.pid|default:"—" }}</td>
               <td class="px-4 py-2">{{ t.product.sub_category }}</td>
               <td class="px-4 py-2">{{ t.user.username }}</td>
               <td class="px-4 py-2">{{ t.quantity }}</td>
-              <td class="px-4 py-2">रु {{ t.amount }}</td>
+              <td class="px-4 py-2 font-semibold">रु {{ t.amount }}</td>
+              
+              <!-- Delivery Status -->
               <td class="px-4 py-2">
                 <span class="px-2 py-1 rounded text-xs font-semibold
                   {% if t.delivery_status == 'Pending' %} bg-yellow-100 text-yellow-700
                   {% elif t.delivery_status == 'Dispatched' %} bg-blue-100 text-blue-700
                   {% elif t.delivery_status == 'Delivered' %} bg-purple-100 text-purple-700
+                  {% elif t.delivery_status == 'Completed' %} bg-green-100 text-green-700
+                  {% elif t.delivery_status == 'Dispute' %} bg-red-100 text-red-700
                   {% else %} bg-gray-100 text-gray-600 {% endif %}">
                   {{ t.delivery_status }}
                 </span>
               </td>
+
+              <!-- Payment Status -->
+              <td class="px-4 py-2">
+                {% if t.payment_status == 'Waiting' and t.payment_method == 'COD' %}
+                  <form method="POST" action="{% url 'payments:confirm_cod_payment' t.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-green-600 text-white px-2 py-1 rounded text-xs">
+                      ✅ Confirm COD
+                    </button>
+                  </form>
+                {% else %}
+                  <span class="px-2 py-1 rounded text-xs font-semibold
+                    {% if t.payment_status == 'Success' %} bg-green-100 text-green-700
+                    {% elif t.payment_status == 'Waiting' %} bg-purple-100 text-purple-700
+                    {% else %} bg-gray-100 text-gray-600 {% endif %}">
+                    {{ t.payment_status }}
+                  </span>
+                {% endif %}
+              </td>
+
+              <!-- Update Status -->
               <td class="px-4 py-2">
                 <form method="POST" action="{% url 'payments:update_delivery_status' t.id %}">
                   {% csrf_token %}
@@ -106,15 +100,23 @@
                     <option value="Pending" {% if t.delivery_status == 'Pending' %}selected{% endif %}>Pending</option>
                     <option value="Dispatched" {% if t.delivery_status == 'Dispatched' %}selected{% endif %}>Dispatched</option>
                     <option value="Delivered" {% if t.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="Completed" {% if t.delivery_status == 'Completed' %}selected{% endif %}>Completed</option>
                   </select>
-                  <button type="submit" class="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">Update</button>
+                  <button type="submit" class="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">
+                    Update
+                  </button>
                 </form>
               </td>
+
               <td class="px-4 py-2">{{ t.created_at|date:"Y-m-d" }}</td>
             </tr>
           {% endfor %}
         {% else %}
-          <tr><td colspan="8" class="text-center py-4 text-gray-400 italic">हाल कुनै Pending कारोबार छैन।</td></tr>
+          <tr>
+            <td colspan="9" class="text-center py-4 text-gray-400 italic">
+              हाल कुनै कारोबार छैन।
+            </td>
+          </tr>
         {% endif %}
       </tbody>
     </table>
