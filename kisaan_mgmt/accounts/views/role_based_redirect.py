@@ -14,7 +14,7 @@ def role_based_redirect(request):
     try:
         profile = request.user.profile
     except Exception:
-        messages.error(request, "प्रोफाइल फेला परेन। कृपया पुन: लगइन गर्नुहोस्।")
+        messages.error(request, "Profile not found. Please log in again.  ")
         return redirect('login')
 
     if profile.role == 'farmer':
@@ -32,8 +32,9 @@ def role_based_redirect(request):
     elif profile.role == 'customer':
         try:
             customer_profile = request.user.customerprofile
+            if not customer_profile.profile_picture:
             # if not customer_profile.first_name or not customer_profile.last_name:
-            return redirect('update-customer-profile')
+                return redirect('update-customer-profile')
         except CustomerProfile.DoesNotExist:
             CustomerProfile.objects.create(user=request.user)
             return redirect('update-customer-profile')
@@ -56,7 +57,7 @@ class FarmerLoginView(LoginView):
                 return redirect('role-redirect')
             else:
                 logout(request)
-                messages.error(request, "तपाईं किसान भूमिका लिएर मात्र यो पृष्ठ प्रयोग गर्न सक्नुहुन्छ।")
+                messages.error(request, "you must be logged in as a farmer to access this page.")
                 return redirect('farmer-login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -67,7 +68,7 @@ class FarmerLoginView(LoginView):
             return redirect('role-redirect')
         else:
             logout(self.request)
-            messages.error(self.request, "तपाईं किसान होइन। कृपया सही login पृष्ठ प्रयोग गर्नुहोस्।")
+            messages.error(self.request, "you are not a farmer. Please use the correct login page.  ")
             return redirect('farmer-login')
 
 
@@ -81,7 +82,7 @@ class CustomerLoginView(LoginView):
                 return redirect('role-redirect')
             else:
                 logout(request)
-                messages.error(request, "तपाईं ग्राहक भूमिका लिएर मात्र यो पृष्ठ प्रयोग गर्न सक्नुहुन्छ।")
+                messages.error(request, "you must be logged in as a customer to access this page.")
                 return redirect('customer-login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -92,7 +93,7 @@ class CustomerLoginView(LoginView):
             return redirect('role-redirect')
         else:
             logout(self.request)
-            messages.error(self.request, "तपाईं ग्राहक होइन। कृपया सही login पृष्ठ प्रयोग गर्नुहोस्।")
+            messages.error(self.request, "you are not a customer. Please use the correct login page.  ")
             return redirect('customer-login')
         
         
@@ -108,7 +109,7 @@ def farmer_required(view_func):              # 1. Accepts a view function as inp
 
         else:
             # 6. Otherwise, add an error message that only farmers can access this page
-            messages.error(request, "यो पृष्ठमा किसान मात्र पहुँच गर्न सक्छन्।")
+            messages.error(request, "only farmers can access this page.")
 
             # 7. Redirect the user to the farmer login page
             return redirect('farmer-login')
@@ -124,7 +125,7 @@ def customer_required(view_func):
         if hasattr(request.user, 'profile') and request.user.profile.role == 'customer':
             return view_func(request, *args, **kwargs)
         else:
-            messages.error(request, "यो पृष्ठमा ग्राहक मात्र पहुँच गर्न सक्छन्।")
+            messages.error(request, "only customers can access this page.")
             return redirect('customer-login')
     return wrapper
 

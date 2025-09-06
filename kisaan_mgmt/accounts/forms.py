@@ -20,53 +20,53 @@ WARD_CHOICES = [
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
-        error_messages={'required': 'कृपया इमेल अनिवार्य रूपमा भर्नुहोस्।'}
+        error_messages={'required': _('please enter your email address.')}
     )
     phonenumber = forms.CharField(
         required=True,
         max_length=20,
-        error_messages={'required': 'कृपया फोन नम्बर अनिवार्य रूपमा भर्नुहोस्।'}
+        error_messages={'required': _('please enter your phone number.')}
     )
     ward = forms.ChoiceField(
         choices=WARD_CHOICES,
         required=True,
-        error_messages={'required': 'कृपया वडा छान्नुहोस्।'}
+        error_messages={'required': _('please select your ward.')}
     )
     first_name = forms.CharField(
-    required=True,
-    max_length=30,
-    label="First Name",
-    widget=forms.TextInput(attrs={'autofocus': True}),
-    error_messages={'required': 'कृपया पहिलो नाम अनिवार्य रूपमा लेख्नुहोस्।'}
-)
+        required=True,
+        max_length=30,
+        label=_("First Name"),
+        widget=forms.TextInput(attrs={'autofocus': True}),
+        error_messages={'required': _('please enter your first name.')}
+    )
 
     last_name = forms.CharField(
         required=True,
         max_length=30,
-        label="Last Name",
-        error_messages={'required': 'कृपया अन्तिम नाम अनिवार्य रूपमा लेख्नुहोस्।'}
+        label=_("Last Name"),
+        error_messages={'required': _('please enter your last name.')}
     )   
 
     tole = forms.CharField(
         required=True,
         max_length=100,
-        label="Tole (Neighborhood)",
-        error_messages={'required': 'कृपया टोल अनिवार्य रूपमा लेख्नुहोस्।'}
+        label=_("Tole (Neighborhood)"),
+        error_messages={'required': _('please enter your tole')}
     )
     role = forms.ChoiceField(
         choices=Profile.ROLE_CHOICES,
         required=True,
-        error_messages={'required': 'कृपया भूमिका छान्नुहोस्।'}
+        error_messages={'required': _('please select your role.')}
     )
     password1 = forms.CharField(
-        label="Password",
+        label=_("Password"),
         widget=forms.PasswordInput,
-        error_messages={'required': 'पासवर्ड आवश्यक छ'}
+        error_messages={'required': _('password is required.')}
     )
     password2 = forms.CharField(
-        label="Confirm Password",
+        label=_("Confirm Password"),
         widget=forms.PasswordInput,
-        error_messages={'required': 'पासवर्ड पुन दोहोर्याउनु होस् '}
+        error_messages={'required': _('please confirm your password.')}
     )
 
     class Meta:
@@ -74,30 +74,30 @@ class SignUpForm(UserCreationForm):
         fields = ('first_name', 'last_name', 'username', 'email', 'phonenumber', 'ward', 'tole', 'role', 'password1', 'password2')
         error_messages = {
             'username': {
-                'required': 'कृपया प्रयोगकर्ता नाम लेख्नुहोस्।'
+                'required': _('please enter a username.'),
             },
             'password1': {
-                'required': 'कृपया पासवर्ड लेख्नुहोस्।'
+                'required': _('please enter a password.')
             },
             'password2': {
-                'required': 'कृपया पासवर्ड दोहोर्याउनुहोस्।'
+                'required': _('please confirm your password.')
             },
         }
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("यो इमेल पहिले नै प्रयोग भैसकेको छ, कृपया नया इमेल प्रयोग गर्नुहोस्।")
+            raise forms.ValidationError(_('the email is already in use. Please use a different email.'))
         return email
 
     def clean_phonenumber(self):
         phonenumber = self.cleaned_data.get('phonenumber')
         if not phonenumber.isdigit():
-            raise forms.ValidationError("फोन नम्बर अंकमा मात्र लेख्नुहोस्।")
+            raise forms.ValidationError(_('please enter a valid phone number containing only digits.'))
         if len(phonenumber) < 8:
-            raise forms.ValidationError("फोन नम्बर कम्तीमा ८ अंकको हुनु पर्छ।")
+            raise forms.ValidationError(_('the phone number is too short. It should be at least 8 digits.'))
         if Profile.objects.filter(phonenumber=phonenumber).exists():
-            raise forms.ValidationError("यो फोन नम्बर पहिले नै प्रयोग भैसकेको छ। कृपया अर्को प्रयोग गर्नुहोस्।")
+            raise forms.ValidationError(_('the phone number is already in use. Please use a different phone number.'))
         return phonenumber
 
 

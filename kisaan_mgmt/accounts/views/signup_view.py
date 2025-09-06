@@ -62,7 +62,7 @@ def contact(request):
             fail_silently=False,
         )
 
-        messages.success(request, _('तपाईंको सन्देश सफलतापूर्वक पठाइयो।'))
+        messages.success(request, _('Your message has been sent successfully!'))
 
     return render(request, 'landingpage/contact.html')
 
@@ -78,8 +78,8 @@ def switch_to_customer(request):
 
 # ✅ Send OTP Email
 def send_otp(email, otp):
-    subject = _("किसान app को लागि तपाइको OTP")
-    message = _(f"तपाइको OTP {otp}. यो OTP ३ मिनेट सम्म मात्र मान्य हुनेछ ।")
+    subject = _("Your OTP for Kisaan app")
+    message = _(f" your OTP {otp}. This OTP is valid for 3 minutes. If you did not request this, please ignore this email.")
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
 
@@ -93,7 +93,7 @@ def signup_view(request):
             domain = email.split('@')[-1].lower()
 
             if domain not in allowed_domains:
-                messages.error(request, _("यो ईमेल डोमेन अनुमति छैन। कृपया अरु डोमेन प्रयोग गर्नुहोस्।"))
+                messages.error(request, _("this email domain is not allowed. Please use a common email provider like Gmail, Yahoo, Outlook, etc."))
                 return render(request, 'accounts/signup.html', {'form': form})
 
             signup_data = form.cleaned_data.copy()      #retrieve form data in dictionary
@@ -146,12 +146,12 @@ def verify_otp_view(request):
     # Resend OTP
     if request.method == 'POST' and 'resend_otp' in request.POST:   #post method and user clicks resend OTP button
         if not can_resend:
-            messages.warning(request, f"पर्खनुहोस्, OTP पुन: पठाउन {int(seconds_left)} सेकेन्ड बाकी छ।")
+            messages.warning(request, f"wait, to resend otp {int(seconds_left)} is left")
         else:
             otp_obj.generate_otp()
             otp_obj.save()
             send_otp(email, otp_obj.otp)
-            messages.success(request, "तपाइँको इमेलमा नयाँ OTP पठाइएको छ।")
+            messages.success(request, "the new otp has been sent to your email. ")
             seconds_left = 180
             can_resend = False
 
@@ -169,7 +169,7 @@ def verify_otp_view(request):
             if User.objects.filter(email=email).exists():
                 del request.session['signup_data']
                 EmailOTP.objects.filter(email=email).delete()
-                messages.success(request, "तपाईं पहिले नै दर्ता भइसकेको हुनाले लगइन पृष्ठमा जानुहोस्।")
+                messages.success(request, "you are already registered. Please log in.")
                 return redirect('login')
 
             user = User.objects.create_user(
@@ -192,7 +192,7 @@ def verify_otp_view(request):
 
             del request.session['signup_data']
             EmailOTP.objects.filter(email=email).delete()
-            messages.success(request, "दर्ता सफल भयो!")
+            messages.success(request, "regestration successful. You can now log in.")
 
             if profile.role == 'farmer':
                 return redirect('farmer-login')
@@ -202,7 +202,7 @@ def verify_otp_view(request):
         else:
             return render(request, 'accounts/verify_otp.html', {
                 'email': email,
-                'error': 'OTP गलत वा म्याद सकिएको छ। कृपया पुन: प्रयास गर्नुहोस्।',
+                'error': 'invalid or expired OTP. Please try again.',
                 'seconds_left': int(seconds_left),
                 'can_resend': can_resend,
             })
