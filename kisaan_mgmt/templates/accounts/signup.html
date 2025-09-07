@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ne">
 <head>
@@ -243,14 +244,13 @@
   <div class="form-container">
 
     <div class="form-left">
-      <h2 style="margin-bottom: 20px; font-size: 1.4rem;">Welcome to <br><span style="font-size:1.7rem;">किसान</span> Portal</h2>
-
-      <img src="{% static 'accounts/images/register.jpg' %}" alt="Register Image" />
+      <h2 style="margin-bottom: 20px; font-size: 1.4rem;">{% trans "Welcome to" %} <br><span style="font-size:1.7rem;">{% trans "Kisaan" %}</span> {% trans "Portal" %}</h2>
+      <img src="{% static 'accounts/images/register.jpg' %}" alt="{% trans 'Register Image' %}" />
     </div>
 
     <div class="form-right">
       <div>   
-        <p class="note">Note: Please write your username in English</p>
+        <p class="note">{% trans "Note: Please write your username in English" %}</p>
       </div>
       {% if messages %}
         {% for message in messages %}
@@ -258,7 +258,6 @@
         {% endfor %}
       {% endif %}
 
-    <!-- Everything above remains the same -->
 <form method="post" id="signupForm" novalidate autocomplete="off">
   {% csrf_token %}
   <div class="form-row">
@@ -266,15 +265,15 @@
       {% if field.name not in 'ward tole role' %}
         <div>
           {% if field.name == 'username' %}
-            <label for="{{ field.id_for_label }}">प्रयोगकर्ता नाम (username)</label>
+            <label for="{{ field.id_for_label }}">{% trans "Username" %}</label>
           {% elif field.name == 'email' %}
-            <label for="{{ field.id_for_label }}">इमेल (email)</label>
+            <label for="{{ field.id_for_label }}">{% trans "Email" %}</label>
           {% elif field.name == 'phonenumber' %}
-            <label for="{{ field.id_for_label }}">फोन नम्बर (phone number)</label>
+            <label for="{{ field.id_for_label }}">{% trans "Phone Number" %}</label>
           {% elif field.name == 'password1' %}
-            <label for="{{ field.id_for_label }}">पासवर्ड (password)</label>
+            <label for="{{ field.id_for_label }}">{% trans "Password" %}</label>
           {% elif field.name == 'password2' %}
-            <label for="{{ field.id_for_label }}">पासवर्ड दोहोराउनुहोस् (confirm password)</label>
+            <label for="{{ field.id_for_label }}">{% trans "Confirm Password" %}</label>
           {% else %}
             {{ field.label_tag }}
           {% endif %}
@@ -293,13 +292,12 @@
   <!-- ROLE -->
   <div class="form-row full-width">
     <div>
-      <label for="id_role">भूमिका (Role)</label>
-      <select name="role" id="id_role" required aria-required="true" aria-describedby="roleHelp">
-        <option value="">-- भूमिका छान्नुहोस् (choose your role) --</option>
-        <option value="farmer" {% if request.POST.role == "farmer" %}selected{% endif %}>किसान (farmer)</option>
-        <option value="customer" {% if request.POST.role == "customer" %}selected{% endif %}>ग्राहक (customer)</option>
+      <label for="id_role">{% trans "Role" %}</label>
+      <select name="role" id="id_role" required aria-required="true">
+        <option value="">{% trans "-- Choose Your Role --" %}</option>
+        <option value="farmer" {% if request.POST.role == "farmer" %}selected{% endif %}>{% trans "Farmer" %}</option>
+        <option value="customer" {% if request.POST.role == "customer" %}selected{% endif %}>{% trans "Customer" %}</option>
       </select>
-      <!-- <small id="roleHelp" class="sr-only">Choose</small> -->
       {% if form.role.errors %}
         <div class="form-errors" role="alert" aria-live="assertive">{{ form.role.errors|striptags }}</div>
       {% endif %}
@@ -309,41 +307,36 @@
   <!-- ADDRESS STATIC -->
   <div class="form-row full-width">
     <div>
-      <label for="address">ठेगाना (address)</label>
-   <select id="address" name="address" required>
-  <option value="" {% if not request.POST.address %}selected{% endif %}>-- ठेगाना छान्नुहोस् (choose your address) --</option>
-  <option value="Beni Municipality" {% if request.POST.address == 'Beni Municipality' %}selected{% endif %}>वेनी नगरपालिका (Beni Municipality)</option>
-</select>
-
-
-
-      <!-- <small id="addressHelp" class="sr-only">Choose your address</small> -->
+      <label for="address">{% trans "Address" %}</label>
+      <select id="address" name="address" required>
+        <option value="" {% if not request.POST.address %}selected{% endif %}>{% trans "-- Choose Your Address --" %}</option>
+        <option value="Beni Municipality" {% if request.POST.address == 'Beni Municipality' %}selected{% endif %}>{% trans "Beni Municipality" %}</option>
+      </select>
     </div>
   </div>
 
   <!-- WARD -->
   <div class="form-row full-width" id="wardDiv" style="display:none;">
     <div>
-      <label for="ward">वडा (ward)</label>
-      <select id="ward" name="ward" required aria-required="true" aria-describedby="wardHelp">
-        <option value="">-- वडा छान्नुहोस् (choose ward) --</option>
+      <label for="ward">{% trans "Ward" %}</label>
+      <select id="ward" name="ward" required aria-required="true">
+        <option value="">{% trans "-- Choose Ward --" %}</option>
         {% for w in form.fields.ward.choices %}
           <option value="{{ w.0 }}" {% if request.POST.ward == w.0 %}selected{% endif %}>{{ w.1 }}</option>
         {% endfor %}
       </select>
-      <!-- <small id="wardHelp" class="sr-only">Choose your ward</small> -->
     </div>
   </div>
 
   <!-- TOLE -->
   <div class="form-row full-width" id="toleDiv" style="display:block;">
     <div>
-      <label for="tole">टोल (tole)</label>
+      <label for="tole">{% trans "Tole" %}</label>
       <input
         type="text"
         id="tole"
         name="tole"
-        placeholder="तपाइको टोल को नाम लेख्नुहोस्"
+        placeholder="{% trans 'Enter your Tole Name' %}"
         required
         aria-required="true"
         value="{{ request.POST.tole }}"
@@ -355,17 +348,15 @@
 
   <div class="form-row full-width" id="mapButtonDiv" style="display: none;">
     <div>
-      <button type="button" onclick="openMapModal()" aria-label="Select location on map">स्थान छान्नुहोस् (Select Location on Map)</button>
+      <button type="button" onclick="openMapModal()" aria-label="{% trans 'Select location on map' %}">{% trans "Select Location on Map" %}</button>
     </div>
   </div>
 
-  <button type="submit">साइन अप (Sign Up)</button>
+  <button type="submit">{% trans "Sign Up" %}</button>
 </form>
 
-
-
       <div class="login-link">
-        पहिले नै खाता छ <a href="{% url 'login' %}">लग इन गर्नुहोस् </a>
+        {% trans "Already have an account?" %} <a href="{% url 'login' %}">{% trans "Log in" %}</a>
       </div>
     </div>
   </div>

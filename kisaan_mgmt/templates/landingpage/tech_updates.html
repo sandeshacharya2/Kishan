@@ -1,9 +1,10 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ne" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <title>प्रविधि अपडेट</title>
+  <title>{% trans "Technology Updates" %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -20,10 +21,10 @@
 
   <div class="container mx-auto px-4 mt-12 mb-12 max-w-7xl">
     <h2 class="text-3xl font-extrabold text-[#2d6a4f] text-center mb-6 drop-shadow-md">
-      कृषिमा प्रविधिको अद्यावधिक जानकारी
+      {% trans "Updated Information on Agricultural Technology" %}
     </h2>
     <p class="text-center text-gray-700 max-w-3xl mx-auto mb-12 text-lg leading-relaxed tracking-wide">
-      नेपालको कृषि क्षेत्रमा प्रयोग भैरहेका नयाँ प्रविधिहरू, उपकरणहरू र नविनतम प्रवृत्तिहरूको जानकारी यस पृष्ठमा उपलब्ध गराइएको छ।
+      {% trans "This page provides information on the latest technologies, tools, and trends being used in Nepal's agricultural sector." %}
     </p>
 
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -35,22 +36,19 @@
         <div class="overflow-hidden">
           <img
             src="{% static 'smart agri.jpg' %}"
-            alt="स्मार्ट सिँचाइ प्रणाली"
+            alt="{% trans 'Smart Irrigation System' %}"
             class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <!-- Overlay -->
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"
-          ></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         </div>
 
         <div class="p-5 relative z-10">
           <h5 class="text-2xl font-semibold text-[#1b4332] mb-3 drop-shadow-sm">
-            स्मार्ट सिँचाइ प्रणाली
+            {% trans "Smart Irrigation System" %}
           </h5>
           <p class="text-gray-700 text-base leading-relaxed tracking-wide">
-            स्मार्ट सिँचाइ प्रणालीहरूले जमिनको नमी अनुसार स्वचालित रूपमा पानी दिन्छ। यसले पानीको बचत गर्छ र बालीको वृद्धि राम्रो बनाउँछ।
+            {% trans "Smart irrigation systems automatically water crops based on soil moisture. This saves water and improves crop growth." %}
           </p>
         </div>
       </div>
@@ -63,21 +61,19 @@
         <div class="overflow-hidden">
           <img
             src="{% static 'drone agri.jpg' %}"
-            alt="ड्रोन प्रविधि"
+            alt="{% trans 'Drone Technology' %}"
             class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"
-          ></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         </div>
 
         <div class="p-5 relative z-10">
           <h5 class="text-2xl font-semibold text-[#1b4332] mb-3 drop-shadow-sm">
-            ड्रोन प्रविधिको प्रयोग
+            {% trans "Use of Drone Technology" %}
           </h5>
           <p class="text-gray-700 text-base leading-relaxed tracking-wide">
-            ड्रोनको प्रयोग बालीको अवस्था विश्लेषण, सिँचाइ र मल छर्नका लागि गरिँदैछ। यो प्रविधिले समय बचत गर्ने र कामलाई सजिलो बनाउने काम गर्छ।
+            {% trans "Drones are used for crop monitoring, irrigation, and fertilizer application. This technology saves time and simplifies work." %}
           </p>
         </div>
       </div>
@@ -90,21 +86,19 @@
         <div class="overflow-hidden">
           <img
             src="{% static 'krishi mobile.jpg' %}"
-            alt="कृषि मोबाइल एप्स"
+            alt="{% trans 'Agriculture Mobile Apps' %}"
             class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"
-          ></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         </div>
 
         <div class="p-5 relative z-10">
           <h5 class="text-2xl font-semibold text-[#1b4332] mb-3 drop-shadow-sm">
-            कृषि मोबाइल एप्स
+            {% trans "Agriculture Mobile Apps" %}
           </h5>
           <p class="text-gray-700 text-base leading-relaxed tracking-wide">
-            कृषकहरूले मोबाइल एप्सबाट बालीको जानकारी, बजार मूल्य, मौसम पूर्वानुमान र सल्लाहहरू प्राप्त गर्न सक्छन्। यो डिजिटल युगमा निकै सहयोगी साबित भएको छ।
+            {% trans "Farmers can access crop information, market prices, weather forecasts, and advice through mobile apps. These apps are very helpful in the digital age." %}
           </p>
         </div>
       </div>
@@ -117,21 +111,19 @@
         <div class="overflow-hidden">
           <img
             src="{% static 'hydroponix.jpg' %}"
-            alt="हाइड्रोपोनिक्स प्रविधि"
+            alt="{% trans 'Hydroponics Technology' %}"
             class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"
-          ></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         </div>
 
         <div class="p-5 relative z-10">
           <h5 class="text-2xl font-semibold text-[#1b4332] mb-3 drop-shadow-sm">
-            हाइड्रोपोनिक्स खेती
+            {% trans "Hydroponics Farming" %}
           </h5>
           <p class="text-gray-700 text-base leading-relaxed tracking-wide">
-            माटो बिना पानीमा बाली उत्पादन गर्ने यो प्रविधि शहरी क्षेत्रमा लोकप्रिय हुँदै गएको छ। यसले स्थानको बचत गर्छ र साना क्षेत्रमा अधिक उत्पादन दिन सक्छ।
+            {% trans "This soil-less farming technology grows crops in water. It is popular in urban areas, saves space, and increases yields in small areas." %}
           </p>
         </div>
       </div>
@@ -144,21 +136,19 @@
         <div class="overflow-hidden">
           <img
             src="{% static 'sensor.webp' %}"
-            alt="सेंसर प्रविधि"
+            alt="{% trans 'Sensor Technology' %}"
             class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"
-          ></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         </div>
 
         <div class="p-5 relative z-10">
           <h5 class="text-2xl font-semibold text-[#1b4332] mb-3 drop-shadow-sm">
-            सेंसर प्रविधिको उपयोग
+            {% trans "Use of Sensor Technology" %}
           </h5>
           <p class="text-gray-700 text-base leading-relaxed tracking-wide">
-            माटोको नमी, तापक्रम र पोषक तत्त्वहरू पत्ता लगाउने संवेदक (sensor) को प्रयोग कृषिमा बढ्दो छ जसले वैज्ञानिक खेतीलाई प्रोत्साहन गर्छ।
+            {% trans "Sensors measuring soil moisture, temperature, and nutrients are increasingly used in agriculture to promote scientific farming." %}
           </p>
         </div>
       </div>
@@ -171,34 +161,32 @@
         <div class="overflow-hidden">
           <img
             src="{% static 'blockchain.webp' %}"
-            alt="ब्लकचेन प्रविधि"
+            alt="{% trans 'Blockchain Technology' %}"
             class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"
-          ></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
         </div>
 
         <div class="p-5 relative z-10">
           <h5 class="text-2xl font-semibold text-[#1b4332] mb-3 drop-shadow-sm">
-            ब्लकचेन प्रणाली
+            {% trans "Blockchain Systems" %}
           </h5>
           <p class="text-gray-700 text-base leading-relaxed tracking-wide">
-            कृषि आपूर्ति श्रृङ्खलामा पारदर्शिता ल्याउन ब्लकचेन प्रविधिको उपयोग हुँदैछ। उपभोक्ताले उत्पादनको स्रोत, गुणस्तर र वितरणको ट्र्याक राख्न सक्छन्।
+            {% trans "Blockchain technology is being used to increase transparency in the agricultural supply chain. Consumers can track product origin, quality, and distribution." %}
           </p>
         </div>
       </div>
     </div>
 
     <h4 class="mt-16 mb-6 text-3xl font-semibold text-[#1b4332] underline drop-shadow-md">
-      आगामी प्रविधिहरू
+      {% trans "Upcoming Technologies" %}
     </h4>
     <ul class="list-disc list-inside space-y-2 text-gray-700 max-w-xl mx-auto text-lg font-medium tracking-wide">
-      <li>AI आधारित बाली रोग पहिचान</li>
-      <li>रोबोटिक्सद्वारा मलजल</li>
-      <li>सौर्य ऊर्जाबाट चल्ने कृषि उपकरणहरू</li>
-      <li>डेटा एनालिटिक्सद्वारा उत्पादनको भविष्यवाणी</li>
+      <li>{% trans "AI-based Crop Disease Detection" %}</li>
+      <li>{% trans "Robotic Fertilizer Application" %}</li>
+      <li>{% trans "Solar-Powered Agricultural Equipment" %}</li>
+      <li>{% trans "Predictive Analytics for Crop Yield" %}</li>
     </ul>
   </div>
 

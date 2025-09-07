@@ -1,13 +1,14 @@
 {% load static %}
+{% load i18n %}
+ 
 <!DOCTYPE html>
-<html lang="ne" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <title>खेतीका सुझावहरू</title>
+  <title>{% trans "Farming Tips" %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="{% static 'css/output.css' %}" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#f0f7ec] font-sans text-[#2f3d23] pb-16">
 
@@ -21,10 +22,10 @@
         class="text-4xl font-extrabold text-[#2e7d32] mb-2 drop-shadow-md"
         style="text-shadow: 1px 1px 3px #a4c494;"
       >
-        खेतीका सुझावहरू
+        {% trans "Farming Tips" %}
       </h2>
       <p class="text-lg font-medium text-[#4a6b3b] max-w-xl mx-auto leading-relaxed">
-        नेपालका किसानहरूका लागि उपयोगी कृषि सुझावहरू — जसले उत्पादन बढाउन, रोग नियन्त्रण गर्न र माटोको उर्वरता जोगाउन सहयोग गर्छ।
+        {% trans "Useful agricultural tips for Nepali farmers — helping to increase production, control diseases, and preserve soil fertility." %}
       </p>
     </section>
 
@@ -38,10 +39,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            १. माटो परीक्षण गर्नुहोस्
+            {% trans "1. Test the Soil" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            खेती सुरु गर्नु अघि माटो परीक्षण गर्नु अत्यन्त आवश्यक छ। यसले माटोमा कुन पोषकतत्व कम वा बढी छ भन्ने जानकारी दिन्छ र तदनुसार मलको प्रयोग गर्न सकिन्छ।
+            {% trans "Before starting farming, soil testing is very important. It shows which nutrients are lacking or in excess, and fertilizers can be applied accordingly." %}
           </p>
         </div>
       </article>
@@ -54,10 +55,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            २. मौसमी बालीको छनोट गर्नुहोस्
+            {% trans "2. Select Seasonal Crops" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            स्थानीय मौसमअनुसारको बाली छनोट गर्नु राम्रो उत्पादनका लागि महत्त्वपूर्ण हुन्छ। चिसो मौसममा तोरी, गहुँ, आलु, र तातो मौसममा मकै, धान, तरकारी खेती उपयुक्त हुन्छ।
+            {% trans "Choosing crops according to the local climate is important for good production. Mustard, wheat, and potato are suitable in cold weather, while maize, rice, and vegetables are good for hot seasons." %}
           </p>
         </div>
       </article>
@@ -70,10 +71,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            ३. जैविक मल प्रयोग गर्नुहोस्
+            {% trans "3. Use Organic Fertilizers" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            रासायनिक मलको अत्यधिक प्रयोगले माटो बिगार्न सक्छ। सकेसम्म कम्पोष्ट, गहुँगोबर, वर्मीकम्पोष्ट जस्ता जैविक मलको प्रयोग गर्नुपर्छ।
+            {% trans "Excessive use of chemical fertilizers can damage soil. Whenever possible, use organic fertilizers such as compost, farmyard manure, or vermicompost." %}
           </p>
         </div>
       </article>
@@ -86,10 +87,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            ४. सिंचाइको उचित व्यवस्था
+            {% trans "4. Proper Irrigation Management" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            समयमा सिंचाइ नगरेमा बालीमा असर पर्न सक्छ। ड्रिप इरिगेसन वा स्प्रिंकलर प्रणाली जस्ता आधुनिक सिंचाइ प्रणाली अपनाउनु लाभदायक हुन्छ।
+            {% trans "Without timely irrigation, crops can be affected. Modern irrigation systems like drip or sprinkler irrigation are beneficial." %}
           </p>
         </div>
       </article>
@@ -102,10 +103,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            ५. रोग र कीराको व्यवस्थापन
+            {% trans "5. Manage Diseases and Pests" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            बालीमा आउने रोग र कीराहरूको नियमित निगरानी गर्नुपर्छ। जैविक कीटनाशक वा IPM (Integrated Pest Management) विधि प्रयोग गर्नु राम्रो हुन्छ।
+            {% trans "Crops should be regularly monitored for diseases and pests. Using organic pesticides or IPM (Integrated Pest Management) methods is recommended." %}
           </p>
         </div>
       </article>
@@ -118,10 +119,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            ६. खेतीको विविधिकरण
+            {% trans "6. Crop Diversification" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            एउटै बाली बारम्बार लगाउनुको सट्टा विविध बालीहरू लगाउनुपर्छ, जसले माटोमा पोषणको सन्तुलन कायम गर्छ र आम्दानी पनि बढाउँछ।
+            {% trans "Instead of planting the same crop repeatedly, plant diverse crops. This maintains soil nutrient balance and increases income." %}
           </p>
         </div>
       </article>
@@ -134,10 +135,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            ७. कृषि प्रविधिको उपयोग
+            {% trans "7. Use Agricultural Technology" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            डिजिटल एप्स, कृषि उपकरणहरू, मोबाइल सूचनाको प्रयोग गरी बाली व्यवस्थापन गर्न सकिन्छ। प्रविधिको उपयोगले लागत घटाएर उत्पादन बढाउन सकिन्छ।
+            {% trans "Crops can be managed using digital apps, agricultural tools, and mobile information. Technology reduces costs and increases production." %}
           </p>
         </div>
       </article>
@@ -150,10 +151,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            ८. बाली बिमा गराउनुहोस्
+            {% trans "8. Get Crop Insurance" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            प्राकृतिक विपद् वा कीराले बालीमा क्षति पुर्‍याएमा बिमा गरिएको बालीबाट राहत पाउन सकिन्छ। सरकारले कृषकहरूका लागि बाली बिमा कार्यक्रम संचालन गरिरहेको छ।
+            {% trans "If crops are damaged by natural disasters or pests, insured crops provide compensation. The government runs crop insurance programs for farmers." %}
           </p>
         </div>
       </article>
@@ -166,10 +167,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            ९. कृषि तालिममा सहभागी हुनुहोस्
+            {% trans "9. Participate in Agricultural Training" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            स्थानीय कृषि कार्यालय वा एनजीओहरूले दिइने तालिमहरूमा सहभागी भइ नयाँ ज्ञान र प्रविधिबारे जानकारी लिनुपर्छ।
+            {% trans "Farmers should join trainings organized by local agriculture offices or NGOs to learn about new knowledge and technologies." %}
           </p>
         </div>
       </article>
@@ -182,10 +183,10 @@
         </div>
         <div>
           <h4 class="text-2xl font-semibold text-[#2e7d32] mb-1">
-            १०. बजारको अनुसन्धान गर्नुहोस्
+            {% trans "10. Research the Market" %}
           </h4>
           <p class="text-lg leading-relaxed text-[#3b4b20]">
-            बाली उत्पादन अघि बजारमा माग, मूल्य, र बिक्रीको सम्भाव्यता बारे जानकारी लिएर खेती गर्दा राम्रो आम्दानी गर्न सकिन्छ।
+            {% trans "Before producing crops, farmers should study demand, price, and sales possibilities in the market to earn better income." %}
           </p>
         </div>
       </article>

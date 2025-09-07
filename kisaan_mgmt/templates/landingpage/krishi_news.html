@@ -1,9 +1,10 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>कृषि समाचार</title>
+  <title>{% trans "Agriculture News" %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -42,54 +43,54 @@
   <section class="bg-gradient-to-br from-green-50 via-lime-100 to-green-50 py-16">
   <div class="max-w-6xl mx-auto px-4">
     <div class="text-center mb-12">
-      <h2 class="text-4xl font-extrabold text-green-800 mb-2">कृषि समाचार</h2>
-      <p class="text-green-700 text-lg">नवीनतम कृषि गतिविधि, नीतिहरू र प्रविधिहरू</p>
+      <h2 class="text-4xl font-extrabold text-green-800 mb-2">{% trans "Agriculture News" %}</h2>
+      <p class="text-green-700 text-lg">{% trans "Latest agricultural activities, policies, and technologies" %}</p>
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- Card 1 -->
       <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-        <img src="{% static 'dhaan.jpg' %}" alt="धान उत्पादन" class="w-full h-56 object-cover" />
+        <img src="{% static 'dhaan.jpg' %}" alt="{% trans 'Rice Production' %}" class="w-full h-56 object-cover" />
         <div class="p-5 space-y-2">
           <div class="flex justify-between items-center">
-            <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">धान</span>
-            <span class="text-sm text-gray-500 italic">२०८२ साउन १५</span>
+            <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">{% trans "Rice" %}</span>
+            <span class="text-sm text-gray-500 italic">{% trans "2082 Saun 15" %}</span>
           </div>
-          <h3 class="text-xl font-bold text-green-900">धान उत्पादनमा वृद्धि</h3>
-          <p class="text-gray-700 text-sm">यस वर्ष १०% धान उत्पादनमा वृद्धि भएको छ। प्रविधिको प्रयोग र अनुकूल मौसमको योगदान।</p>
+          <h3 class="text-xl font-bold text-green-900">{% trans "Increase in Rice Production" %}</h3>
+          <p class="text-gray-700 text-sm">{% trans "Rice production increased by 10% this year, aided by technology use and favorable weather." %}</p>
         </div>
       </div>
 
       <!-- Card 2 -->
       <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-        <img src="{% static 'mal.jpg' %}" alt="जैविक मल" class="w-full h-56 object-cover" />
+        <img src="{% static 'mal.jpg' %}" alt="{% trans 'Organic Fertilizer' %}" class="w-full h-56 object-cover" />
         <div class="p-5 space-y-2">
           <div class="flex justify-between items-center">
-            <span class="bg-lime-100 text-lime-800 text-xs font-semibold px-3 py-1 rounded-full">मल</span>
-            <span class="text-sm text-gray-500 italic">२०८२ साउन १०</span>
+            <span class="bg-lime-100 text-lime-800 text-xs font-semibold px-3 py-1 rounded-full">{% trans "Fertilizer" %}</span>
+            <span class="text-sm text-gray-500 italic">{% trans "2082 Saun 10" %}</span>
           </div>
-          <h3 class="text-xl font-bold text-green-900">जैविक मल प्रयोगमा अनुदान</h3>
-          <p class="text-gray-700 text-sm">सरकारले जैविक मल प्रयोग गर्ने किसानलाई प्रति रोपनी ५०० रू. अनुदान दिने निर्णय गरेको छ।</p>
+          <h3 class="text-xl font-bold text-green-900">{% trans "Grant for Organic Fertilizer Use" %}</h3>
+          <p class="text-gray-700 text-sm">{% trans "The government decided to provide a grant of NPR 500 per ropani for farmers using organic fertilizer." %}</p>
         </div>
       </div>
 
       <!-- Card 3 -->
       <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-        <img src="{% static 'yaantrikaran.jpg' %}" alt="कृषि यान्त्रीकरण" class="w-full h-56 object-cover" />
+        <img src="{% static 'yaantrikaran.jpg' %}" alt="{% trans 'Agricultural Mechanization' %}" class="w-full h-56 object-cover" />
         <div class="p-5 space-y-2">
           <div class="flex justify-between items-center">
-            <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">प्रविधि</span>
-            <span class="text-sm text-gray-500 italic">२०८२ असार ३०</span>
+            <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">{% trans "Technology" %}</span>
+            <span class="text-sm text-gray-500 italic">{% trans "2082 Asar 30" %}</span>
           </div>
-          <h3 class="text-xl font-bold text-green-900">कृषि यान्त्रीकरण अभियान</h3>
-          <p class="text-gray-700 text-sm">गाउँपालिकाले ट्र्याक्टर, थ्रेसर, सिँचाइ संयन्त्रको प्रयोगमा जोड दिँदै यान्त्रीकरण अभियान शुरू गरेको छ।</p>
+          <h3 class="text-xl font-bold text-green-900">{% trans "Agricultural Mechanization Campaign" %}</h3>
+          <p class="text-gray-700 text-sm">{% trans "The municipality has launched a mechanization campaign focusing on the use of tractors, threshers, and irrigation equipment." %}</p>
         </div>
       </div>
     </div>
 
     <!-- Optional Extra Banner/Ad/Stats Section -->
     <div class="mt-12 text-center">
-      <img src="{% static 'krishi_banner.png' %}" alt="कृषि अभियान" class="mx-auto w-full max-w-4xl rounded-lg shadow-md" />
+      <img src="{% static 'krishi_banner.png' %}" alt="{% trans 'Agriculture Campaign' %}" class="mx-auto w-full max-w-4xl rounded-lg shadow-md" />
     </div>
   </div>
 </section>

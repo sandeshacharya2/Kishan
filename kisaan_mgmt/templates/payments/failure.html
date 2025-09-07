@@ -1,7 +1,8 @@
+{% load static i18n %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payment Failed</title>
+    <title>{% trans "Payment Failed" %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,17 +28,18 @@
 </head>
 <body>
     <div class="box">
-        <h1>❌ Payment Failed</h1>
-        <p>Something went wrong or the transaction was canceled.</p>
-        <p>Please try again or contact support.</p><h2>Payment Failed</h2>
-<p>Unfortunately, your payment could not be verified or was cancelled.</p>
+        <h1>❌ {% trans "Payment Failed" %}</h1>
+        <p>{% trans "Something went wrong or the transaction was canceled." %}</p>
+        <p>{% trans "Please try again or contact support." %}</p>
 
-{% if pid %}
-<p>Transaction ID: {{ pid }}</p>
-{% endif %}
+        <h2>{% trans "Payment Failed" %}</h2>
+        <p>{% trans "Unfortunately, your payment could not be verified or was cancelled." %}</p>
 
-<a href="{% url 'customer-dashboard' %}">Go back to Dashboard</a>
+        {% if pid %}
+        <p>{% trans "Transaction ID" %}: {{ pid }}</p>
+        {% endif %}
 
+        <a href="{% url 'customer-dashboard' %}">{% trans "Go back to Dashboard" %}</a>
     </div>
 </body>
 </html>

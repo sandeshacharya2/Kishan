@@ -1,6 +1,7 @@
-<h2>Pay with eSewa</h2>
+{% load i18n %}
+<h2>{% trans "Pay with eSewa" %}</h2>
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Proceed to Pay</button>
+  <button type="submit">{% trans "Proceed to Pay" %}</button>
 </form>

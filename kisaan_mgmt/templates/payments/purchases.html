@@ -1,28 +1,29 @@
+{% load i18n % }
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>🛒 मेरो किनमेल</title>
+  <title>🛒 {% trans "My Purchases" %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen p-4 sm:p-6 font-sans text-gray-800">
 
   <!-- Page Title -->
   <header class="mb-6 text-center">
-    <h1 class="text-2xl sm:text-3xl font-bold text-green-700">🛒 मेरो किनमेल</h1>
-    <p class="text-sm sm:text-base text-gray-600 mt-1">तपाईंले किनेका उत्पादनहरूको विवरण तल छ।</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-green-700">🛒 {% trans "My Purchases" %}</h1>
+    <p class="text-sm sm:text-base text-gray-600 mt-1">{% trans "Below are the details of the products you have purchased." %}</p>
   </header>
 
   <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <a href="{% url 'customer-dashboard' %}" 
        class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
-      ← Dashboard मा फर्कनुहोस्
+      ← {% trans "Back to Dashboard" %}
     </a>
 
     <button onclick="window.print()" 
             class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm sm:text-base">
-      🖨️ प्रिन्ट गर्नुहोस्
+      🖨️ {% trans "Print" %}
     </button>
   </div>
 
@@ -31,17 +32,17 @@
     <table class="min-w-full text-sm sm:text-base">
       <thead class="bg-green-100 text-green-800">
         <tr>
-          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">PID</th>
-          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">उत्पादन</th>
-          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">भुक्तानी तरिका</th>
-          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">भुक्तानी स्थिति</th>
-          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">मूल्य</th>
-          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">मात्रा</th>
-          <th class="px-4 py-3 text-right font-semibold whitespace-nowrap">कुल रकम</th>
-          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">मिति</th>
-          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">किसान</th>
-          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">डेलिभरी स्थिति</th>
-          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">कार्य</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">{% trans "PID" %}</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">{% trans "Product" %}</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">{% trans "Payment Method" %}</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">{% trans "Payment Status" %}</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">{% trans "Price" %}</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">{% trans "Quantity" %}</th>
+          <th class="px-4 py-3 text-right font-semibold whitespace-nowrap">{% trans "Total Amount" %}</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">{% trans "Date" %}</th>
+          <th class="px-4 py-3 text-left font-semibold whitespace-nowrap">{% trans "Farmer" %}</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">{% trans "Delivery Status" %}</th>
+          <th class="px-4 py-3 text-center font-semibold whitespace-nowrap">{% trans "Action" %}</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -63,30 +64,30 @@
           <!-- Payment Status -->
           <td class="px-4 py-3">
             {% if t.payment_status == 'Success' %}
-              <span class="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-700">भुक्तानी भयो</span>
+              <span class="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-700">{% trans "Paid" %}</span>
             {% elif t.payment_status == 'Pending' %}
-              <span class="px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-700">पर्खाइमा</span>
+              <span class="px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-700">{% trans "Pending" %}</span>
             {% elif t.payment_status == 'Pay' %}
               <!-- Show Pay Now button -->
               <form method="post" action="{% url 'payments:cod_pay' t.id %}">
                 {% csrf_token %}
                 <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs">
-                  💵 भुक्तानी गर्नुहोस्
+                  💵 {% trans "Pay Now" %}
                 </button>
               </form>
             {% elif t.payment_status == 'Waiting' %}
-              <span class="px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-700">किसानको पुष्टि पर्खिदै</span>
+              <span class="px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-700">{% trans "Waiting for Farmer" %}</span>
             {% elif t.payment_status == 'Failed' %}
-              <span class="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-700">असफल</span>
+              <span class="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-700">{% trans "Failed" %}</span>
             {% else %}
               <span class="px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-600">{{ t.payment_status }}</span>
             {% endif %}
           </td>
 
           <!-- Price / Qty / Amount / Date / Farmer -->
-          <td class="px-4 py-3">रु {{ t.product.price }}</td>
+          <td class="px-4 py-3">Rs {{ t.product.price }}</td>
           <td class="px-4 py-3 text-center">{{ t.quantity }}</td>
-          <td class="px-4 py-3 text-right font-semibold text-green-700">रु {{ t.amount }}</td>
+          <td class="px-4 py-3 text-right font-semibold text-green-700">Rs {{ t.amount }}</td>
           <td class="px-4 py-3 text-center text-gray-500">{{ t.created_at|date:"Y-m-d" }}</td>
           <td class="px-4 py-3">{{ t.product.farmer.username }}</td>
 
@@ -109,13 +110,13 @@
               <form method="post" action="{% url 'payments:confirm-delivery' t.id %}" class="inline">
                 {% csrf_token %}
                 <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs">
-                  ✅ Confirm
+                  ✅ {% trans "Confirm" %}
                 </button>
               </form>
               <form method="post" action="{% url 'payments:dispute-delivery' t.id %}" class="inline">
                 {% csrf_token %}
                 <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">
-                  ⚠️ Not Received
+                  ⚠️ {% trans "Not Received" %}
                 </button>
               </form>
             {% else %}
@@ -130,7 +131,7 @@
 
   {% else %}
   <div class="mt-10 text-center text-gray-500 italic text-sm">
-    तपाईंले अहिलेसम्म केही पनि किन्नुभएको छैन।
+    {% trans "You have not purchased anything yet." %}
   </div>
   {% endif %}
 

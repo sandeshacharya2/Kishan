@@ -1,17 +1,16 @@
 {% load static %}
-
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>हाम्रोबारे - किसान</title>
+  <title>{% trans "About Us - Kisaan" %}</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Optional: you can add custom fonts or shadows here */
     body {
       background: #f0f4e3;
       font-family: 'sans-serif';
@@ -28,45 +27,52 @@
 
   <!-- About Content -->
   <main class="container mx-auto my-12 bg-white rounded-lg shadow-lg p-6 md:p-10 max-w-7xl">
-    <h2 class="text-4xl font-extrabold text-center mb-12 drop-shadow-sm">हाम्रो बारेमा</h2>
+    <h2 class="text-4xl font-extrabold text-center mb-12 drop-shadow-sm">
+      {% trans "About Us" %}
+    </h2>
 
     <img 
       src="{% static 'accounts/images/about.jpg' %}" 
-      alt="About Kisaan" 
+      alt="{% trans 'About Kisaan' %}" 
       class="mx-auto mb-8 rounded-lg object-cover max-h-[400px] w-full max-w-4xl" 
     />
 
     <p class="mb-6 text-base md:text-lg leading-relaxed font-normal">
-      <strong class="font-semibold">किसान</strong> एक सरल र उपयोगी वेब एप्लिकेसन हो, जसले नेपाली किसान र ग्राहकहरूलाई सिधा जोड्ने काम गर्छ। अब किसानहरूले आफ्ना तरकारी, फलफूल वा अन्य कृषि सामग्रीहरू मोबाइल वा कम्प्युटरबाटै सजिलै अनलाइन राख्न सक्छन्। ग्राहकहरूले पनि नजिकैका किसानहरूबाट सिधा उत्पादन हेरेर किनमेल गर्न सक्छन्।
+      <strong class="font-semibold">Kisaan</strong>
+      {% blocktrans %}is a simple and useful web application that directly connects Nepali farmers and customers. Now, farmers can easily upload their vegetables, fruits, or other agricultural products online through mobile or computer. Customers can also view and purchase fresh products directly from nearby farmers.{% endblocktrans %}
     </p>
 
     <p class="mb-6 text-base md:text-lg leading-relaxed font-normal">
-      हाम्रो एपमा किसानका लागि विशेष ड्यासबोर्ड छ, जहाँ उनीहरूले आफ्ना उत्पादनहरू पोस्ट गर्न, मासिक वा वार्षिक आम्दानी हेर्न, अनि ग्राहकहरूसँग सिधा संवाद गर्न सक्छन्।
+      {% blocktrans %}Our app provides a special dashboard for farmers where they can post their products, check monthly or yearly income, and directly communicate with customers.{% endblocktrans %}
     </p>
 
     <p class="mb-6 text-base md:text-lg leading-relaxed font-normal">
-      हामी चाहन्छौं कि किसानले राम्रो मूल्य पाऊन्, ग्राहकले ताजा उत्पादन पाऊन्, र दुबैको बीचमा विश्वासको सम्बन्ध बनोस्। एपमा स्थानको आधारमा पनि खोजी गर्न सकिने सुविधा छ, जसले गर्दा ग्राहकले नजिकैको किसान रोज्न सक्नेछन्।
+      {% blocktrans %}We want farmers to get a fair price, customers to get fresh products, and trust to be built between both sides. The app also allows location-based search, so customers can choose nearby farmers.{% endblocktrans %}
     </p>
 
     <p class="mb-10 text-base md:text-lg leading-relaxed font-normal">
-      हामी प्रविधिको माध्यमबाट गाउँ–शहरबीचको दूरी घटाउन, कृषि कारोबारलाई सजिलो बनाउन र किसानको आय बढाउन सहयोग गर्न चाहन्छौं।
+      {% blocktrans %}Through technology, we aim to reduce the distance between villages and cities, make agricultural trade easier, and help increase farmers’ income.{% endblocktrans %}
     </p>
 
-    <p class="mb-12 text-center text-lg font-semibold italic">“किसानसँगै भविष्य सुरक्षित बनाऔं।”</p>
+    <p class="mb-12 text-center text-lg font-semibold italic">
+      {% trans "“Let’s build a secure future together with farmers.”" %}
+    </p>
 
     <!-- Team Section -->
-    <h2 class="text-4xl font-extrabold text-center mb-12 drop-shadow-sm">हाम्रो टिम</h2>
+    <h2 class="text-4xl font-extrabold text-center mb-12 drop-shadow-sm">
+      {% trans "Our Team" %}
+    </h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
       <!-- Team member -->
       <div class="team-member bg-[#f0f4e3] rounded-lg p-6 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
         <img src="{% static 'accounts/images/Sandesh s.jpg' %}" alt="Sandesh" class="mx-auto mb-4 w-32 h-32 object-cover rounded-full" />
         <h4 class="text-xl font-semibold mb-1 text-[#2e4600]">Sandesh Acharya</h4>
-        <p class="text-gray-600 mb-4">Developer</p>
+        <p class="text-gray-600 mb-4">{% trans "Developer" %}</p>
         <div class="flex justify-center gap-6">
-          <a href="#" aria-label="Facebook"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#" aria-label="GitHub"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#" aria-label="Instagram"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#" aria-label="Facebook"><img src="{% static 'accounts/images/facebook.png' %}" alt="{% trans 'Facebook' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#" aria-label="GitHub"><img src="{% static 'accounts/images/github.png' %}" alt="{% trans 'GitHub' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#" aria-label="Instagram"><img src="{% static 'accounts/images/insta.jpg' %}" alt="{% trans 'Instagram' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
         </div>
       </div>
 
@@ -74,33 +80,33 @@
       <div class="team-member bg-[#f0f4e3] rounded-lg p-6 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
         <img src="{% static 'accounts/images/deepa.jpg' %}" alt="Dipa" class="mx-auto mb-4 w-32 h-32 object-cover rounded-full" />
         <h4 class="text-xl font-semibold mb-1 text-[#2e4600]">Dipa Poudel</h4>
-        <p class="text-gray-600 mb-4">Developer</p>
+        <p class="text-gray-600 mb-4">{% trans "Developer" %}</p>
         <div class="flex justify-center gap-6">
-          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="{% trans 'Facebook' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="{% trans 'GitHub' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="{% trans 'Instagram' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
         </div>
       </div>
 
       <div class="team-member bg-[#f0f4e3] rounded-lg p-6 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
         <img src="{% static 'accounts/images/Sila.jpg' %}" alt="Sila" class="mx-auto mb-4 w-32 h-32 object-cover rounded-full" />
         <h4 class="text-xl font-semibold mb-1 text-[#2e4600]">Sila GC</h4>
-        <p class="text-gray-600 mb-4">Developer</p>
+        <p class="text-gray-600 mb-4">{% trans "Developer" %}</p>
         <div class="flex justify-center gap-6">
-          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="{% trans 'Facebook' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="{% trans 'GitHub' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="{% trans 'Instagram' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
         </div>
       </div>
 
       <div class="team-member bg-[#f0f4e3] rounded-lg p-6 text-center shadow-md hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
         <img src="{% static 'accounts/images/bibek.png' %}" alt="Bibek" class="mx-auto mb-4 w-32 h-32 object-cover rounded-full" />
         <h4 class="text-xl font-semibold mb-1 text-[#2e4600]">Bibek Sapkota</h4>
-        <p class="text-gray-600 mb-4">Developer</p>
+        <p class="text-gray-600 mb-4">{% trans "Developer" %}</p>
         <div class="flex justify-center gap-6">
-          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="GitHub" class="w-5 h-5 transition-transform hover:scale-110" /></a>
-          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/facebook.png' %}" alt="{% trans 'Facebook' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/github.png' %}" alt="{% trans 'GitHub' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
+          <a href="#"><img src="{% static 'accounts/images/insta.jpg' %}" alt="{% trans 'Instagram' %}" class="w-5 h-5 transition-transform hover:scale-110" /></a>
         </div>
       </div>
     </div>

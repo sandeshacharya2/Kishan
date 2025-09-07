@@ -1,7 +1,8 @@
 <!--  -->
+  {% load static i18n %}
+<!--  -->
 {% include 'landingpage/header.html' %}
-  <script src="https://cdn.tailwindcss.com"></script>
-
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
   body {
@@ -60,19 +61,19 @@
 </style>
 
 <div class="weather-container shadow-sm rounded">
-  <h2 class="weather-title">मौसम: {{ city }}</h2>
+  <h2 class="weather-title">{% trans "मौसम:" %} {{ city }}</h2>
 
   {% if weather %}
   <div class="weather-temp">{{ weather.temperature_c }}°C</div>
   <div class="weather-desc">{{ weather.weather_desc }}</div>
 
   <div class="weather-info">
-    <p><i class="bi bi-wind"></i>हावा: {{ weather.wind_speed_kmph }} किमी/घण्टा</p>
-    <p><i class="bi bi-droplet"></i>आर्द्रता: {{ weather.humidity }}%</p>
-    <p><i class="bi bi-thermometer-half"></i>महसुस गरिने तापक्रम: {{ weather.feels_like_c }}°C</p>
+    <p><i class="bi bi-wind"></i>{% trans "हावा:" %} {{ weather.wind_speed_kmph }} किमी/घण्टा</p>
+    <p><i class="bi bi-droplet"></i>{% trans "आर्द्रता:" %} {{ weather.humidity }}%</p>
+    <p><i class="bi bi-thermometer-half"></i>{% trans "महसुस गरिने तापक्रम:" %} {{ weather.feels_like_c }}°C</p>
   </div>
   {% else %}
-    <p class="no-data">मौसम जानकारी प्राप्त गर्न सकिएन। कृपया पछि प्रयास गर्नुहोस्।</p>
+    <p class="no-data">{% trans "मौसम जानकारी प्राप्त गर्न सकिएन। कृपया पछि प्रयास गर्नुहोस्।" %}</p>
   {% endif %}
 </div>
 

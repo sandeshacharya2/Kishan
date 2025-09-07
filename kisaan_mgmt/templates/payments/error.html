@@ -1,8 +1,9 @@
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Error</title>
+    <title>{% trans "Error" %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,13 +46,13 @@
 </head>
 <body>
     <div class="error-box">
-        <h1>Oops! Something went wrong.</h1>
+        <h1>{% trans "Oops! Something went wrong." %}</h1>
         {% if message %}
             <p>{{ message }}</p>
         {% else %}
-            <p>An unexpected error has occurred. Please try again later.</p>
+            <p>{% trans "An unexpected error has occurred. Please try again later." %}</p>
         {% endif %}
-        <a href="{% url 'landing' %}" class="button">Go to Landing Page</a>
+        <a href="{% url 'landing' %}" class="button">{% trans "Go to Landing Page" %}</a>
     </div>
 </body>
 </html>
