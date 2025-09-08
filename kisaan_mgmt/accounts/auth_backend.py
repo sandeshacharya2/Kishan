@@ -16,8 +16,8 @@ class EmailBackend(ModelBackend):
             return None
 
         # Enforce strict case-sensitive email check in Python
-        if user.email != username:
-            return None
+        # if user.email != username:
+        #     return None
 
         # Optional role check
         if role and (not hasattr(user, "profile") or user.profile.role != role):
