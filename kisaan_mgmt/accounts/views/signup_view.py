@@ -320,3 +320,42 @@ def submit_farmer_review(request, farmer_id):
 #         'reviews': reviews,
 #         'avg_rating': round(avg_rating, 2),
 #     })
+@login_required
+# @farmer_required
+def farmer_reviews_view(request):
+    """Farmer sees all reviews about themselves"""
+    reviews = FarmerReview.objects.filter(farmer=request.user) \
+                                  .select_related('customer') \
+                                  .order_by('-created_at')
+    return render(request, 'accounts/farmer_reviews.html', {
+        'reviews': reviews,
+        'farmer': request.user,
+    })
+
+
+@login_required
+def customer_farmer_reviews_view(request, farmer_id):
+    """Customer sees reviews of a specific farmer"""
+    farmer = get_object_or_404(User, id=farmer_id)
+    reviews = FarmerReview.objects.filter(farmer=farmer) \
+                                  .select_related('customer') \
+                                  .order_by('-created_at')
+    return render(request, 'accounts/farmer_reviews_customer.html', {
+        'reviews': reviews,
+        'farmer': farmer,
+    })
+
+
+@login_required
+@farmer_required
+def customer_detail_view(request, customer_id):
+    """Farmer sees customer details along with reviews given to this farmer"""
+    customer = get_object_or_404(User, id=customer_id)
+    
+    # Fetch review(s) this customer gave to the logged-in farmer
+    reviews = FarmerReview.objects.filter(farmer=request.user, customer=customer)
+
+    return render(request, 'accounts/customer_detail.html', {
+        'customer': customer,
+        'reviews': reviews,
+    })

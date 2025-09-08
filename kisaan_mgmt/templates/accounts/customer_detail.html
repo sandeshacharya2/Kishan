@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 min-h-screen p-6">
+
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
+    <!-- Customer Profile -->
+    <div class="flex gap-4 items-center mb-4">
+        {% if customer.customerprofile.profile_picture %}
+            <img src="{{ customer.customerprofile.profile_picture.url }}" 
+                 class="w-20 h-20 rounded-full object-cover" alt="Profile">
+        {% else %}
+            <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center">
+                <span class="text-gray-700 font-bold text-xl">
+                    {{ customer.first_name|default:customer.username|slice:":1" }}
+                </span>
+            </div>
+        {% endif %}
+
+        <div>
+            <h2 class="font-bold text-xl">{{ customer.first_name }} {{ customer.last_name }}</h2>
+            <p class="text-gray-600">@{{ customer.username }}</p>
+            <p class="text-gray-600">📞 {{ customer.profile.phonenumber }}</p>
+            <p class="text-gray-600">✉️ {{ customer.email }}</p>
+            <p class="text-gray-600">
+                🏠 {{ customer.profile.address }}, 
+                
+                <br>
+                {{ customer.profile.ward }}, {{ customer.profile.tole }} 
+            </p>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Reviews given to this farmer -->
+    <h3 class="font-bold text-lg mb-2">Reviews given by this customer</h3>
+    <div class="space-y-3">
+        {% for review in reviews %}
+            <div class="bg-gray-100 p-3 rounded-lg">
+                <div class="flex items-center gap-2">
+                    {% for i in "12345" %}
+                        {% if i|add:"0" <= review.rating %}
+                            <span class="text-yellow-400">★</span>
+                        {% else %}
+                            <span class="text-gray-300">★</span>
+                        {% endif %}
+                    {% endfor %}
+                    <span class="ml-2 text-sm text-green-800 font-semibold">{{ review.rating }}/5</span>
+                </div>
+                <p class="mt-1">{{ review.comment|default:"No comment" }}</p>
+                <span class="text-xs text-gray-400">{{ review.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+        {% empty %}
+            <p class="text-gray-500">No reviews from this customer.</p>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-6">
+        <a href="{% url 'farmer-reviews' %}" 
+           class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+           Back to Reviews
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

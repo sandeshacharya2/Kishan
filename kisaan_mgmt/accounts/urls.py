@@ -14,7 +14,8 @@ from .views import (
     update_farmer_profile,
     update_customer_profile,
     check_availability,
-    farmer_detail,  # views बाट import गरियो
+    farmer_detail,
+    farmer_reviews_view,  # views बाट import गरियो
 )
 
 urlpatterns = [
@@ -46,5 +47,8 @@ urlpatterns = [
     path('farmer-location/<int:farmer_id>/', views.view_farmer_location, name='view_farmer_location'),
     path('ajax/check-availability/', check_availability, name='check_availability'),
     path('farmer/<int:farmer_id>/', farmer_detail, name='farmer_detail'),
+    path('farmer/reviews/', farmer_reviews_view, name='farmer-reviews'),
+    path('farmer/<int:farmer_id>/reviews/', views.customer_farmer_reviews_view, name='customer-farmer-reviews'),
+    path('farmer/customer/<int:customer_id>/', views.customer_detail_view, name='customer-detail'),
 
 ]

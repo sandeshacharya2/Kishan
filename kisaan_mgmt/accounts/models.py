@@ -115,6 +115,7 @@ class FarmerReview(models.Model):
     farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(default=5)  # 1-5 stars
+    comment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,19 +28,24 @@
         <span class="star text-gray-300 mx-1" data-value="5">★</span>
     </div>
 
-    <!-- Comment -->
+    <!-- Comment & Form -->
     <form method="POST" class="space-y-4">
         {% csrf_token %}
-        <!-- <textarea name="comment" rows="4" placeholder="Write your review (optional)"
-                  class="w-full p-3 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"></textarea> -->
+        <textarea name="comment" rows="4" maxlength="200" placeholder="Write your review (optional, max 200 characters)"
+                  class="w-full p-3 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
 
         <input type="hidden" name="rating" id="ratingInput" value="0">
 
-        <!-- Submit Button -->
-      <a href="{% url 'customer-dashboard' %}" > <button type="submit" 
+        <!-- Submit Rating Button -->
+        <button type="submit" 
                 class="w-full bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
             Submit Rating
         </button>
+
+        <!-- See All Reviews Button -->
+        <a href="{% url 'customer-farmer-reviews' farmer.id %}"
+           class="block text-center bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition">
+           See All Reviews
         </a>
     </form>
 

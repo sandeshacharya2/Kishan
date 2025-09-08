@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Farmer Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 min-h-screen p-6">
+
+    <h1 class="text-2xl font-bold text-center mb-6">Customer Reviews</h1>
+
+    <div class="max-w-3xl mx-auto space-y-4">
+        {% for review in reviews %}
+        <div class="bg-white shadow-md rounded-lg p-4 flex gap-4">
+            <!-- Profile picture -->
+            {% if review.customer.customerprofile.profile_picture %}
+                <img src="{{ review.customer.customerprofile.profile_picture.url }}" 
+                     alt="Profile" class="w-12 h-12 rounded-full object-cover">
+            {% else %}
+                <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+                    <span class="text-gray-700 font-bold text-lg">
+                        {{ review.customer.first_name|default:review.customer.username|slice:":1" }}
+                    </span>
+                </div>
+            {% endif %}
+
+            <!-- Review details -->
+            <div class="flex-1">
+                <!-- Name clickable -->
+                <p class="font-bold">
+                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
+                        {{ review.customer.first_name }} {{ review.customer.last_name }}
+                    </a>
+                </p>
+                <!-- Username clickable -->
+                <p class="text-sm text-gray-500">
+                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
+                        @{{ review.customer.username }}
+                    </a>
+                </p>
+
+                <!-- Stars -->
+                <div class="flex my-1">
+                    {% for i in "12345" %}
+                        {% if i|add:"0" <= review.rating %}
+                            <span class="text-yellow-400">★</span>
+                        {% else %}
+                            <span class="text-gray-300">★</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Comment -->
+                <p class="text-gray-700">{{ review.comment|default:"No comment provided." }}</p>
+
+                <span class="text-xs text-gray-400">{{ review.created_at|date:"M d, Y H:i" }}</span>
+
+                <!-- View Customer button -->
+
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-gray-500">No reviews yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-6">
+        <a href="{% url 'farmer-dashboard' %}" 
+           class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Back</a>
+    </div>
+
+</body>
+</html>

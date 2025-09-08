@@ -135,7 +135,8 @@ from .models import FarmerReview
 class FarmerReviewForm(forms.ModelForm):
     class Meta:
         model = FarmerReview
-        fields = ['rating']
+        fields = ['rating', 'comment']  # include comment field
         widgets = {
-            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5})
+            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5}),
+            'comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your review...'}),
         }

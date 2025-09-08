@@ -29,6 +29,12 @@
         {% endfor %}
         <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
       </div>
+         <div class="text-center mt-3">
+    <a href="{% url 'farmer-reviews' %}"
+       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+       See All Reviews
+    </a>
+</div>
     <h2 class="text-green-900 font-bold text-lg tracking-wide">👨‍🌾 @{{ user.username }}</h2>
     <p class="text-green-900 font-semibold">{{ user.first_name }} {{ user.last_name }}</p>
     <p class="text-green-900 text-sm">
@@ -77,8 +83,16 @@
         {% endfor %}
         <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
       </div>
+   <div class="text-center mt-3">
+    <a href="{% url 'farmer-reviews' %}" 
+       class="text-green-100 italic underline font-semibold hover:text-white transition">
+       See All Reviews
+    </a>
+</div>
 
-          <p class="text-lime-100 font-semibold"> 👨‍🌾{{ user.first_name }} {{ user.last_name }}</p>
+
+
+          <p class="text-lime-100 font-semibold"> 👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
 
     <h2 class="text-white font-bold text-lg tracking-wide"> @{{ user.username }}</h2>
     <p class="text-green-50 text-sm">
