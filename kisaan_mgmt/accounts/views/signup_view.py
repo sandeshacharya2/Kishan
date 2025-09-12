@@ -10,12 +10,16 @@ from datetime import timedelta
 from django.utils.translation import gettext as _
 from accounts.views.role_based_redirect import farmer_required, customer_required
 
-from ..models import EmailOTP, Profile, FarmerProfile
+from ..models import EmailOTP, Profile, FarmerProfile, CustomerProfile  # ✅ Added CustomerProfile
 from ..forms import SignUpForm, FarmerProfileForm
 from products.models import Product
 from chat.models import ChatRoom
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from accounts.forms import FarmerReviewForm
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseForbidden
+from accounts.models import FarmerReview
 
 
 @require_GET
@@ -31,19 +35,22 @@ def check_availability(request):
     elif field == 'email':
         exists = User.objects.filter(email=value).exists()
     elif field == 'phonenumber':
-        # Assuming you have a custom user model or Profile model with phone number field
-        # Replace this with your actual phone field lookup logic
-        exists = User.objects.filter(profile__phonenumber=value).exists()
+        # Check both FarmerProfile and CustomerProfile for phone number
+        exists = FarmerProfile.objects.filter(phonenumber=value).exists() or \
+                 CustomerProfile.objects.filter(phonenumber=value).exists()
     else:
         return JsonResponse({'error': 'Invalid field'}, status=400)
 
     return JsonResponse({'exists': exists})
 
+
 def landing_page(request):
     return render(request, 'landingpage/index.html')
 
+
 def about(request):
     return render(request, 'landingpage/about.html')
+
 
 def contact(request):
     if request.method == 'POST':
@@ -70,6 +77,7 @@ def contact(request):
 def switch_to_farmer(request):
     logout(request)
     return redirect('farmer-login')
+
 
 def switch_to_customer(request):
     logout(request)
@@ -178,25 +186,41 @@ def verify_otp_view(request):
                 username=signup_data['username'],
                 email=email,
                 password=signup_data['password1']
-
             )
 
+            # ✅ Get or create Profile (role only)
             profile = user.profile
-            profile.phonenumber = signup_data.get('phonenumber')
-            profile.ward = signup_data.get('ward')
-            profile.tole = signup_data.get('tole')
             profile.role = signup_data.get('role')
-            profile.latitude = float(signup_data.get('latitude') or 0)
-            profile.longitude = float(signup_data.get('longitude') or 0)
             profile.save()
+
+            # ✅ Assign profile fields to FarmerProfile or CustomerProfile based on role
+            role = signup_data.get('role')
+
+            if role == 'farmer':
+                farmer_profile, created = FarmerProfile.objects.get_or_create(user=user)
+                farmer_profile.phonenumber = signup_data.get('phonenumber')
+                farmer_profile.ward = signup_data.get('ward')
+                farmer_profile.tole = signup_data.get('tole')
+                farmer_profile.latitude = float(signup_data.get('latitude') or 0)
+                farmer_profile.longitude = float(signup_data.get('longitude') or 0)
+                farmer_profile.save()
+
+            elif role == 'customer':
+                customer_profile, created = CustomerProfile.objects.get_or_create(user=user)
+                customer_profile.phonenumber = signup_data.get('phonenumber')
+                customer_profile.ward = signup_data.get('ward')
+                customer_profile.tole = signup_data.get('tole')
+                customer_profile.latitude = float(signup_data.get('latitude') or 0)
+                customer_profile.longitude = float(signup_data.get('longitude') or 0)
+                customer_profile.save()
 
             del request.session['signup_data']
             EmailOTP.objects.filter(email=email).delete()
             messages.success(request, "regestration successful. You can now log in.")
 
-            if profile.role == 'farmer':
+            if role == 'farmer':
                 return redirect('farmer-login')
-            elif profile.role == 'customer':
+            elif role == 'customer':
                 return redirect('customer-login')
             return redirect('login')
         else:
@@ -213,43 +237,43 @@ def verify_otp_view(request):
         'can_resend': can_resend,
     })
 
-from django.db.models import Avg
-from accounts.models import FarmerReview  # make sure this import exists
 
 from django.db.models import Avg
 from accounts.models import FarmerReview
-from accounts.models import FarmerReview
-from django.db.models import Avg
 
 @login_required
 @farmer_required
 def farmer_dashboard_view(request):
     user = request.user
 
-    products = Product.objects.filter(farmer=user)
+    # ✅ Correct: Product.farmer expects FarmerProfile
+    products = Product.objects.filter(farmer=user.farmerprofile)
 
     try:
         farmer_profile = user.farmerprofile
     except FarmerProfile.DoesNotExist:
         farmer_profile = None
 
+    # ✅ FIXED: Get Profile (for role), not FarmerProfile
     try:
         accounts_profile = user.profile
     except Profile.DoesNotExist:
         accounts_profile = None
 
+    # ✅ FIXED: ChatRoom.farmer expects FarmerProfile
     pending_chats = ChatRoom.objects.filter(
-        farmer=user, 
+        farmer=user.farmerprofile,  # ← CHANGED HERE
         farmer_accepted=False,
         farmer_rejected=False
     )
 
     form = FarmerProfileForm(instance=farmer_profile)
 
+    # ✅ FarmerReview.farmer still expects User → so use request.user
     avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
-    # ✅ Fetch reviews from customers
+    # ✅ Fetch reviews from customers — farmer is User
     reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
 
     context = {
@@ -259,12 +283,10 @@ def farmer_dashboard_view(request):
         'accounts_profile': accounts_profile,
         'pending_chats': pending_chats,
         'avg_rating': avg_rating,
-        'reviews': reviews,  # <-- must be passed here
+        'reviews': reviews,
     }
 
     return render(request, 'accounts/farmer_dashboard.html', context)
-
-
 
 # @login_required
 # def customer_dashboard_view(request):
@@ -282,20 +304,22 @@ def farmer_dashboard_view(request):
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from accounts.models import FarmerReview
-from accounts.forms import FarmerReviewForm
-from django.contrib.auth.models import User
-from accounts.views.role_based_redirect import customer_required
-
+from django.http import HttpResponseForbidden
+from django.db.models import Avg
+# from .models import FarmerProfile, CustomerProfile, FarmerReview, User  # Import User explicitly
+# from .forms import FarmerReviewForm
 
 @login_required
 @customer_required
 def submit_farmer_review(request, farmer_id):
-    farmer = get_object_or_404(User, id=farmer_id)
+    # Get the FarmerProfile to display info, but review uses User
+    farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
+    farmer_user = farmer_profile.user  # Extract the User object
     
+    # Use User objects for review
     review, created = FarmerReview.objects.get_or_create(
-        farmer=farmer,
-        customer=request.user,
+        farmer=farmer_user,           # ← Farmer is a User
+        customer=request.user,        # ← Customer is a User (logged-in user)
         defaults={'rating': 5}
     )
 
@@ -303,30 +327,28 @@ def submit_farmer_review(request, farmer_id):
         form = FarmerReviewForm(request.POST, instance=review)
         if form.is_valid():
             form.save()
-            return redirect('customer-dashboard')  # Redirect to customer dashboard after saving
+            return redirect('customer-dashboard')
     else:
         form = FarmerReviewForm(instance=review)
 
-    return render(request, 'accounts/submit_farmer_review.html', {'form': form, 'farmer': farmer})
+    return render(request, 'accounts/submit_farmer_review.html', {
+        'form': form,
+        'farmer': farmer_user,  # Pass User object for display
+    })
 
-# @login_required
-# def view_farmer_reviews(request, farmer_id):
-#     farmer = get_object_or_404(User, id=farmer_id)
-#     reviews = FarmerReview.objects.filter(farmer=farmer)
-#     avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
 
-#     return render(request, 'accounts/view_farmer_reviews.html', {
-#         'farmer': farmer,
-#         'reviews': reviews,
-#         'avg_rating': round(avg_rating, 2),
-#     })
 @login_required
-# @farmer_required
 def farmer_reviews_view(request):
     """Farmer sees all reviews about themselves"""
-    reviews = FarmerReview.objects.filter(farmer=request.user) \
-                                  .select_related('customer') \
-                                  .order_by('-created_at')
+    # Ensure user has FarmerProfile (role check)
+    try:
+        farmer_profile = request.user.farmerprofile  # ← Note: auto-generated name 'farmerprofile'
+    except FarmerProfile.DoesNotExist:
+        return HttpResponseForbidden("You are not a farmer.")
+
+    # Filter reviews by User (request.user), not FarmerProfile
+    reviews = FarmerReview.objects.filter(farmer=request.user).select_related('customer')        .order_by('-created_at')
+
     return render(request, 'accounts/farmer_reviews.html', {
         'reviews': reviews,
         'farmer': request.user,
@@ -336,26 +358,30 @@ def farmer_reviews_view(request):
 @login_required
 def customer_farmer_reviews_view(request, farmer_id):
     """Customer sees reviews of a specific farmer"""
-    farmer = get_object_or_404(User, id=farmer_id)
-    reviews = FarmerReview.objects.filter(farmer=farmer) \
-                                  .select_related('customer') \
-                                  .order_by('-created_at')
+    farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
+    farmer_user = farmer_profile.user
+    
+    reviews = FarmerReview.objects.filter(farmer=farmer_user) .select_related('customer') .order_by('-created_at')
+
     return render(request, 'accounts/farmer_reviews_customer.html', {
         'reviews': reviews,
-        'farmer': farmer,
+        'farmer': farmer_user,  # Pass User for display
     })
 
 
 @login_required
-@farmer_required
+# @farmer_required
 def customer_detail_view(request, customer_id):
-    """Farmer sees customer details along with reviews given to this farmer"""
-    customer = get_object_or_404(User, id=customer_id)
+    customer_profile = get_object_or_404(CustomerProfile, id=customer_id)
+    customer_user = customer_profile.user  # Extract User object
     
-    # Fetch review(s) this customer gave to the logged-in farmer
-    reviews = FarmerReview.objects.filter(farmer=request.user, customer=customer)
+    # Reviews this farmer (request.user) received FROM this customer (customer_user)
+    reviews = FarmerReview.objects.filter(
+        farmer=request.user,      # ← Farmer is User
+        customer=customer_user    # ← Customer is User
+    )
 
     return render(request, 'accounts/customer_detail.html', {
-        'customer': customer,
+        'customer': customer_profile,  # Still pass profile for display details
         'reviews': reviews,
     })

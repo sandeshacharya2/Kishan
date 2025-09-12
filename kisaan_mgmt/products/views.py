@@ -1,18 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProductForm
-from .models import Product
+from .models import Product, ProductSynonym  # Make sure ProductSynonym exists
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.utils.translation import gettext_lazy as _
 import requests
 from django.conf import settings
 from django.db.models import Sum, Count, Min, Max, OuterRef, Subquery
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import ProductForm
-from .models import Product, ProductSynonym  # Make sure ProductSynonym exists
-from django.utils.translation import gettext_lazy as _
+from django.core.mail import send_mail
+from django.contrib import messages
 
 # Define Roman and English synonyms
 synonyms_dict = {
@@ -66,32 +62,71 @@ def add_product(request):
         if form.is_valid():
             product = form.save(commit=False)
             
-            # Handle 'अन्य' subcategory
+            is_other = False
             if product.sub_category == 'अन्य':
                 product.sub_category = request.POST.get('other_subcategory')
+                is_other = True  # Flag for notification
             
-            product.farmer = request.user
+            product.farmer = request.user.farmerprofile
             product.save()
 
-            # Add synonyms automatically
-            ProductSynonym.objects.create(product=product, language="nepali", synonym=product.sub_category)
+            # Always create Nepali synonym
+            ProductSynonym.objects.create(
+                product=product,
+                language="nepali",
+                synonym=product.sub_category
+            )
+
+            # Auto-add Roman/English if known
             if product.sub_category in synonyms_dict:
                 for roman_name in synonyms_dict[product.sub_category]["roman"]:
                     ProductSynonym.objects.create(product=product, language="roman", synonym=roman_name)
                 for eng_name in synonyms_dict[product.sub_category]["english"]:
                     ProductSynonym.objects.create(product=product, language="english", synonym=eng_name)
+            else:
+                # It's unknown → likely "अन्य" → notify admin
+                if is_other:
+                    try:
+                        farmer_name = request.user.get_full_name() or request.user.username
+                        admin_url = request.build_absolute_uri(f"/admin/products/product/{product.id}/change/")
+                        
+                        send_mail(
+                            subject=f'🔔 New Custom Product Added: {product.sub_category}',
+                            message=f'''
+Hello Admin,
+
+A new custom product has been added by a farmer and needs your attention.
+
+Farmer: {farmer_name}
+Product: {product.sub_category}
+Quantity: {product.quantity} {product.unit}
+Price: {product.price} per unit
+Date Posted: {product.date_posted.strftime("%Y-%m-%d %H:%M")}
+
+Please log in to Django Admin and add Roman & English synonyms:
+{admin_url}
+
+Thank you!
+                            ''',
+                            from_email=settings.DEFAULT_FROM_EMAIL,
+                            recipient_list=[admin[1] for admin in settings.ADMINS],  # Get emails from ADMINS
+                            fail_silently=False,
+                        )
+                    except Exception as e:
+                        print("Failed to send admin email:", e)
+                        # Optionally log or show message to farmer
+                        # messages.warning(request, "Product added, but admin notification failed.")
 
             return redirect('farmer-dashboard')
     else:
         form = ProductForm()
     
     return render(request, 'products/add_product.html', {'form': form})
-
 @login_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can edit
-    if product.farmer != request.user:
+    if product.farmer != request.user.farmerprofile:  # ✅ CHANGED HERE
         return HttpResponseForbidden(_("You are not allowed to edit this product."))
 
     if request.method == 'POST':
@@ -115,7 +150,7 @@ def edit_product(request, product_id):
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can delete
-    if product.farmer != request.user:
+    if product.farmer != request.user.farmerprofile:  # ✅ CHANGED HERE
         return HttpResponseForbidden(_("You are not allowed to delete this product."))
 
     if request.method == 'POST':
@@ -123,6 +158,8 @@ def delete_product(request, product_id):
         return redirect('farmer-dashboard')
 
     return render(request, 'products/confirm_delete.html', {'product': product})
+
+
 
 
 
@@ -144,7 +181,7 @@ from django.shortcuts import render
 
 def weather_view(request):
     city = 'Beni, Myagdi'
-    url = f'https://wttr.in/{city}?format=j1'
+    url = f'https://wttr.in/  {city}?format=j1'
 
     try:
         response = requests.get(url)
@@ -179,7 +216,7 @@ def weather_view(request):
     return render(request, 'landingpage/weather_info.html', {'weather': weather, 'city': city})
 
     city = 'Beni, Myagdi'
-    url = f'https://wttr.in/{city}?format=j1'  # j1 means JSON format
+    url = f'https://wttr.in/  {city}?format=j1'  # j1 means JSON format
 
     try:
         response = requests.get(url)

@@ -38,7 +38,7 @@
     <h2 class="text-green-900 font-bold text-lg tracking-wide">👨‍🌾 @{{ user.username }}</h2>
     <p class="text-green-900 font-semibold">{{ user.first_name }} {{ user.last_name }}</p>
     <p class="text-green-900 text-sm">
-      {% blocktrans with address=user.profile.address tole=user.profile.tole ward=user.profile.ward %}
+      {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
         {{ address }}, {{ tole }}, Ward No. {{ ward }}
       {% endblocktrans %}
     </p>
@@ -96,7 +96,7 @@
 
     <h2 class="text-white font-bold text-lg tracking-wide"> @{{ user.username }}</h2>
     <p class="text-green-50 text-sm">
-      {% blocktrans with address=user.profile.address tole=user.profile.tole ward=user.profile.ward %}
+      {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
         {{ address }}, {{ tole }}, Ward No. {{ ward }}
       {% endblocktrans %}
     </p>

@@ -2,19 +2,23 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from .models import Product, ChatRoom, Message
+from accounts.models import FarmerProfile, CustomerProfile  # ← Import these!
+
 
 @login_required
 def farmer_dashboard(request):
-    if not request.user.is_authenticated or not request.user.profile.role == 'farmer':
-        return redirect('login')
+    try:
+        farmer_profile = request.user.farmerprofile  # Direct relation from User → FarmerProfile
+    except FarmerProfile.DoesNotExist:
+        return redirect('login')  # Redirect if user is not a farmer
 
     pending_chats = ChatRoom.objects.filter(
-        farmer=request.user,
+        farmer=farmer_profile,
         farmer_accepted=False,
         farmer_rejected=False
     )
 
-    products = Product.objects.filter(farmer=request.user)  # if you're showing product list too
+    products = Product.objects.filter(farmer=farmer_profile)
 
     context = {
         'products': products,
@@ -22,37 +26,32 @@ def farmer_dashboard(request):
     }
     return render(request, 'accounts/farmer_dashboard.html', context)
 
+
 @login_required
 def start_chat(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    farmer = product.farmer
-    customer = request.user
+    farmer_profile = product.farmer  # Correct: Product.farmer → FarmerProfile
 
-    print(f"[DEBUG] start_chat called: product_id={product_id}, farmer={farmer.username}, customer={customer.username}")
+    # Get customer profile from current user
+    try:
+        customer_profile = request.user.customerprofile
+    except CustomerProfile.DoesNotExist:
+        return HttpResponseForbidden("You must be a registered customer to start a chat.")
 
-    # Check if chatroom exists for this product, farmer, customer
-    chatroom_qs = ChatRoom.objects.filter(product=product, farmer=farmer, customer=customer)
-    if chatroom_qs.exists():
-        chatroom = chatroom_qs.first()
-        print(f"[DEBUG] Found existing chatroom with ID {chatroom.id}")
+    # Create or get existing chatroom (unique_together prevents duplicates)
+    chatroom, created = ChatRoom.objects.get_or_create(
+        product=product,
+        farmer=farmer_profile,
+        customer=customer_profile
+    )
 
-        if chatroom.farmer_rejected:
-            print("[DEBUG] Chatroom was previously rejected by farmer, resetting flags")
-            chatroom.farmer_rejected = False
-            chatroom.farmer_accepted = False
-            chatroom.save()
-    else:
-        chatroom = ChatRoom.objects.create(product=product, farmer=farmer, customer=customer)
-        print(f"[DEBUG] Created new chatroom with ID {chatroom.id}")
-
-    # Create initial message if none exists
-    if chatroom.message_set.count() == 0:
+    if created:
+        # Use sub_category instead of name (since Product has no 'name' field)
         Message.objects.create(
             chatroom=chatroom,
-            sender=customer,
-            text=f"{customer.username} wants to start a chat with you. Please accept to continue.",
+            sender=request.user,
+            text=f"Hi {farmer_profile.user.username}, I'm interested in your product '{product.sub_category}'. Please accept this chat to continue."
         )
-        print("[DEBUG] Created initial message in chatroom")
 
     return redirect('chat:chatroom_detail', chatroom_id=chatroom.id)
 
@@ -60,67 +59,39 @@ def start_chat(request, product_id):
 @login_required
 def chatroom_detail(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
-    messages = Message.objects.filter(chatroom=chatroom).order_by('timestamp')
 
-    print(f"[DEBUG] chatroom_detail called for chatroom ID {chatroom_id}")
-    print(f"[DEBUG] Farmer accepted: {chatroom.farmer_accepted}, Farmer rejected: {chatroom.farmer_rejected}")
-    print(f"[DEBUG] Request user: {request.user.username}")
+    # Permission check: Only farmer or customer can view
+    if request.user != chatroom.farmer.user and request.user != chatroom.customer.user:
+        return HttpResponseForbidden("You don't have permission to view this chat.")
 
-    # Handle farmer rejected case
+    # Handle rejection
     if chatroom.farmer_rejected:
-        if request.user == chatroom.customer:
-            print("[DEBUG] Farmer rejected chatroom - showing rejection to customer")
+        if request.user == chatroom.customer.user:
             return render(request, 'chat/chat_rejected.html', {'chatroom': chatroom})
-        elif request.user == chatroom.farmer:
-            print("[DEBUG] Farmer viewing rejected chatroom")
-            # Farmer may still view chatroom
-            pass
-        else:
-            print("[DEBUG] Unauthorized user tried to access rejected chatroom")
-            return HttpResponseForbidden("You don't have permission to view this chat.")
+        # Farmer can still view
 
-    # If farmer hasn't accepted yet, restrict messaging
+    # If chat not accepted yet
     if not chatroom.farmer_accepted:
-        if request.user == chatroom.farmer:
-            print("[DEBUG] Farmer sees accept/reject buttons (chat pending)")
-            return render(request, 'chat/chatroom_pending.html', {
-                'chatroom': chatroom,
-                'messages': messages,
-                'is_farmer': True
-            })
-        elif request.user == chatroom.customer:
-            print("[DEBUG] Customer waiting for farmer acceptance")
-            return render(request, 'chat/chatroom_pending.html', {
-                'chatroom': chatroom,
-                'messages': messages,
-                'is_farmer': False
-            })
-        else:
-            print("[DEBUG] Unauthorized user tried to access pending chatroom")
-            return HttpResponseForbidden("You don't have permission to view this chat.")
+        is_farmer = request.user == chatroom.farmer.user
+        messages = chatroom.message_set.all().order_by('timestamp')
+        return render(request, 'chat/chatroom_pending.html', {
+            'chatroom': chatroom,
+            'messages': messages,
+            'is_farmer': is_farmer
+        })
 
-    # Farmer accepted - allow messaging
+    # Chat accepted — allow messaging
     if request.method == 'POST':
         text = request.POST.get('text', '').strip()
-        is_bid = request.POST.get('is_bid') == 'on'
-        bid_amount = request.POST.get('bid_amount') if is_bid else None
-        bid_quantity = request.POST.get('bid_quantity') if is_bid else None
+        if text:
+            Message.objects.create(
+                chatroom=chatroom,
+                sender=request.user,
+                text=text
+            )
+        return redirect('chat:chatroom_detail', chatroom_id=chatroom.id)
 
-        print(f"[DEBUG] New message POST - text: {text}, is_bid: {is_bid}, bid_amount: {bid_amount}, bid_quantity: {bid_quantity}")
-
-        Message.objects.create(
-            chatroom=chatroom,
-            sender=request.user,
-            text=text,
-            is_bid=is_bid,
-            bid_amount=bid_amount if bid_amount else None,
-            bid_quantity=bid_quantity if bid_quantity else None,
-            bid_status='pending' if is_bid else None
-        )
-
-        # Refresh messages after POST
-        messages = Message.objects.filter(chatroom=chatroom).order_by('timestamp')
-
+    messages = chatroom.message_set.all().order_by('timestamp')
     return render(request, 'chat/chatroom.html', {
         'chatroom': chatroom,
         'messages': messages
@@ -131,17 +102,19 @@ def chatroom_detail(request, chatroom_id):
 def accept_chat(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
 
-    print(f"[DEBUG] accept_chat called by user {request.user.username} for chatroom ID {chatroom_id}")
-
-    if request.user != chatroom.farmer:
-        print("[DEBUG] Unauthorized accept attempt")
+    if request.user != chatroom.farmer.user:
         return HttpResponseForbidden("Only the farmer can accept this chat.")
 
     chatroom.farmer_accepted = True
     chatroom.farmer_rejected = False
     chatroom.save()
 
-    print("[DEBUG] Chatroom accepted")
+    # Optional: Send auto message
+    Message.objects.create(
+        chatroom=chatroom,
+        sender=chatroom.farmer.user,
+        text="I've accepted your chat request. How can I help you?"
+    )
 
     return redirect('chat:chatroom_detail', chatroom_id=chatroom.id)
 
@@ -150,42 +123,11 @@ def accept_chat(request, chatroom_id):
 def reject_chat(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
 
-    print(f"[DEBUG] reject_chat called by user {request.user.username} for chatroom ID {chatroom_id}")
-
-    if request.user != chatroom.farmer:
-        print("[DEBUG] Unauthorized reject attempt")
+    if request.user != chatroom.farmer.user:
         return HttpResponseForbidden("Only the farmer can reject this chat.")
 
     chatroom.farmer_accepted = False
     chatroom.farmer_rejected = True
     chatroom.save()
 
-    print("[DEBUG] Chatroom rejected")
-
-    return redirect('farmer-dashboard')  # Adjust URL name if needed
-
-
-@login_required
-def accept_bid(request, message_id):
-    message = get_object_or_404(Message, id=message_id, is_bid=True)
-
-    print(f"[DEBUG] accept_bid called by user {request.user.username} for message ID {message_id}")
-
-    if request.user != message.chatroom.farmer:
-        print("[DEBUG] Unauthorized bid accept attempt")
-        return HttpResponseForbidden("You are not allowed to accept this bid.")
-
-    message.bid_status = 'accepted'
-    message.save()
-
-    product = message.chatroom.product
-    print(f"[DEBUG] Current product stock: {product.stock_quantity}, bid quantity: {message.bid_quantity}")
-
-    if message.bid_quantity and message.bid_quantity <= product.stock_quantity:
-        product.stock_quantity -= message.bid_quantity
-        product.save()
-        print(f"[DEBUG] Product stock updated to {product.stock_quantity}")
-    else:
-        print("[DEBUG] Insufficient stock for bid quantity or no bid quantity provided")
-
-    return redirect('chat:chatroom_detail', chatroom_id=message.chatroom.id)
+    return redirect('farmer-dashboard')  # Make sure this URL name exists in your urls.py

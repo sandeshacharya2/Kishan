@@ -49,7 +49,7 @@
             <p class="font-medium text-green-800">📦 मात्रा: <span class="font-semibold">{{ product.quantity }} {{ product.unit }}</span></p>
             <p class="font-medium text-green-800">💰 मूल्य प्रति एकाइ: <span class="font-semibold">Rs. {{ product.price }}</span></p>
             <p class="font-medium text-green-800">💵 कुल मूल्य: <span class="font-semibold">Rs. {{ product.total_price }}</span></p>
-            <p class="font-medium text-green-800">📍 स्थान: <span class="font-semibold">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</span></p>
+            <p class="font-medium text-green-800">📍 स्थान: <span class="font-semibold">{{ user.farmerprofile.address }}, {{ user.farmerprofile.tole }}, वाड नं. {{ user.profile.ward }}</span></p>
             <p class="text-green-700 text-sm mt-2 font-medium">📅 पोस्ट मिति: {{ product.date_posted|date:"Y-m-d" }}</p>
             <p class="mt-2 text-green-700 font-medium">📝 विवरण: {{ product.description }}</p>
 

@@ -20,7 +20,7 @@
             {% else %}
                 <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
                     <span class="text-gray-700 font-bold text-lg">
-                        {{ review.customer.first_name|default:review.customer.username|slice:":1" }}
+                        {{ review.customer.first_name|default:review.customer.username|slice:":1"|upper }}
                     </span>
                 </div>
             {% endif %}
@@ -29,13 +29,13 @@
             <div class="flex-1">
                 <!-- Name clickable -->
                 <p class="font-bold">
-                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
+                    <a href="{% url 'customer-detail' review.customer.customerprofile.id %}" class="hover:text-green-700">
                         {{ review.customer.first_name }} {{ review.customer.last_name }}
                     </a>
                 </p>
                 <!-- Username clickable -->
                 <p class="text-sm text-gray-500">
-                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
+                    <a href="{% url 'customer-detail' review.customer.customerprofile.id %}" class="hover:text-green-700">
                         @{{ review.customer.username }}
                     </a>
                 </p>
@@ -55,9 +55,6 @@
                 <p class="text-gray-700">{{ review.comment|default:"No comment provided." }}</p>
 
                 <span class="text-xs text-gray-400">{{ review.created_at|date:"M d, Y H:i" }}</span>
-
-                <!-- View Customer button -->
-
             </div>
         </div>
         {% empty %}

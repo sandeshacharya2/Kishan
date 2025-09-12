@@ -6,51 +6,83 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% trans "ग्राहक ड्याशबोर्ड" %}</title>
-  <title>{% trans "customer-dashboard" %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* Responsive sidebar styles */
-    @media (max-width: 1024px) {
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      height: 100vh;
+      background: linear-gradient(to bottom right, #e6ffe6, #b2ff59);
+      border-right: 1px solid #a3e4a1;
+      box-shadow: 2px 0 12px rgba(44, 62, 80, 0.13);
+      transition: transform 0.3s ease-in-out; /* Smooth transition */
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 767px) {
       .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 50;
-        height: 100vh;
         width: 80vw;
-        max-width: 320px;
-        background: linear-gradient(to bottom right, #e6ffe6, #b2ff59);
+        max-width: 300px;
         transform: translateX(-100%);
-        transition: transform 0.3s;
-        box-shadow: 2px 0 12px rgba(44,62,80,0.13);
       }
+
       .sidebar.open {
         transform: translateX(0);
       }
+
       .sidebar-overlay {
         display: none;
         position: fixed;
-        inset: 0;
-        background: rgba(44,62,80,0.13);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(44, 62, 80, 0.3);
         z-index: 40;
       }
+
       .sidebar-overlay.active {
         display: block;
       }
+
       .ml-72 {
         margin-left: 0 !important;
       }
     }
-    @media (max-width: 640px) {
+
+    /* Medium Screen Styles */
+    @media (min-width: 768px) and (max-width: 1023px) {
       .sidebar {
-        width: 100vw;
-        max-width: none;
+        width: 250px;
       }
+
+      .ml-72 {
+        margin-left: 250px !important;
+      }
+    }
+
+    /* Desktop Styles */
+    @media (min-width: 1024px) {
+      .sidebar {
+        width: 280px;
+      }
+
+      .ml-72 {
+        margin-left: 280px !important;
+      }
+    }
+
+    /* General Styles */
+    .transition-all {
+      transition: all 0.3s ease-in-out;
     }
   </style>
 </head>
 <body class="bg-green-50 text-green-900">
-  <!-- Hamburger for mobile -->
+  <!-- Mobile navbar with hamburger -->
   <div class="lg:hidden flex items-center justify-between px-4 py-2 bg-white shadow sticky top-0 z-30">
     <button id="sidebar-toggle" class="text-green-700 text-3xl focus:outline-none">
       &#9776;
@@ -71,27 +103,18 @@
       {% endif %}
       <h2 class="mt-2 font-bold text-green-900 flex items-center justify-center gap-1">🧑‍💼 @{{ user.username }}</h2>
       <p class="text-sm font-semibold text-green-800">{{ user.first_name }} {{ user.last_name }}</p>
-      <!-- <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, वाड नं. {{ user.profile.ward }}</p> -->
-      <!-- <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "थप विवरण हेर्नुहोस्" %}</button> -->
-      <p class="text-sm text-green-700">{{ user.profile.address }}, {{ user.profile.tole }}, Ward No. {{ user.profile.ward }}</p>
+      <p class="text-sm text-green-700">{{ user.customerprofile.address }}, {{ user.customerprofile.tole }}, Ward No. {{ user.customerprofile.ward }}</p>
       <button onclick="toggleDetails()" class="mt-2 text-sm text-green-800 hover:underline">{% trans "Add more information" %}</button>
       <div id="details" class="hidden mt-2 text-sm text-green-800">
         <p>📧 {{ user.email }}</p>
-        <p>📞 {{ user.profile.phonenumber }}</p>
+        <p>📞 {{ user.customerprofile.phonenumber }}</p>
       </div>
       <div class="mt-3 text-green-900 text-xs italic">{% trans "ग्राहक साथी, तपाईंको सहभागिताले कृषि बजार चल्दछ!" %}</div>
     </div>
     <nav class="flex-1 p-4 space-y-4 text-green-800 font-semibold">
-      <!-- <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "प्रोफाइल सम्पादन" %}</a> -->
-      <!-- <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "ड्याशबोर्ड" %}</a> -->
-    </nav>
-    <form method="post" action="{% url 'logout' %}" class="p-4 border-t border-green-300">
-      {% csrf_token %}
-      <!-- <button class="text-red-700 font-semibold w-full hover:underline">🚪 {% trans "लगआउट" %}</button> -->
       <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "Edit Profile" %}</a>
       <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "Dashboard" %}</a>
-      <a href="{% url 'payments:customer_purchases' %}" class="text-decoration-none text-primary">🛒 मेरो किनमेल</a>
-
+      <a href="{% url 'payments:customer_purchases' %}" class="block hover:text-green-900">🛒 {% trans "My Purchases" %}</a>
     </nav>
     <form method="post" action="{% url 'logout' %}" class="p-4 border-t border-green-300">
       {% csrf_token %}
@@ -99,7 +122,7 @@
     </form>
   </aside>
   <!-- Main Content -->
-  <div class="ml-72 min-h-screen flex flex-col">
+  <div class="ml-72 min-h-screen flex flex-col transition-all">
 
     <!-- Navbar (desktop only) -->
     <header class="bg-white shadow p-3 flex items-center justify-between sticky top-0 z-20 lg:flex hidden">
@@ -128,29 +151,40 @@
       {% trans "नमस्ते ग्राहक साथी! यहाँ तपाईंले किसानहरूले पोस्ट गरेका उत्पादनहरू हेर्न सक्नुहुन्छ।" %}
     </div>
 
-    <!-- Search & Filter Form -->
-    <div class="px-6 mb-4">
-      <form method="get" class="flex flex-col sm:flex-row items-center gap-3">
-        <input
+<div class="px-4 sm:px-6 mb-5">
+  <form method="get" 
+        class="flex flex-row items-center gap-2 bg-white p-3 rounded-xl shadow-sm border border-green-200 flex-wrap">
+
+    <!-- Search Input -->
+    <input
       type="text"
       name="q"
       id="search-input"
       value="{{ query|default_if_none:'' }}"
       placeholder="{% trans 'Search items like (जस्तै: आलु, अदुवा, आ...)' %}"
-      class="w-full sm:w-1/2 px-4 py-2 border border-green-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+      class="flex-1 min-w-[150px] px-3 py-2 border border-green-300 rounded-lg shadow-sm 
+             focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 text-sm"
       autocomplete="off"
     />
 
     <!-- Filter Button and Dropdown -->
     <div class="relative">
-      <button type="button" id="filter-toggle" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+      <button type="button" id="filter-toggle" 
+              class="px-2 py-1.5 sm:px-4 sm:py-2.5 bg-green-600 text-white rounded-lg 
+                     hover:bg-green-700 transition-all duration-300 flex items-center gap-1 
+                     text-xs sm:text-sm shadow-md hover:shadow-lg">
         ⚙️ {% trans "Filter" %}
       </button>
 
-      <div id="filter-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white border border-green-300 rounded-lg shadow-lg z-50 p-4">
-        <label class="block mb-2 font-semibold text-green-800">{% trans "Filter by:" %}</label>
+      <!-- Dropdown -->
+      <div id="filter-dropdown" 
+           class="hidden absolute right-0 mt-2 w-72 bg-white border border-green-300 rounded-lg shadow-xl 
+                  z-50 p-5 animate-fadeIn">
+        <label class="block mb-3 font-semibold text-green-800 text-sm">{% trans "Filter by:" %}</label>
 
-        <select id="filter-type" name="filter_type" class="w-full mb-3 border border-green-300 rounded px-3 py-2">
+        <select id="filter-type" name="filter_type" 
+                class="w-full mb-4 border border-green-300 rounded px-3 py-2 text-sm 
+                       focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="">{% trans "Select Filter" %}</option>
           <option value="price" {% if filter_type == 'price' %}selected{% endif %}>{% trans "Price Range" %}</option>
           <option value="date" {% if filter_type == 'date' %}selected{% endif %}>{% trans "Date Range" %}</option>
@@ -159,337 +193,345 @@
         </select>
 
         <!-- Price Range Inputs -->
-        <div id="price-filter" class="filter-inputs hidden space-y-2">
-          <input type="number" name="min_price" placeholder="{% trans 'Minimum Price' %}" value="{{ request.GET.min_price }}" class="w-full border border-green-300 rounded px-3 py-2" />
-          <input type="number" name="max_price" placeholder="{% trans 'Maximum Price' %}" value="{{ request.GET.max_price }}" class="w-full border border-green-300 rounded px-3 py-2" />
+        <div id="price-filter" class="filter-inputs hidden space-y-3">
+          <input type="number" name="min_price" placeholder="{% trans 'Minimum Price' %}" value="{{ request.GET.min_price }}" 
+                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+                        focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <input type="number" name="max_price" placeholder="{% trans 'Maximum Price' %}" value="{{ request.GET.max_price }}" 
+                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+                        focus:outline-none focus:ring-2 focus:ring-green-400" />
         </div>
 
         <!-- Date Range Inputs -->
-        <div id="date-filter" class="filter-inputs hidden space-y-2">
-          <label class="block text-green-700 font-medium">{% trans "From" %}</label>
-          <input type="date" name="start_date" value="{{ request.GET.start_date }}" class="w-full border border-green-300 rounded px-3 py-2" />
-          <label class="block text-green-700 font-medium">{% trans "To" %}</label>
-          <input type="date" name="end_date" value="{{ request.GET.end_date }}" class="w-full border border-green-300 rounded px-3 py-2" />
+        <div id="date-filter" class="filter-inputs hidden space-y-3">
+          <label class="block text-green-700 font-medium text-sm">{% trans "From" %}</label>
+          <input type="date" name="start_date" value="{{ request.GET.start_date }}" 
+                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+                        focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <label class="block text-green-700 font-medium text-sm">{% trans "To" %}</label>
+          <input type="date" name="end_date" value="{{ request.GET.end_date }}" 
+                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+                        focus:outline-none focus:ring-2 focus:ring-green-400" />
         </div>
 
         <!-- Quantity Range Inputs -->
-        <div id="quantity-filter" class="filter-inputs hidden space-y-2">
-          <input type="number" name="min_quantity" placeholder="{% trans 'Minimum Quantity' %}" value="{{ request.GET.min_quantity }}" class="w-full border border-green-300 rounded px-3 py-2" />
-          <input type="number" name="max_quantity" placeholder="{% trans 'Maximum Quantity' %}" value="{{ request.GET.max_quantity }}" class="w-full border border-green-300 rounded px-3 py-2" />
+        <div id="quantity-filter" class="filter-inputs hidden space-y-3">
+          <input type="number" name="min_quantity" placeholder="{% trans 'Minimum Quantity' %}" value="{{ request.GET.min_quantity }}" 
+                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+                        focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <input type="number" name="max_quantity" placeholder="{% trans 'Maximum Quantity' %}" value="{{ request.GET.max_quantity }}" 
+                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+                        focus:outline-none focus:ring-2 focus:ring-green-400" />
         </div>
 
         <!-- Distance Range Inputs -->
-      <!-- Distance Range Inputs -->
-<div id="distance-filter" class="filter-inputs hidden space-y-2">
-  <select id="distance-option" name="distance_filter" class="w-full border border-green-300 rounded px-3 py-2 mb-2">
-    <option value="nearest" {% if request.GET.distance_filter == 'nearest' %}selected{% endif %}>{% trans "Nearest" %}</option>
-    <option value="farthest" {% if request.GET.distance_filter == 'farthest' %}selected{% endif %}>{% trans "Farthest" %}</option>
-    <option value="enter_range" {% if request.GET.distance_filter == 'enter_range' %}selected{% endif %}>{% trans "Enter Range" %}</option>
-  </select>
+        <div id="distance-filter" class="filter-inputs hidden space-y-3">
+          <select id="distance-option" name="distance_filter" 
+                  class="w-full border border-green-300 rounded px-3 py-2 mb-3 text-sm 
+                         focus:outline-none focus:ring-2 focus:ring-green-400">
+            <option value="nearest" {% if request.GET.distance_filter == 'nearest' %}selected{% endif %}>{% trans "Nearest" %}</option>
+            <option value="farthest" {% if request.GET.distance_filter == 'farthest' %}selected{% endif %}>{% trans "Farthest" %}</option>
+            <option value="enter_range" {% if request.GET.distance_filter == 'enter_range' %}selected{% endif %}>{% trans "Enter Range" %}</option>
+          </select>
 
-  <!-- Show only if Enter Range is selected -->
-  <div id="enter-range-inputs" class="hidden space-y-2">
-    <div class="flex gap-2 items-center">
-      <input type="number" step="any" name="min_distance" placeholder="{% trans 'Min Distance' %}" value="{{ request.GET.min_distance }}" class="flex-grow border border-green-300 rounded px-3 py-2" />
-      <select name="distance_unit" class="w-24 border border-green-300 rounded px-3 py-2">
-        <option value="km" {% if request.GET.distance_unit == 'km' %}selected{% endif %}>km</option>
-        <option value="meter" {% if request.GET.distance_unit == 'meter' %}selected{% endif %}>meter</option>
-      </select>
-    </div>
-    <div>
-      <input type="number" step="any" name="max_distance" placeholder="{% trans 'Max Distance' %}" value="{{ request.GET.max_distance }}" class="w-full border border-green-300 rounded px-3 py-2" />
-    </div>
-  </div>
-</div>
+          <!-- Show only if Enter Range is selected -->
+          <div id="enter-range-inputs" class="hidden space-y-3">
+            <div class="flex gap-2 items-center">
+              <input type="number" step="any" name="min_distance" placeholder="{% trans 'Min Distance' %}" value="{{ request.GET.min_distance }}" 
+                     class="flex-grow border border-green-300 rounded px-3 py-2 text-sm 
+                            focus:outline-none focus:ring-2 focus:ring-green-400" />
+              <select name="distance_unit" 
+                      class="w-24 border border-green-300 rounded px-3 py-2 text-sm 
+                             focus:outline-none focus:ring-2 focus:ring-green-400">
+                <option value="km" {% if request.GET.distance_unit == 'km' %}selected{% endif %}>km</option>
+                <option value="meter" {% if request.GET.distance_unit == 'meter' %}selected{% endif %}>meter</option>
+              </select>
+            </div>
+            <div>
+              <input type="number" step="any" name="max_distance" placeholder="{% trans 'Max Distance' %}" value="{{ request.GET.max_distance }}" 
+                     class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+                            focus:outline-none focus:ring-2 focus:ring-green-400" />
+            </div>
+          </div>
+        </div>
 
-
-        <button type="submit" class="mt-4 w-full bg-green-600 text-white rounded-lg py-2 hover:bg-green-700 transition">
+        <!-- Apply Filters Button -->
+        <button type="submit" 
+                class="mt-4 w-full bg-green-600 text-white rounded-lg py-2.5 
+                       hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg">
           {% trans "Apply Filters" %}
         </button>
       </div>
     </div>
 
-
-
-        <button
+    <!-- Search Button -->
+    <button
       type="submit"
-      class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+      class="px-2 py-1.5 sm:px-4 sm:py-2.5 bg-green-600 text-white rounded-lg 
+             hover:bg-green-700 transition-all duration-300 flex items-center gap-1 
+             text-xs sm:text-sm shadow-md hover:shadow-lg"
     >
       🔍 {% trans "खोज्नुहोस्" %}
     </button>
   </form>
-
-    </div>
-
-      <!-- Product Cards -->
-  <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
-    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {% if products %}
-        {% for product in products %}
-          <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-green-300 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
-            <!-- Farmer Info -->
-<div class="flex items-start gap-4 p-4 bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
-  
-  <!-- Farmer Profile Picture -->
-  <div class="flex flex-col items-center">
-    {% if product.farmer.farmerprofile.profile_picture %}
-      <a href="{{ product.farmer.farmerprofile.profile_picture.url }}" target="_blank">
-        <img src="{{ product.farmer.farmerprofile.profile_picture.url }}"
-             alt="{% trans 'Farmer Picture' %}"
-             class="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-sm" />
-      </a>
-    {% else %}
-      <a href="{% static 'default_profile.jpg' %}" target="_blank">
-        <img src="{% static 'default_profile.jpg' %}"
-             alt="{% trans 'Default Picture' %}"
-             class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
-      </a>
-    {% endif %}
-
-    <!-- Rating Stars as Clickable Link -->
-    <a href="{% url 'submit-farmer-review' product.farmer.id %}"
-       class="flex mt-1 text-yellow-500 text-xs hover:scale-110 transition">
-      {% for i in "12345" %}
-        {% if i|add:"0" <= product.farmer_avg_rating %}
-          ⭐
-        {% elif i|add:"-0.5" <= product.farmer_avg_rating %}
-          ⭐️
-        {% else %}
-          ☆
-        {% endif %}
-      {% endfor %}
-    </a>
-  </div>
-
-  <!-- Farmer Details -->
-  <div class="flex flex-col">
-    <span class="font-semibold text-green-900 text-base flex items-center gap-1">
-      👨‍🌾 <a href="{% url 'farmer_detail' product.farmer.id %}" 
-   class="font-semibold text-green-900 text-base flex items-center gap-1">
-  👨‍🌾 {{ product.farmer.first_name }} {{ product.farmer.last_name }}
-</a>
-    </span>
-    <span class="text-xs text-green-700">@{{ product.farmer.username }}</span>
-    <span class="text-xs text-green-600 mt-1">
-      📅 {% trans "पोस्ट गरिएको मिति" %}: {{ product.date_posted|date:"Y-m-d" }}
-    </span>
-  </div>
 </div>
 
-            <!-- Product Image -->
-            {% if product.image %}
-              <a href="{{ product.image.url }}" target="_blank">
-                <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover" />
-              </a>
-            {% else %}
-              <img src="{% static 'default_product.png' %}" alt="{% trans 'Default Product' %}" class="w-full h-48 object-cover" />
-            {% endif %}
 
-            <!-- Product Details -->
-            <div class="p-5 space-y-2 text-green-900">
-              <h3 class="text-lg font-bold text-green-800 flex items-center gap-2">
-                🌾 {{ product.sub_category }}
-              </h3>
+    <!-- Product Cards -->
+    <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
+      <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% if products %}
+          {% for product in products %}
+            <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-green-300 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
+              <!-- Farmer Info -->
+              <div class="flex items-start gap-4 p-4 bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
+                <!-- Farmer Profile Picture -->
+                <div class="flex flex-col items-center">
+                  
+                {% if product.farmer.profile_picture %}
+                  <a href="{{ product.farmer.profile_picture.url }}" target="_blank" class="block">
+                    <img src="{{ product.farmer.profile_picture.url }}"
+                         alt="{% trans 'Farmer Picture' %}"
+                         class="w-12 h-12 rounded-full object-cover border-2 border-emerald-400 shadow-sm hover:scale-105 transition" />
+                  </a>
+                {% else %}
+                    <a href="{% static 'default_profile.jpg' %}" target="_blank">
+                      <img src="{% static 'default_profile.jpg' %}"
+                           alt="{% trans 'Default Picture' %}"
+                           class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
+                    </a>
+                  {% endif %}
 
-              <div class="flex flex-wrap gap-2 text-sm text-green-700">
-                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
-                  🧮 {% trans "मात्रा" %}: {{ product.quantity }} {{ product.unit }}
-                </span>
-                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
-                  💵 {% trans "प्रति एकाइ मूल्य" %}: Rs. {{ product.price }}
-                </span>
-                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
-                  🧾 {% trans "कुल" %}: Rs. {{ product.total_price }}
-                </span>
+                  <!-- Rating Stars as Clickable Link -->
+                  <a href="{% url 'submit-farmer-review' product.farmer.id %}"
+                     class="flex mt-1 text-yellow-500 text-xs hover:scale-110 transition">
+                    {% for i in "12345" %}
+                      {% if i|add:"0" <= product.farmer_avg_rating %}
+                        ⭐
+                      {% elif i|add:"-0.5" <= product.farmer_avg_rating %}
+                        ⭐️
+                      {% else %}
+                        ☆
+                      {% endif %}
+                    {% endfor %}
+                  </a>
+                </div>
+
+                <!-- Farmer Details -->
+                <div class="flex flex-col">
+                  <span class="font-semibold text-green-900 text-base flex items-center gap-1">
+                    👨‍🌾 <a href="{% url 'farmer_detail' product.farmer.id %}" 
+                       class="font-semibold text-green-900 text-base flex items-center gap-1">
+                      👨‍🌾 {{ product.farmer.user.first_name }} {{ product.farmer.user.last_name }}
+                    </a>
+                  </span>
+                  <span class="text-xs text-green-700">@{{ product.farmer.user.username }}</span>
+                  <span class="text-xs text-green-600 mt-1">
+                    📅 {% trans "पोस्ट गरिएको मिति" %}: {{ product.date_posted|date:"Y-m-d" }}
+                  </span>
+                </div>
               </div>
 
-              <div class="text-sm mt-2 text-green-700 leading-relaxed">
-                📍 <strong>{% trans "स्थान" %}</strong>: {{ product.farmer.profile.address }}, {{ product.farmer.profile.tole }},
-                {% blocktrans with ward=product.farmer.profile.ward %}
-                  वाड नं. {{ ward }}
-                {% endblocktrans %}
+              <!-- Product Image -->
+              {% if product.image %}
+                <a href="{{ product.image.url }}" target="_blank">
+                  <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover" />
+                </a>
+              {% else %}
+                <img src="{% static 'default_product.png' %}" alt="{% trans 'Default Product' %}" class="w-full h-48 object-cover" />
+              {% endif %}
+
+              <!-- Product Details -->
+              <div class="p-5 space-y-2 text-green-900">
+                <h3 class="text-lg font-bold text-green-800 flex items-center gap-2">
+                  🌾 {{ product.sub_category }}
+                </h3>
+
+                <div class="flex flex-wrap gap-2 text-sm text-green-700">
+                  <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
+                    🧮 {% trans "मात्रा" %}: {{ product.quantity }} {{ product.unit }}
+                  </span>
+                  <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
+                    💵 {% trans "प्रति एकाइ मूल्य" %}: Rs. {{ product.price }}
+                  </span>
+                  <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
+                    🧾 {% trans "कुल" %}: Rs. {{ product.total_price }}
+                  </span>
+                </div>
+                <div>
+                    <p class="mt-2 text-green-700 font-medium">📝 विवरण: {{ product.description }}</p>
+
+                </div>
+                <!-- ✅ FIXED: Use farmerprofile, not profile -->
+                <div class="text-sm mt-2 text-green-700 leading-relaxed">
+                  📍 <strong>{% trans "स्थान" %}</strong>: {{ product.farmer.user.farmerprofile.address }}, {{ product.farmer.user.farmerprofile.tole }},
+                  {% blocktrans with ward=product.farmer.user.farmerprofile.ward %}
+                    वाड नं. {{ ward }}
+                  {% endblocktrans %}
+                </div>
+                <div>
+                  
+                </div>
+                <!-- Distance Display -->
+                {% if product.display_distance %}
+                  <div class="text-sm mt-2 text-green-800 font-semibold flex items-center gap-1">
+                    📍 <strong>{% trans "दूरी" %}:</strong> {{ product.display_distance }}
+                  </div>
+                {% else %}
+                  <div class="text-sm mt-2 text-red-600 font-semibold">
+                    ⚠️ {% trans "दूरी उपलब्ध छैन" %}
+                  </div>
+                {% endif %}
+
+                <a href="{% url 'view_farmer_location' product.farmer.id %}" class="text-blue-600 underline text-sm">
+                  👨‍🌾 {% trans "किसानको स्थान हेर्नुहोस्" %}
+                </a>
+
+                <div class="mt-4 flex justify-between gap-3">
+                  <a href="{% url 'payments:payment_request' product.id %}" 
+                     class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+                    🛒 {% trans "Buy Now" %}
+                  </a>
+
+                  <a href="{% url 'chat:start_chat' product.id %}" 
+                     class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+                    💬 {% trans "Chat with farmer" %}
+                  </a>
+                </div>
               </div>
-
-             <!-- Distance Display -->
-    {% if product.display_distance %}
-      <div class="text-sm mt-2 text-green-800 font-semibold flex items-center gap-1">
-        📍 <strong>{% trans "दूरी" %}:</strong> {{ product.display_distance }}
-      </div>
-    {% else %}
-      <div class="text-sm mt-2 text-red-600 font-semibold">
-        ⚠️ {% trans "दूरी उपलब्ध छैन" %}}
-      </div>
-    {% endif %}
-    <a href="{% url 'view_farmer_location' product.farmer.id %}" class="text-blue-600 underline text-sm">
-        👨‍🌾 किसानको स्थान हेर्नुहोस्
-    </a>
-<div class="mt-4 flex justify-between gap-3">
-  <a href="{% url 'payments:payment_request' product.id %}" 
-     class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-    🛒 Buy Now
-  </a>
-
-  <a href="{% url 'chat:start_chat' product.id %}" 
-     class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-    💬 {% trans "Chat with farmer" %}
-  </a>
-</div>
-
             </div>
-            
-          </div>
-        {% endfor %}
-      {% else %}
-        <p class="text-center col-span-full text-green-600">{% trans "हाल कुनै उत्पादन उपलब्ध छैन।" %}</p>
-      {% endif %}
-    </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-center col-span-full text-green-600">{% trans "हाल कुनै उत्पादन उपलब्ध छैन।" %}</p>
+        {% endif %}
+      </div>
 
-    <!-- Pagination Controls -->
-    <div class="mt-8 flex justify-center items-center gap-3 text-green-800 font-semibold">
-  {% if products.has_previous %}
-    <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
-      &laquo; {% trans "अघिल्लो" %}
-    </a>
-  {% endif %}
+      <!-- Pagination Controls -->
+      <div class="mt-8 flex justify-center items-center gap-3 text-green-800 font-semibold">
+        {% if products.has_previous %}
+          <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.min_quantity %}&min_quantity={{ request.GET.min_quantity }}{% endif %}{% if request.GET.max_quantity %}&max_quantity={{ request.GET.max_quantity }}{% endif %}{% if request.GET.min_distance %}&min_distance={{ request.GET.min_distance }}{% endif %}{% if request.GET.max_distance %}&max_distance={{ request.GET.max_distance }}{% endif %}{% if request.GET.distance_unit %}&distance_unit={{ request.GET.distance_unit }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
+            &laquo; {% trans "अघिल्लो" %}
+          </a>
+        {% endif %}
 
-  <span class="px-3 py-1 rounded border border-green-400 bg-green-100">
-    {% trans "पृष्ठ" %} {{ products.number }} {% trans "बाट" %} {{ products.paginator.num_pages }}
-  </span>
+        <span class="px-3 py-1 rounded border border-green-400 bg-green-100">
+          {% trans "पृष्ठ" %} {{ products.number }} {% trans "बाट" %} {{ products.paginator.num_pages }}
+        </span>
 
-  {% if products.has_next %}
-    <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
-      {% trans "अर्को" %} &raquo;
-    </a>
-  {% endif %}
-</div>
-
-</main>
-
-
-
+        {% if products.has_next %}
+          <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.min_quantity %}&min_quantity={{ request.GET.min_quantity }}{% endif %}{% if request.GET.max_quantity %}&max_quantity={{ request.GET.max_quantity }}{% endif %}{% if request.GET.min_distance %}&min_distance={{ request.GET.min_distance }}{% endif %}{% if request.GET.max_distance %}&max_distance={{ request.GET.max_distance }}{% endif %}{% if request.GET.distance_unit %}&distance_unit={{ request.GET.distance_unit }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
+            {% trans "अर्को" %} &raquo;
+          </a>
+        {% endif %}
+      </div>
+    </main>
   </div>
-  
- <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const productsContainer = document.getElementById('products-container');
-    const searchInput = document.getElementById('search-input');
 
-    let debounceTimeout;
+  <script>
+    function toggleDetails() {
+      const details = document.getElementById('details');
+      details.classList.toggle('hidden');
+    }
 
-    searchInput.addEventListener('input', () => {
+    document.addEventListener('DOMContentLoaded', () => {
+      const productsContainer = document.getElementById('products-container');
+      const searchInput = document.getElementById('search-input');
+
+      let debounceTimeout;
+
+      searchInput.addEventListener('input', () => {
         clearTimeout(debounceTimeout);
 
         const query = searchInput.value.trim();
 
         debounceTimeout = setTimeout(() => {
-            fetch(`?q=${encodeURIComponent(query)}`, {
-                headers: { 'x-requested-with': 'XMLHttpRequest' }
-            })
-            .then(res => res.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newProducts = doc.getElementById('products-container');
-                if (newProducts && productsContainer) {
-                    productsContainer.innerHTML = newProducts.innerHTML;
-                }
-            });
-        }, 300); // wait 300ms after typing stops
-    });
+          const url = new URL(window.location);
+          url.searchParams.set('q', query);
+          // Preserve other filters
+          fetch(url.toString(), {
+            headers: { 'x-requested-with': 'XMLHttpRequest' }
+          })
+          .then(res => res.text())
+          .then(html => {
+            
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const newProducts = doc.getElementById('products-container');
+  if (newProducts && productsContainer) {
+    productsContainer.innerHTML = newProducts.innerHTML;
+  }
 });
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const filterToggleBtn = document.getElementById("filter-toggle");
-  const filterDropdown = document.getElementById("filter-dropdown");
-  const filterTypeSelect = document.getElementById("filter-type");
-  const filterInputs = document.querySelectorAll(".filter-inputs");
-  const distanceOption = document.getElementById("distance-option");
-  const enterRangeInputs = document.getElementById("enter-range-inputs");
-  const applyFiltersBtn = filterDropdown.querySelector("button[type='submit']");
-
-  // Toggle filter dropdown
-  filterToggleBtn.addEventListener("click", (e) => {
-    e.stopPropagation(); // prevent outside click from immediately closing
-    filterDropdown.classList.toggle("hidden");
-  });
-
-  // Show/hide filter inputs based on selected filter type
-  function updateFilterInputs() {
-    filterInputs.forEach(input => input.classList.add("hidden")); // hide all
-    const selected = filterTypeSelect.value;
-
-    if (selected === "price") {
-      document.getElementById("price-filter").classList.remove("hidden");
-    } else if (selected === "date") {
-      document.getElementById("date-filter").classList.remove("hidden");
-    } else if (selected === "quantity") {
-      document.getElementById("quantity-filter").classList.remove("hidden");
-    } else if (selected === "distance") {
-      document.getElementById("distance-filter").classList.remove("hidden");
-      updateDistanceInputs(); // show/hide enter-range inputs if needed
-    }
-  }
-
-  filterTypeSelect.addEventListener("change", updateFilterInputs);
-
-  // Show/hide enter-range inputs for distance
-  function updateDistanceInputs() {
-    if (distanceOption.value === "enter_range") {
-      enterRangeInputs.classList.remove("hidden");
-    } else {
-      enterRangeInputs.classList.add("hidden");
-    }
-  }
-
-  distanceOption.addEventListener("change", updateDistanceInputs);
-
-  // Initialize on page load
-  updateFilterInputs();
-
-  // Close filter dropdown when clicking outside
-  document.addEventListener("click", function(e) {
-    if (!filterDropdown.contains(e.target) && e.target !== filterToggleBtn) {
-      filterDropdown.classList.add("hidden");
-    }
-  });
-
-  // Reset all inputs when Apply Filters is clicked
-  applyFiltersBtn.addEventListener("click", function() {
-    setTimeout(() => { // delay to let form submit
-      filterInputs.forEach(inputDiv => {
-        const inputs = inputDiv.querySelectorAll("input, select");
-        inputs.forEach(i => i.value = ""); // clear inputs
+          
+          
+        }, 300);
       });
-      filterTypeSelect.value = ""; // reset filter dropdown
-      updateFilterInputs();         // hide all sub-inputs
-    }, 100);
-  });
-});
-</script>
+    });
 
+    document.addEventListener("DOMContentLoaded", function() {
+      const filterToggleBtn = document.getElementById("filter-toggle");
+      const filterDropdown = document.getElementById("filter-dropdown");
+      const filterTypeSelect = document.getElementById("filter-type");
+      const filterInputs = document.querySelectorAll(".filter-inputs");
+      const distanceOption = document.getElementById("distance-option");
+      const enterRangeInputs = document.getElementById("enter-range-inputs");
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const sidebarToggle = document.getElementById("sidebar-toggle");
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("sidebar-overlay");
+      function updateFilterInputs() {
+        filterInputs.forEach(input => input.classList.add("hidden"));
+        const selected = filterTypeSelect.value;
 
-  // Open/close sidebar on hamburger click
-  sidebarToggle.addEventListener("click", () => {
-    sidebar.classList.toggle("open");
-    overlay.classList.toggle("active");
-  });
+        if (selected === "price") {
+          document.getElementById("price-filter").classList.remove("hidden");
+        } else if (selected === "date") {
+          document.getElementById("date-filter").classList.remove("hidden");
+        } else if (selected === "quantity") {
+          document.getElementById("quantity-filter").classList.remove("hidden");
+        } else if (selected === "distance") {
+          document.getElementById("distance-filter").classList.remove("hidden");
+          updateDistanceInputs();
+        }
+      }
 
-  // Close sidebar when clicking overlay
-  overlay.addEventListener("click", () => {
-    sidebar.classList.remove("open");
-    overlay.classList.remove("active");
-  });
-});
-</script>
+      function updateDistanceInputs() {
+        if (distanceOption.value === "enter_range") {
+          enterRangeInputs.classList.remove("hidden");
+        } else {
+          enterRangeInputs.classList.add("hidden");
+        }
+      }
 
+      filterTypeSelect.addEventListener("change", updateFilterInputs);
+      distanceOption.addEventListener("change", updateDistanceInputs);
 
+      updateFilterInputs();
 
+      filterToggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        filterDropdown.classList.toggle("hidden");
+      });
+
+      document.addEventListener("click", function(e) {
+        if (!filterDropdown.contains(e.target) && e.target !== filterToggleBtn) {
+          filterDropdown.classList.add("hidden");
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const sidebarToggle = document.getElementById("sidebar-toggle");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebar-overlay");
+
+      sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+      });
+
+      overlay.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+      });
+    });
+    
+  </script>
 </body>
 </html>

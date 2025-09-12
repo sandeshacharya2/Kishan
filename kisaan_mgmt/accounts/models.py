@@ -39,12 +39,6 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='admin')
-    address = models.CharField(max_length=255, default="Beni Municipality", editable=False)
-    phonenumber = models.CharField(max_length=20)
-    ward = models.CharField(max_length=100, blank=True, null=True)
-    tole = models.CharField(max_length=100)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} Profile"
@@ -54,8 +48,12 @@ class Profile(models.Model):
 class FarmerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='farmer_profiles/', blank=True, null=True)
-    # first_name = models.CharField(max_length=30, blank=True, null=True)
-    # last_name = models.CharField(max_length=30, blank=True, null=True)
+    address = models.CharField(max_length=255, default="Beni Municipality", editable=False)
+    phonenumber = models.CharField(max_length=20)
+    ward = models.CharField(max_length=100, blank=True, null=True)
+    tole = models.CharField(max_length=100)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     # def __str__(self):
     #     return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
@@ -65,8 +63,12 @@ class FarmerProfile(models.Model):
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='customer_profiles/', blank=True, null=True)
-    # first_name = models.CharField(max_length=30, blank=True, null=True)
-    # last_name = models.CharField(max_length=30, blank=True, null=True)
+    address = models.CharField(max_length=255, default="Beni Municipality", editable=False)
+    phonenumber = models.CharField(max_length=20)
+    ward = models.CharField(max_length=100, blank=True, null=True)
+    tole = models.CharField(max_length=100)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     # थप fields चाहियो भने यहाँ थप्न सक्नुहुन्छ
     
 
@@ -108,8 +110,6 @@ def create_or_update_user_profiles(sender, instance, created, **kwargs):
             except CustomerProfile.DoesNotExist:
                 CustomerProfile.objects.create(user=instance)
 
-from django.db import models
-from django.contrib.auth.models import User
 
 class FarmerReview(models.Model):
     farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')

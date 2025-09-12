@@ -1,6 +1,7 @@
 # STEP 1: Create the model in products/models.py
 from django.db import models
 from django.contrib.auth.models import User
+from accounts.models import FarmerProfile
 from django.utils.translation import gettext_lazy as _
 class Product(models.Model):
     CATEGORY_CHOICES = [
@@ -15,7 +16,7 @@ class Product(models.Model):
         ('मुरी', 'मुरी'),
     ]
 
-    farmer = models.ForeignKey(User, on_delete=models.CASCADE)
+    farmer = models.ForeignKey(FarmerProfile, on_delete=models.CASCADE)
     main_category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     sub_category = models.CharField(max_length=100)
 

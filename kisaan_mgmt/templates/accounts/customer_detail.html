@@ -12,35 +12,34 @@
 
     <!-- Customer Profile -->
     <div class="flex gap-4 items-center mb-4">
-        {% if customer.customerprofile.profile_picture %}
-            <img src="{{ customer.customerprofile.profile_picture.url }}" 
+        {% if customer.profile_picture %}
+            <img src="{{ customer.profile_picture.url }}" 
                  class="w-20 h-20 rounded-full object-cover" alt="Profile">
         {% else %}
             <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center">
                 <span class="text-gray-700 font-bold text-xl">
-                    {{ customer.first_name|default:customer.username|slice:":1" }}
+                    {{ customer.user.first_name|default:customer.user.username|slice:":1"|upper }}
                 </span>
             </div>
         {% endif %}
 
         <div>
-            <h2 class="font-bold text-xl">{{ customer.first_name }} {{ customer.last_name }}</h2>
-            <p class="text-gray-600">@{{ customer.username }}</p>
-            <p class="text-gray-600">📞 {{ customer.profile.phonenumber }}</p>
-            <p class="text-gray-600">✉️ {{ customer.email }}</p>
+            <h2 class="font-bold text-xl">{{ customer.user.first_name }} {{ customer.user.last_name }}</h2>
+            <p class="text-gray-600">@{{ customer.user.username }}</p>
+            <p class="text-gray-600">📞 {{ customer.phonenumber }}</p>
+            <p class="text-gray-600">✉️ {{ customer.user.email }}</p>
             <p class="text-gray-600">
-                🏠 {{ customer.profile.address }}, 
-                
+                🏠 {{ customer.address }}, 
                 <br>
-                {{ customer.profile.ward }}, {{ customer.profile.tole }} 
+                Ward {{ customer.ward }}, {{ customer.tole }} 
             </p>
         </div>
     </div>
 
-    <hr class="my-4">
+    <!-- <hr class="my-4"> -->
 
     <!-- Reviews given to this farmer -->
-    <h3 class="font-bold text-lg mb-2">Reviews given by this customer</h3>
+    <!-- <h3 class="font-bold text-lg mb-2">Reviews given by this customer</h3>
     <div class="space-y-3">
         {% for review in reviews %}
             <div class="bg-gray-100 p-3 rounded-lg">
@@ -60,12 +59,12 @@
         {% empty %}
             <p class="text-gray-500">No reviews from this customer.</p>
         {% endfor %}
-    </div>
+    </div> -->
 
     <div class="text-center mt-6">
-        <a href="{% url 'farmer-reviews' %}" 
+        <a href="{% url 'farmer-dashboard' %}" 
            class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
-           Back to Reviews
+           Back to Dashboard
         </a>
     </div>
 </div>
