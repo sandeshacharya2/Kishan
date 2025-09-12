@@ -309,32 +309,32 @@ from django.db.models import Avg
 # from .models import FarmerProfile, CustomerProfile, FarmerReview, User  # Import User explicitly
 # from .forms import FarmerReviewForm
 
-@login_required
-@customer_required
-def submit_farmer_review(request, farmer_id):
-    # Get the FarmerProfile to display info, but review uses User
-    farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
-    farmer_user = farmer_profile.user  # Extract the User object
+# @login_required
+# @customer_required
+# def submit_farmer_review(request, farmer_id):
+#     # Get the FarmerProfile to display info, but review uses User
+#     farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
+#     farmer_user = farmer_profile.user  # Extract the User object
     
-    # Use User objects for review
-    review, created = FarmerReview.objects.get_or_create(
-        farmer=farmer_user,           # ← Farmer is a User
-        customer=request.user,        # ← Customer is a User (logged-in user)
-        defaults={'rating': 5}
-    )
+#     # Use User objects for review
+#     review, created = FarmerReview.objects.get_or_create(
+#         farmer=farmer_user,           # ← Farmer is a User
+#         customer=request.user,        # ← Customer is a User (logged-in user)
+#         defaults={'rating': 5}
+#     )
 
-    if request.method == 'POST':
-        form = FarmerReviewForm(request.POST, instance=review)
-        if form.is_valid():
-            form.save()
-            return redirect('customer-dashboard')
-    else:
-        form = FarmerReviewForm(instance=review)
+#     if request.method == 'POST':
+#         form = FarmerReviewForm(request.POST, instance=review)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('customer-dashboard')
+#     else:
+#         form = FarmerReviewForm(instance=review)
 
-    return render(request, 'accounts/submit_farmer_review.html', {
-        'form': form,
-        'farmer': farmer_user,  # Pass User object for display
-    })
+#     return render(request, 'accounts/submit_farmer_review.html', {
+#         'form': form,
+#         'farmer': farmer_user,  # Pass User object for display
+#     })
 
 
 @login_required
@@ -385,3 +385,74 @@ def customer_detail_view(request, customer_id):
         'customer': customer_profile,  # Still pass profile for display details
         'reviews': reviews,
     })
+
+
+
+
+
+
+
+
+@login_required
+@customer_required
+def submit_farmer_review(request, farmer_id):
+    farmer = get_object_or_404(User, id=farmer_id)
+    
+    review, created = FarmerReview.objects.get_or_create(
+        farmer=farmer,
+        customer=request.user,
+        defaults={'rating': 5}
+    )
+
+    if request.method == 'POST':
+        form = FarmerReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('customer-dashboard')  # Redirect to customer dashboard after saving
+    else:
+        form = FarmerReviewForm(instance=review)
+
+    return render(request, 'accounts/submit_farmer_review.html', {'form': form, 'farmer': farmer})
+
+
+
+
+# @login_required
+# # @farmer_required
+# def farmer_reviews_view(request):
+#     """Farmer sees all reviews about themselves"""
+#     reviews = FarmerReview.objects.filter(farmer=request.user) \
+#                                   .select_related('customer') \
+#                                   .order_by('-created_at')
+#     return render(request, 'accounts/farmer_reviews.html', {
+#         'reviews': reviews,
+#         'farmer': request.user,
+#     })
+
+
+@login_required
+def customer_farmer_reviews_view(request, farmer_id):
+    """Customer sees reviews of a specific farmer"""
+    farmer = get_object_or_404(User, id=farmer_id)
+    reviews = FarmerReview.objects.filter(farmer=farmer) \
+                                  .select_related('customer') \
+                                  .order_by('-created_at')
+    return render(request, 'accounts/farmer_reviews_customer.html', {
+        'reviews': reviews,
+        'farmer': farmer,
+    })
+
+
+# @login_required
+# @farmer_required
+# def customer_detail_view(request, customer_id):
+#     """Farmer sees customer details along with reviews given to this farmer"""
+#     customer = get_object_or_404(User, id=customer_id)
+    
+#     # Fetch review(s) this customer gave to the logged-in farmer
+#     reviews = FarmerReview.objects.filter(farmer=request.user, customer=customer)
+
+#     return render(request, 'accounts/customer_detail.html', {
+#         'customer': customer,
+#         'reviews': reviews,
+#     })
