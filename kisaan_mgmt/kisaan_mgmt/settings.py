@@ -113,7 +113,7 @@ WSGI_APPLICATION = 'kisaan_mgmt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kisaan_mgmt',           # your database name
+        'NAME': 'kisaan',           # your database name
         'USER': 'root',               # your MySQL username
         'PASSWORD': 'Sandesh@12345',  # your MySQL password
         'HOST': 'localhost',          # or 127.0.0.1
