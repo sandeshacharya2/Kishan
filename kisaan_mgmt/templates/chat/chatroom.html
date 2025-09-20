@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with {{ chatroom.farmer.user.username }} — {{ chatroom.product.main_category }}: {{ chatroom.product.sub_category }}</title>
+    <title>Chat with {{ chatroom.farmer.user.username }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -91,16 +91,32 @@
             margin-bottom: 15px;
             border-left: 4px solid #3498db;
         }
+        .context-note {
+            background: #fff8e1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #5d4037;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffb300;
+        }
     </style>
 </head>
 <body>
 
-<h2>💬 Chat with {{ chatroom.farmer.user.username }} about "{{ chatroom.product.get_main_category_display }}: {{ chatroom.product.sub_category }}"</h2>
+<h2>💬 Chat with {{ chatroom.farmer.user.username }}
+    {% if chatroom.product %}
+        <span class="context-note">Started from: {{ chatroom.product.get_main_category_display }} — {{ chatroom.product.sub_category }}</span>
+    {% endif %}
+</h2>
 
+{% if chatroom.product %}
 <div class="product-info">
+    <strong>Initial Product:</strong> {{ chatroom.product.get_main_category_display }} — {{ chatroom.product.sub_category }}<br>
     <strong>Price:</strong> Rs. {{ chatroom.product.price }} per {{ chatroom.product.get_unit_display }}<br>
     <strong>Quantity Available:</strong> {{ chatroom.product.quantity }} {{ chatroom.product.get_unit_display }}
 </div>
+{% endif %}
 
 <div id="chat-box">
   {% for msg in messages %}
@@ -121,27 +137,31 @@
 </form>
 
 <script>
-    // Ensure WebSocket URL uses wss:// in production (HTTPS)
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const chatSocket = new WebSocket(
         protocol + window.location.host + '/ws/chat/{{ chatroom.id }}/'
     );
 
     const chatBox = document.getElementById('chat-box');
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
 
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message received';
-        messageElement.innerHTML = `
-            <strong>${data.username}</strong><br>
-            ${data.message}<br>
-            <span class="timestamp">${data.timestamp}</span>
-        `;
-        chatBox.appendChild(messageElement);
-        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
-    };
+    // ✅ DO NOT RENDER if this message is from current user — we already showed it optimistically
+    if (data.username === "{{ request.user.username }}") {
+        return; // Skip rendering your own message — already shown
+    }
 
+    const messageElement = document.createElement('div');
+    messageElement.className = 'message received'; // Only others' messages appear as "received"
+
+    messageElement.innerHTML = `
+        <strong>${data.username}</strong><br>
+        ${data.message}<br>
+        <span class="timestamp">${data.timestamp}</span>
+    `;
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
+};
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
         alert('Connection lost. Please refresh the page.');
@@ -157,12 +177,10 @@
         const message = messageInput.value.trim();
 
         if (message) {
-            // Send via WebSocket
             chatSocket.send(JSON.stringify({
                 'message': message
             }));
 
-            // Clear input
             messageInput.value = '';
 
             // Optimistic UI: show your own message immediately
@@ -178,7 +196,6 @@
         }
     };
 
-    // Auto-scroll to bottom on page load
     chatBox.scrollTop = chatBox.scrollHeight;
 </script>
 

@@ -4,8 +4,9 @@ from accounts.models import FarmerProfile, CustomerProfile
 from products.models import Product
 from django.core.exceptions import ValidationError
 
+
 class ChatRoom(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)  # Optional: for context only
     farmer = models.ForeignKey(FarmerProfile, on_delete=models.CASCADE, related_name='farmer_chats')
     customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='customer_chats')
     farmer_accepted = models.BooleanField(default=False)
@@ -13,7 +14,8 @@ class ChatRoom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('product', 'farmer', 'customer')
+        # ✅ Only one chatroom allowed per farmer-customer pair
+        unique_together = ('farmer', 'customer')
 
     def clean(self):
         super().clean()
@@ -29,8 +31,8 @@ class ChatRoom(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        product_name = self.product.name if self.product else "Unknown Product"
-        return f"Chat between {self.customer.user.username} and {self.farmer.user.username} for {product_name}"
+        # ✅ No longer depends on product — works even if product is null
+        return f"Chat between {self.customer.user.username} and {self.farmer.user.username}"
 
 
 class Message(models.Model):

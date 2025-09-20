@@ -1,0 +1,103 @@
+<!-- templates/chat/farmer_chats.html -->
+{% extends "accounts/farmer_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}च्याट{% endblock %}
+
+{% block content %}
+
+<main class="lg:ml-60 p-6">
+
+  <!-- Pending Requests Section -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold text-green-900 mb-4 flex items-center">
+      <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path>
+      </svg>
+      {% trans "Pending Chat Requests" %}
+    </h2>
+
+    {% if pending_chats %}
+      <div class="space-y-4">
+        {% for chat in pending_chats %}
+          <div class="border border-green-400 rounded-lg p-4 shadow bg-green-50 hover:bg-green-100 transition">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-medium text-green-800">
+                  <strong>{{ chat.customer.user.username }}</strong> 
+                  {% trans "ले च्याट अनुरोध गर्नुभएको छ" %}
+                </p>
+                {% if chat.product %}
+                  <p class="text-sm text-green-700 mt-1">📦 {{ chat.product.sub_category }}</p>
+                {% endif %}
+              </div>
+              <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">⏳ {% trans "Pending" %}</span>
+            </div>
+            <div class="flex gap-3 mt-4">
+              <form method="post" action="{% url 'chat:accept_chat' chat.id %}">{% csrf_token %}
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold text-sm tracking-wide shadow-sm flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                  {% trans "स्वीकार गर्नुहोस्" %}
+                </button>
+              </form>
+              <form method="post" action="{% url 'chat:reject_chat' chat.id %}">{% csrf_token %}
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold text-sm tracking-wide shadow-sm flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                  {% trans "अस्वीकार गर्नुहोस्" %}
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+        <p class="text-green-700 font-medium">✅ {% trans "No pending chat requests." %}</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Previous Chats Section -->
+  <section>
+    <h2 class="text-2xl font-bold text-green-900 mb-4 flex items-center">
+      <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z"></path>
+      </svg>
+      {% trans "Previous Chats" %}
+    </h2>
+
+    {% if grouped_chats %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for group in grouped_chats %}
+          <a href="{% url 'chat:chatroom_detail' group.latest_chat.id %}" class="block border border-green-200 rounded-xl p-4 bg-white hover:shadow-lg hover:-translate-y-1 transition transform duration-300">
+            <div class="flex items-center gap-3 mb-3">
+              {% if group.customer.user.profile.profile_picture %}
+                <img src="{{ group.customer.user.profile.profile_picture.url }}" class="w-12 h-12 rounded-full object-cover border-2 border-green-300" alt="{{ group.customer.user.username }}" />
+              {% else %}
+                <div class="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center border-2 border-green-300">
+                  <span class="text-lg font-bold text-green-800">{{ group.customer.user.username|first|upper }}</span>
+                </div>
+              {% endif %}
+              <div>
+                <p class="font-semibold text-green-900">{{ group.customer.user.username }}</p>
+                <small class="text-green-600">{{ group.total_chats }} {% trans "conversations" %}</small>
+              </div>
+            </div>
+            <div class="bg-green-50 p-3 rounded-lg">
+              <p class="text-sm text-green-800 line-clamp-2">💬 {{ group.latest_message }}</p>
+              <p class="text-xs text-green-600 mt-1">📅 {{ group.latest_chat.created_at|date:"M d, Y H:i" }}</p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+        <p class="text-green-700 font-medium">💬 {% trans "No previous chats yet." %}</p>
+      </div>
+    {% endif %}
+  </section>
+
+</main>
+
+{% endblock content %}

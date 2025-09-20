@@ -1,8 +1,9 @@
-<!-- templates/chat/chatroom.html -->
+<!-- templates/chat/chatroom_pending.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat — {{ chatroom.product.get_main_category_display }}: {{ chatroom.product.sub_category }}</title>
+    <!-- ✅ Updated title: no longer product-specific -->
+    <title>Chat with {{ chatroom.farmer.user.username }}</title>
     <style>
         #chat-box {
             border: 1px solid #ccc;
@@ -62,16 +63,51 @@
             margin-bottom: 15px;
             border-left: 4px solid #3498db;
         }
+        .context-note {
+            background: #fff8e1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #5d4037;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffb300;
+        }
+        .pending-banner {
+            background: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffe600;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-<h2>💬 Chat with {{ chatroom.farmer.user.username }} about "{{ chatroom.product.get_main_category_display }}: {{ chatroom.product.sub_category }}"</h2>
+<!-- ✅ Updated heading -->
+<h2>💬 Chat with {{ chatroom.farmer.user.username }}
+    {% if chatroom.product %}
+        <span class="context-note">Started from: {{ chatroom.product.get_main_category_display }} — {{ chatroom.product.sub_category }}</span>
+    {% endif %}
+</h2>
 
+<!-- ✅ Show banner to indicate pending state -->
+<div class="pending-banner">
+    ⏳ Waiting for {{ chatroom.farmer.user.username }} to accept this chat request.
+    {% if is_farmer %}
+        <br><em>You can accept or reject this request below.</em>
+    {% endif %}
+</div>
+
+<!-- ✅ Show product info only if exists -->
+{% if chatroom.product %}
 <div class="product-info">
+    <strong>Initial Product:</strong> {{ chatroom.product.get_main_category_display }} — {{ chatroom.product.sub_category }}<br>
     <strong>Price:</strong> Rs. {{ chatroom.product.price }} per {{ chatroom.product.get_unit_display }}<br>
     <strong>Quantity:</strong> {{ chatroom.product.quantity }} {{ chatroom.product.get_unit_display }}
 </div>
+{% endif %}
 
 <div id="chat-box">
   {% for msg in messages %}
@@ -81,15 +117,22 @@
       <div class="timestamp">{{ msg.timestamp|date:"M d, Y H:i" }}</div>
     </div>
   {% empty %}
-    <p><em>No messages yet. Be the first to say hello!</em></p>
+    <p><em>No messages yet. Awaiting farmer's response.</em></p>
   {% endfor %}
 </div>
 
-<form method="POST">
+<!-- ✅ Only show form if user is farmer (can accept/reject) -->
+{% if is_farmer %}
+<form method="POST" action="{% url 'chat:accept_chat' chatroom.id %}" style="display:inline;">
   {% csrf_token %}
-  <textarea name="text" rows="3" placeholder="Type your message here..." required></textarea>
-  <button type="submit">Send Message</button>
+  <button type="submit" style="background: #28a745; margin-right: 10px;">✅ Accept Chat</button>
 </form>
+
+<form method="POST" action="{% url 'chat:reject_chat' chatroom.id %}" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit" style="background: #dc3545;">❌ Reject Chat</button>
+</form>
+{% endif %}
 
 <script>
     // Auto-scroll to bottom on page load

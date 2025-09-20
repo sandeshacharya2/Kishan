@@ -115,6 +115,8 @@
       <a href="{% url 'update-customer-profile' %}" class="block hover:text-green-900">✏️ {% trans "Edit Profile" %}</a>
       <a href="{% url 'customer-dashboard' %}" class="block hover:text-green-900">📋 {% trans "Dashboard" %}</a>
       <a href="{% url 'payments:customer_purchases' %}" class="block hover:text-green-900">🛒 {% trans "My Purchases" %}</a>
+      <a href="{% url 'chat:customer-chats' %}" class="block hover:text-green-900">💬  {% trans "Chat" %}</a>
+
     </nav>
     <form method="post" action="{% url 'logout' %}" class="p-4 border-t border-green-300">
       {% csrf_token %}
@@ -393,7 +395,7 @@
                     🛒 {% trans "Buy Now" %}
                   </a>
 
-                  <a href="{% url 'chat:start_chat' product.id %}" 
+                  <a href="{% url 'chat:confirm_chat' product.id %}" 
                      class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
                     💬 {% trans "Chat with farmer" %}
                   </a>
