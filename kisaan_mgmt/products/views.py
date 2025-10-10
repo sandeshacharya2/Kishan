@@ -321,7 +321,7 @@ def grains(request):
 
     subcategory_data = (
         Product.objects.filter(main_category='खाद्यान्न')
-        .values('sub_category', 'sub_category_roman', 'unit')
+        .values('sub_category',  'unit')
         .annotate(
             total_quantity=Sum('quantity'),
             min_price=Min('price'),
@@ -358,7 +358,7 @@ def vegetables(request):
 
     subcategory_data = (
         Product.objects.filter(main_category='तरकारी')
-        .values('sub_category', 'sub_category_roman', 'unit')
+        .values('sub_category', 'unit')
         .annotate(
             total_quantity=Sum('quantity'),
             min_price=Min('price'),
