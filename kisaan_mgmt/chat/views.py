@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.db.models import Prefetch
 from django.contrib import messages
-
+from accounts.models import FarmerReview
+from django.db.models import Avg
 # Import custom decorator
 from accounts.views.role_based_redirect import farmer_required, customer_required
 
@@ -89,6 +90,7 @@ def customer_chats_view(request):
     context = {
         'grouped_chats': grouped_chats,
         'pending_chats_count': pending_chats_count,  # For sidebar
+
     }
 
     return render(request, 'chat/customer_chats.html', context)
@@ -129,10 +131,17 @@ def farmer_chats_view(request):
         customer_chats[cust_id]['total_chats'] += 1
 
     grouped_chats = list(customer_chats.values())
+    avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers — farmer is User
+    reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
 
     context = {
         'pending_chats': pending_chats,
         'grouped_chats': grouped_chats,
+        'avg_rating': avg_rating,
+        'reviews': reviews,
     }
 
     return render(request, 'chat/farmer_chats.html', context)

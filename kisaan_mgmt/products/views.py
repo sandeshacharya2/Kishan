@@ -9,6 +9,8 @@ from django.conf import settings
 from django.db.models import Sum, Count, Min, Max, OuterRef, Subquery
 from django.core.mail import send_mail
 from django.contrib import messages
+from accounts.models import FarmerReview
+from django.db.models import Avg
 
 # Define Roman and English synonyms
 synonyms_dict = {
@@ -54,20 +56,28 @@ synonyms_dict = {
     "तोरी": {"roman": ["tori"], "english": ["rapeseed"]}
     # Add more as needed
 }
-
 @login_required
 def add_product(request):
+    farmer = request.user.farmerprofile  # ✅ Get farmer profile
+
+    # ✅ Calculate average rating
+    avg_rating = FarmerReview.objects.filter(farmer=request.user).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=request.user).select_related('customer').order_by('-created_at')
+
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
-            
+
             is_other = False
             if product.sub_category == 'अन्य':
                 product.sub_category = request.POST.get('other_subcategory')
-                is_other = True  # Flag for notification
-            
-            product.farmer = request.user.farmerprofile
+                is_other = True
+
+            product.farmer = farmer
             product.save()
 
             # Always create Nepali synonym
@@ -89,7 +99,7 @@ def add_product(request):
                     try:
                         farmer_name = request.user.get_full_name() or request.user.username
                         admin_url = request.build_absolute_uri(f"/admin/products/product/{product.id}/change/")
-                        
+
                         send_mail(
                             subject=f'🔔 New Custom Product Added: {product.sub_category}',
                             message=f'''
@@ -109,30 +119,37 @@ Please log in to Django Admin and add Roman & English synonyms:
 Thank you!
                             ''',
                             from_email=settings.DEFAULT_FROM_EMAIL,
-                            recipient_list=[admin[1] for admin in settings.ADMINS],  # Get emails from ADMINS
+                            recipient_list=[admin[1] for admin in settings.ADMINS],
                             fail_silently=False,
                         )
                     except Exception as e:
                         print("Failed to send admin email:", e)
-                        # Optionally log or show message to farmer
-                        # messages.warning(request, "Product added, but admin notification failed.")
 
             return redirect('farmer-dashboard')
     else:
         form = ProductForm()
-    
-    return render(request, 'products/add_product.html', {'form': form})
+
+    return render(request, 'products/add_product.html', {
+        'form': form,
+        'avg_rating': avg_rating,   # ✅ Pass to template
+        'reviews': reviews,         # ✅ Pass to template
+    })
 @login_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can edit
-    if product.farmer != request.user.farmerprofile:  # ✅ CHANGED HERE
+    if product.farmer != request.user.farmerprofile:
         return HttpResponseForbidden(_("You are not allowed to edit this product."))
 
+    # ✅ Calculate average rating
+    avg_rating = FarmerReview.objects.filter(farmer=request.user).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=request.user).select_related('customer').order_by('-created_at')
+
     if request.method == 'POST':
-        """(instance= product) # Create a form pre-filled with the existing product data so the user can edit it
-"""
-        form = ProductForm(request.POST, request.FILES, instance=product)  # include request.FILES here
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             updated_product = form.save(commit=False)
             if updated_product.sub_category == 'अन्य':
@@ -141,24 +158,39 @@ def edit_product(request, product_id):
             return redirect('farmer-dashboard')
     else:
         form = ProductForm(instance=product)
-    return render(request, 'products/edit_product.html', {'form': form, 'product': product})
 
+    return render(request, 'products/edit_product.html', {
+        'form': form,
+        'product': product,
+        'avg_rating': avg_rating,   # ✅ Pass to template
+        'reviews': reviews,         # ✅ Pass to template
+    })
 
-    
 
 @login_required
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can delete
-    if product.farmer != request.user.farmerprofile:  # ✅ CHANGED HERE
+    if product.farmer != request.user.farmerprofile:
         return HttpResponseForbidden(_("You are not allowed to delete this product."))
+
+    # ✅ Calculate average rating
+    avg_rating = FarmerReview.objects.filter(farmer=request.user).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=request.user).select_related('customer').order_by('-created_at')
 
     if request.method == 'POST':
         product.delete()
+        # messages.success(request, _("Your product has been deleted successfully."))
         return redirect('farmer-dashboard')
 
-    return render(request, 'products/confirm_delete.html', {'product': product})
-
+    return render(request, 'products/confirm_delete.html', {
+        'product': product,
+        'avg_rating': avg_rating,   # ✅ Pass to template
+        'reviews': reviews,         # ✅ Pass to template
+    })
 
 
 
