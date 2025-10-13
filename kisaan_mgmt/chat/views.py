@@ -25,7 +25,7 @@ from django.db.models import Prefetch
 def confirm_chat(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     farmer_profile = product.farmer
-    customer_profile = request.user.customerprofile  # ✅ Get customer profile
+    customer_profile = request.user.customerprofile  # Get customer profile
 
     # ✅ Check if chat room already exists between this farmer + customer
     existing_chat = ChatRoom.objects.filter(
@@ -147,7 +147,7 @@ def farmer_chats_view(request):
     return render(request, 'chat/farmer_chats.html', context)
 
 
-# ✅ CUSTOMER STARTS CHAT VIA PRODUCT
+# CUSTOMER STARTS CHAT VIA PRODUCT
 @login_required
 def start_chat(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -183,7 +183,7 @@ def start_chat(request, product_id):
     return redirect('chat:chatroom_detail', chatroom_id=chatroom.id)
 
 
-# ✅ CHATROOM DETAIL (MESSAGING INTERFACE)
+# CHATROOM DETAIL (MESSAGING INTERFACE)
 @login_required
 def chatroom_detail(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
@@ -227,7 +227,7 @@ def chatroom_detail(request, chatroom_id):
     })
 
 
-# ✅ FARMER ACCEPTS CHAT
+#FARMER ACCEPTS CHAT
 @login_required
 def accept_chat(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
@@ -249,8 +249,8 @@ def accept_chat(request, chatroom_id):
     return redirect('chat:chatroom_detail', chatroom_id=chatroom.id)
 
 
-# ✅ FARMER REJECTS CHAT
-# ✅ FARMER REJECTS CHAT — Notify Customer via Message
+# FARMER REJECTS CHAT
+# FARMER REJECTS CHAT — Notify Customer via Message
 @login_required
 def reject_chat(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
@@ -262,7 +262,7 @@ def reject_chat(request, chatroom_id):
     chatroom.farmer_rejected = True
     chatroom.save()
 
-    # ✅ Notify customer with system message
+    # Notify customer with system message
     Message.objects.create(
         chatroom=chatroom,
         sender=chatroom.farmer.user,  # Farmer is sender

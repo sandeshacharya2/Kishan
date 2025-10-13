@@ -31,7 +31,7 @@ def update_farmer_profile(request):
     avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
-    # ✅ Fetch reviews from customers
+    # Fetch reviews from customers
     reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
 
     if request.method == 'POST':
@@ -71,17 +71,17 @@ def update_customer_profile(request):
     avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
-    # ✅ Fetch reviews from customers
+    # Fetch reviews from customers
     reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
 
     if request.method == 'POST':
-        # ✅ FIX: Bind form to customer_profile, NOT profile
+        # Bind form to customer_profile, NOT profile
         form = CustomerProfileForm(request.POST, request.FILES, instance=customer_profile)
         if form.is_valid():
             form.save()
             return redirect('customer-dashboard')
     else:
-        # ✅ FIX: Bind form to customer_profile, NOT profile
+        # Bind form to customer_profile, NOT profile
         form = CustomerProfileForm(instance=customer_profile)
 
     context = {
@@ -96,13 +96,13 @@ def update_customer_profile(request):
 
 @login_required
 def farmer_detail(request, farmer_id):
-    # ✅ FIXED: Use 'user__profile__role' to traverse from FarmerProfile -> User -> Profile -> role
+    # Use 'user__profile__role' to traverse from FarmerProfile -> User -> Profile -> role
     farmer = get_object_or_404(FarmerProfile, id=farmer_id, user__profile__role="farmer")
     
-    # ✅ FIXED: If Product.farmer is ForeignKey to User, use farmer.user
+    # If Product.farmer is ForeignKey to User, use farmer.user
     products = Product.objects.filter(farmer=farmer)
 
-    # ✅ FIXED: Filter reviews by farmer.user, not farmer (FarmerReview.farmer is FK to User)
+    #  Filter reviews by farmer.user, not farmer (FarmerReview.farmer is FK to User)
     avg_rating = FarmerReview.objects.filter(farmer=farmer.user).aggregate(Avg("rating"))["rating__avg"] or 0
     avg_rating = round(avg_rating, 1)
 

@@ -10,7 +10,7 @@ from datetime import timedelta
 from django.utils.translation import gettext as _
 from accounts.views.role_based_redirect import farmer_required, customer_required
 
-from ..models import EmailOTP, Profile, FarmerProfile, CustomerProfile  # ✅ Added CustomerProfile
+from ..models import EmailOTP, Profile, FarmerProfile, CustomerProfile  
 from ..forms import SignUpForm, FarmerProfileForm
 from products.models import Product
 from chat.models import ChatRoom

@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from ..models import CustomerProfile, FarmerProfile, Profile
 from ..forms import FarmerProfileForm, CustomerProfileForm
 
-
+# redirects users to their specific dashboards based on their roles after login
 @login_required
 def role_based_redirect(request):
     try:
@@ -24,7 +24,7 @@ def role_based_redirect(request):
         except FarmerProfile.DoesNotExist:
             farmer_profile = FarmerProfile.objects.create(user=request.user)
 
-        # Redirect to profile update if required fields are missing
+        # Redirect to profile update if required fields are missing mainly for profile picture
         if not farmer_profile.profile_picture:
             return redirect('update-farmer-profile')
 
@@ -36,63 +36,78 @@ def role_based_redirect(request):
         except CustomerProfile.DoesNotExist:
             customer_profile = CustomerProfile.objects.create(user=request.user)
 
-        # Redirect to profile update if required fields are missing
+        # Redirect to profile update if required fields are missing like profile picture
         if not customer_profile.profile_picture:
             return redirect('update-customer-profile')
 
         return redirect('customer-dashboard')
 
     else:
-        messages.error(request, _("अवैध भूमिका।"))
+        messages.error(request, _("illegal access"))
         logout(request)
         return redirect('login')
 
-
+# login page for famers only 
 class FarmerLoginView(LoginView):
-    template_name = 'accounts/farmer_login.html'
+    template_name = 'accounts/farmer_login.html'      #use farmer specific login template  
     redirect_authenticated_user = True
 
+#check if the logged in user is a farmer, if not logout and redirect to farmer login page
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if hasattr(request.user, 'profile') and request.user.profile.role == 'farmer':
                 return redirect('role-redirect')
+            
+         # If logged in but not a farmer, log them out and show error
+
             else:
                 logout(request)
                 messages.error(request, _("You must be logged in as a farmer to access this page."))
                 return redirect('farmer-login')
         return super().dispatch(request, *args, **kwargs)
 
+    # After successfully form submission (login)
     def form_valid(self, form):
         user = form.get_user()
+        # Checking the user is actually a farmer or not
         if hasattr(user, 'profile') and user.profile.role == 'farmer':
-            login(self.request, user)
-            return redirect('role-redirect')
+            login(self.request, user)  
+            return redirect('role-redirect') 
         else:
+            # Not a farmer log out and show error
             logout(self.request)
             messages.error(self.request, _("You are not a farmer. Please use the correct login page."))
             return redirect('farmer-login')
 
 
+# Custom login page for customers only
 class CustomerLoginView(LoginView):
-    template_name = 'accounts/customer_login.html'
+    template_name = 'accounts/customer_login.html'  # Use customer-specific login template
     redirect_authenticated_user = True
 
+    # Check before showing the login page
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
+            # If already logged in as a customer, go to dashboard
             if hasattr(request.user, 'profile') and request.user.profile.role == 'customer':
                 return redirect('role-redirect')
             else:
+                # If logged in but not a customer, log them out and show error
                 logout(request)
                 messages.error(request, _("You must be logged in as a customer to access this page."))
                 return redirect('customer-login')
         return super().dispatch(request, *args, **kwargs)
+    
 
+ # After successful login
     def form_valid(self, form):
         user = form.get_user()
+        # Check if the user is actually a customer
         if hasattr(user, 'profile') and user.profile.role == 'customer':
             login(self.request, user)
             return redirect('role-redirect')
         else:
+            # Not a customer – log out and show error
             logout(self.request)
             messages.error(self.request, _("You are not a customer. Please use the correct login page."))
             return redirect('customer-login')
@@ -100,51 +115,29 @@ class CustomerLoginView(LoginView):
 
 # ------------------- Decorators -------------------
 
+# A decorator to protect views that only farmers should access
 def farmer_required(view_func):
-    @login_required
+    @login_required  # First ensure user is logged in
     def wrapper(request, *args, **kwargs):
+        # Check if user has a profile and is a farmer
         if hasattr(request.user, 'profile') and request.user.profile.role == 'farmer':
-            return view_func(request, *args, **kwargs)
+            return view_func(request, *args, **kwargs)  # Allow access
         else:
+            # Show error and redirect to farmer login
             messages.error(request, _("Only farmers can access this page."))
             return redirect('farmer-login')
     return wrapper
 
 
+# A decorator to protect views that only customers should access
 def customer_required(view_func):
-    @login_required
+    @login_required  # First ensure user is logged in
     def wrapper(request, *args, **kwargs):
+        # Check if user has a profile and is a customer
         if hasattr(request.user, 'profile') and request.user.profile.role == 'customer':
-            return view_func(request, *args, **kwargs)
+            return view_func(request, *args, **kwargs)  # Allow access
         else:
+            # Show error and redirect to customer login
             messages.error(request, _("Only customers can access this page."))
             return redirect('customer-login')
     return wrapper
-
-
-# ------------------- Customer Views (Optional - Uncomment if needed) -------------------
-
-# @customer_required
-# def customer_dashboard(request):
-#     # Add any customer-specific data to context here if needed
-#     return render(request, 'customer/dashboard.html')
-
-
-# @customer_required
-# def update_customer_profile(request):
-#     try:
-#         customer_profile = request.user.customerprofile
-#     except CustomerProfile.DoesNotExist:
-#         customer_profile = CustomerProfile.objects.create(user=request.user)
-
-#     if request.method == 'POST':
-#         form = CustomerProfileForm(request.POST, request.FILES, instance=customer_profile)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, _("प्रोफाइल सफलतापूर्वक अपडेट भयो।"))
-#             return redirect('customer-dashboard')
-#     else:
-#         form = CustomerProfileForm(instance=customer_profile)
-
-#     context = {'form': form, 'profile': customer_profile}
-#     return render(request, 'customer/update_profile.html', context)

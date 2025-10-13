@@ -59,7 +59,7 @@ class FarmerProfile(models.Model):
     #     return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
 
 
-# Customer specific profile (नयाँ थपिएको)
+# Customer specific profile 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='customer_profiles/', blank=True, null=True)
@@ -69,7 +69,7 @@ class CustomerProfile(models.Model):
     tole = models.CharField(max_length=100)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
-    # थप fields चाहियो भने यहाँ थप्न सक्नुहुन्छ
+    
     
 
     # def __str__(self):
@@ -90,20 +90,20 @@ def create_or_update_user_profiles(sender, instance, created, **kwargs):
             CustomerProfile.objects.create(user=instance)
 
     else:
-        # General Profile update/बनाउने
+        # General Profile update
         try:
             instance.profile.save()
         except Profile.DoesNotExist:
             Profile.objects.create(user=instance)
 
-        # FarmerProfile update/बनाउने (role 'farmer' हो भने मात्र)
+        # FarmerProfile update
         if instance.profile.role == 'farmer':
             try:
                 instance.farmerprofile.save()
             except FarmerProfile.DoesNotExist:
                 FarmerProfile.objects.create(user=instance)
 
-        # CustomerProfile update/बनाउने (role 'customer' हो भने मात्र)
+        # CustomerProfile update/
         elif instance.profile.role == 'customer':
             try:
                 instance.customerprofile.save()

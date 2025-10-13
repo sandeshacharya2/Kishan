@@ -75,7 +75,7 @@ def payment_request(request, product_id):
                     product.quantity = 0
                 product.save()
 
-                # ✅ CHANGED: Show confirmation page instead of redirecting
+                #Show confirmation page instead of redirecting
                 return render(request, 'payments/cod_confirmation.html', {
                     'transaction': transaction,
                 })
@@ -170,7 +170,7 @@ def payment_success(request):
 
             # ✅ Send email to farmer with buyer details
             try:
-                farmer = product.farmer  # assuming FK to User
+                farmer = product.farmer.user # assuming FK to User
                 customer = request.user
 
                 try:
@@ -302,7 +302,7 @@ from accounts.views.role_based_redirect import farmer_required, customer_require
 @farmer_required
 def update_delivery_status(request, transaction_id):
     try:
-        # ✅ CORRECT: product__farmer expects FarmerProfile → use request.user.farmerprofile
+        # product__farmer expects FarmerProfile → use request.user.farmerprofile
         transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user.farmerprofile)
         if request.method == 'POST':
             new_status = request.POST.get('delivery_status')
@@ -318,7 +318,7 @@ def update_delivery_status(request, transaction_id):
 @login_required
 @customer_required
 def confirm_delivery(request, transaction_id):
-    # ✅ FIX: user expects User → use request.user, NOT request.user.customerprofile
+    # user expects User → use request.user, NOT request.user.customerprofile
     transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
 
     if request.method == 'POST' and transaction.delivery_status == 'Delivered':
@@ -336,7 +336,7 @@ def confirm_delivery(request, transaction_id):
 @login_required
 @farmer_required
 def confirm_cod_payment(request, transaction_id):
-    # ✅ CORRECT: product__farmer expects FarmerProfile → use request.user.farmerprofile
+    # product__farmer expects FarmerProfile → use request.user.farmerprofile
     transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user.farmerprofile)
 
     if request.method == 'POST' and transaction.payment_method == 'COD' and transaction.payment_status == 'Waiting':
@@ -350,7 +350,7 @@ def confirm_cod_payment(request, transaction_id):
 @customer_required
 def dispute_delivery(request, transaction_id):
     try:
-        # ✅ FIX: user expects User → use request.user
+        # user expects User → use request.user
         transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
         if request.method == 'POST' and transaction.delivery_status == 'Delivered':
             transaction.delivery_status = 'Dispute'
@@ -389,8 +389,8 @@ def dispute_delivery(request, transaction_id):
 @customer_required
 def customer_purchases(request):
     try:
-        # ✅ CORRECT: user expects User → use request.user
-        # ✅ CHANGED: Order by newest first → '-created_at'
+        # user expects User → use request.user
+        # Order by newest first → '-created_at'
         transactions = Transaction.objects.filter(user=request.user).select_related('product', 'product__farmer').order_by('-created_at')
 
         return render(request, 'payments/purchases.html', {
@@ -433,7 +433,7 @@ def cod_payment(request, product_id):
             product.quantity = 0
         product.save()
 
-        # ✅ CORRECT: user expects User → use request.user
+        # user expects User → use request.user
         Transaction.objects.create(
             user=request.user,
             product=product,
@@ -457,7 +457,7 @@ def cod_payment(request, product_id):
 @customer_required
 def cod_pay(request, transaction_id):
     try:
-        # ✅ FIX: user expects User → use request.user
+        # user expects User → use request.user
         transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
 
         if request.method == 'POST' and transaction.payment_method == 'COD' and transaction.payment_status == 'Pay':

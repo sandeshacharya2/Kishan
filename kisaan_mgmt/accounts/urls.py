@@ -1,7 +1,7 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth.views import LogoutView
 
-from . import views  # views बाट सबै import गरियो
+from . import views  # views
 
 from .views import (
     signup_view,
@@ -17,7 +17,7 @@ from .views import (
     farmer_detail,
     farmer_reviews_view, 
     customer_farmer_reviews_view,
-    customer_detail_view,      # views बाट import गरियो
+    customer_detail_view,      # views
 )
 
 urlpatterns = [
@@ -45,7 +45,7 @@ urlpatterns = [
 
     # Profile updates
     path('farmer/profile/update/', update_farmer_profile, name='update-farmer-profile'),
-    path('customer/profile/update/', update_customer_profile, name='update-customer-profile'),  # URL path सुधारियो
+    path('customer/profile/update/', update_customer_profile, name='update-customer-profile'),  # URL path 
     path('farmer-location/<int:farmer_id>/', views.view_farmer_location, name='view_farmer_location'),
     path('ajax/check-availability/', check_availability, name='check_availability'),
     path('farmer/<int:farmer_id>/', farmer_detail, name='farmer_detail'),
