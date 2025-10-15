@@ -17,6 +17,8 @@
     {% else %}
       <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" class="mx-auto rounded-full border-4 border-teal-400 shadow-lg w-20 h-20 object-cover mb-2" />
     {% endif %}
+    <h2 class="text-green-800 font-bold text-lg tracking-wide"> @{{ user.first_name }} {{ user.last_name }}</h2>
+    <p class="text-green-900 font-semibold"></p>
     <div class="text-center mt-2 flex justify-center items-center gap-1">
         {% for i in "12345" %}
             {% if i|add:"0" <= avg_rating %}
@@ -31,17 +33,17 @@
       </div>
          <div class="text-center mt-3">
     <a href="{% url 'farmer-reviews' %}"
-       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition">
        See All Reviews
     </a>
 </div>
-    <h2 class="text-green-900 font-bold text-lg tracking-wide">👨‍🌾 @{{ user.username }}</h2>
-    <p class="text-green-900 font-semibold">{{ user.first_name }} {{ user.last_name }}</p>
-    <p class="text-green-900 text-sm">
-      {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
-        {{ address }}, {{ tole }}, Ward No. {{ ward }}
-      {% endblocktrans %}
-    </p>
+    
+    <p class="text-green-900 text-sm mt-6">
+ {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
+        {{ address }},  {{ ward }}
+  {% endblocktrans %}
+</p>
+
   </div>
 
   <nav class="flex flex-col gap-3 px-4 py-4 text-green-700 font-semibold">
@@ -53,11 +55,14 @@
     <a href="{% url 'chat:farmer-chats' %}" class="hover:text-yellow-200 transition"> 💬  {% trans "Chat" %}</a>
 
   </nav>
+<form method="post" action="{% url 'logout' %}" class="px-4 pb-4 border-t border-green-500">
+  {% csrf_token %}
+  <button type="submit" 
+    class="bg-teal-700 hover:bg-green-600 text-white w-full py-2 rounded-lg font-semibold tracking-wide transition">
+    🚪 {% trans "Logout" %}
+  </button>
+</form>
 
-  <form method="post" action="{% url 'logout' %}" class="px-4 pb-4 border-t border-green-500">
-    {% csrf_token %}
-    <button type="submit" class="bg-teal-700 hover:bg-green-600 text-white w-full py-2 rounded-lg font-semibold tracking-wide transition">🚪 {% trans "Logout" %}</button>
-  </form>
 </div>
 
 <!-- Sidebar (desktop) -->
@@ -73,6 +78,8 @@
       <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" 
            class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
     {% endif %}
+    <h2 class="text-white font-bold text-lg tracking-wide">👨‍🌾{{ user.first_name }} {{ user.last_name }}</h2>
+
     <div class="text-center mt-2 flex justify-center items-center gap-1">
         {% for i in "12345" %}
             {% if i|add:"0" <= avg_rating %}
@@ -86,20 +93,16 @@
         <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
       </div>
    <div class="text-center mt-3">
-    <a href="{% url 'farmer-reviews' %}" 
-       class="text-green-100 italic underline font-semibold hover:text-white transition">
+    <a href="{% url 'farmer-reviews' %}"
+       class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800 transition">
        See All Reviews
     </a>
 </div>
 
-
-
-          <p class="text-lime-100 font-semibold"> 👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
-
-    <h2 class="text-white font-bold text-lg tracking-wide"> @{{ user.username }}</h2>
+    <h2 class="text-white mt-6 font-bold text-lg tracking-wide"> @{{ user.username }}</h2>
     <p class="text-green-50 text-sm">
       {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
-        {{ address }}, {{ tole }}, Ward No. {{ ward }}
+        {{ address }},  {{ ward }}
       {% endblocktrans %}
     </p>
   </div>

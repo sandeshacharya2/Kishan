@@ -11,6 +11,19 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from accounts.models import FarmerReview
 from django.db.models import Avg
+from accounts.views.role_based_redirect import farmer_required, customer_required
+
+
+
+
+
+def project(request):
+    return render(request, 'landingpage/project.html')
+def service(request):
+    return render(request, 'landingpage/service.html')
+
+def carrers(request):
+    return render(request, 'landingpage/careers.html')
 
 # Define Roman and English synonyms
 synonyms_dict = {
@@ -56,9 +69,10 @@ synonyms_dict = {
     "तोरी": {"roman": ["tori"], "english": ["rapeseed"]}
     # Add more as needed
 }
+@farmer_required
 @login_required
 def add_product(request):
-    farmer = request.user.farmerprofile  # ✅ Get farmer profile
+    farmer = request.user.farmerprofile  #Get farmer profile
 
     # ✅ Calculate average rating
     avg_rating = FarmerReview.objects.filter(farmer=request.user).aggregate(Avg('rating'))['rating__avg'] or 0
@@ -77,7 +91,7 @@ def add_product(request):
                 product.sub_category = request.POST.get('other_subcategory')
                 is_other = True
 
-            product.farmer = farmer
+            product.farmer = farmer   #link to the product where current farmer is adding the product
             product.save()
 
             # Always create Nepali synonym
@@ -134,6 +148,7 @@ Thank you!
         'avg_rating': avg_rating,   # ✅ Pass to template
         'reviews': reviews,         # ✅ Pass to template
     })
+@farmer_required
 @login_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -166,6 +181,8 @@ def edit_product(request, product_id):
         'reviews': reviews,         # ✅ Pass to template
     })
 
+
+@farmer_required
 
 @login_required
 def delete_product(request, product_id):
@@ -303,9 +320,13 @@ def category_list_view(request):
 
 def fruits(request):
     selected_subcategory = request.GET.get('subcategory', '')
+    # SELECT DISTINCT sub_category FROM app_product WHERE main_category = 'फलफुल' ORDER BY sub_category ASC;
+
+
 
     all_subcategories = Product.objects.filter(main_category='फलफुल') \
-        .values_list('sub_category', flat=True).distinct().order_by('sub_category')
+        .values_list('sub_category', flat=True).distinct().order_by('sub_category')  #flat is also like list but it returns without requring a tuple inside it 
+
 
     # Get latest image path for each subcategory
     latest_image_subquery = Product.objects.filter(

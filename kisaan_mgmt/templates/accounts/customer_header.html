@@ -1,0 +1,54 @@
+{% load static %}
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 
+               bg-gradient-to-r from-emerald-700 via-green-600 to-lime-600 
+               shadow-lg h-20 flex items-center lg:left-72">
+
+  <div class="w-full">
+    <div class="max-w-screen-xl mx-auto px-4 
+                flex items-center justify-between">
+
+      <!-- Left side -->
+<div class="flex items-center gap-3 min-w-0 flex-1">
+  <img src="{% static 'accounts/images/download.jpg' %}" alt="Logo"
+       class="w-10 h-10 rounded-full border-2 border-white shadow-md object-cover flex-shrink-0" />
+
+  <div class="flex flex-col leading-tight overflow-hidden">
+    <span class="text-white font-extrabold text-lg sm:text-xl tracking-wide truncate + min-w-0">
+      ग्राहक ड्याशबोर्ड
+    </span>
+    <span class="text-xs sm:text-sm text-lime-200 italic truncate+min-w-0">
+      “तपाईंको रोजाइ, हाम्रो बजार”
+    </span>
+  </div>
+</div>
+
+
+      <!-- Right side -->
+<div class="flex items-center gap-3 flex-shrink-0 ml-2">
+  <span class="hidden md:inline text-white font-medium">
+   नमस्ते, {{ user.first_name }} {{ user.last_name }}
+</span>
+
+
+
+        {% if user.customerprofile.profile_picture %}
+          <img src="{{ user.customerprofile.profile_picture.url }}" alt="Profile"
+               class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-green-700 shadow-md object-cover" />
+        {% else %}
+          <img src="{% static 'default_profile.jpg' %}" alt="Profile"
+               class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-md object-cover" />
+        {% endif %}
+
+        <!-- Mobile Menu Button -->
+       <button id="mobile-sidebar-toggle" class="lg:hidden text-white text-2xl sm:text-3xl">
+  ☰
+</button>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Dynamic space to prevent content hiding behind header -->
+<div class="h-20 sm:h-24 lg:h-20 flex-shrink-0"></div>

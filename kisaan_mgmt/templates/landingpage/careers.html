@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ne" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>किसान – करियर</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-[#f9faf7] font-sans text-gray-800">
+    {% include 'landingpage/header.html' %}
+
+    <!-- Hero Section -->
+    <section class="bg-green-200 text-green-900 py-20 text-center">
+      <h1 class="text-4xl font-extrabold mb-4">हामीसँग भविष्य निर्माण गर्नुहोस्</h1>
+      <p class="max-w-2xl mx-auto text-lg">किसानमा, हामी केवल प्रविधि मात्र होइन — हामी किसान, ग्राहक, र समुदायलाई जोड्ने सपना निर्माण गर्दैछौं। अहिले हाम्रो टिम सानो छ, तर हृदय ठूलो छ। हामी विश्वास गर्छौं, तपाईं जस्ता मानिस नै हाम्रो भविष्य हो।</p>
+    </section>
+
+    <!-- Message Section -->
+    <section class="py-16 text-center px-4">
+      <h2 class="text-2xl font-bold text-[#276749] mb-6">अहिले अवसर छैन, तर...</h2>
+      <p class="max-w-xl mx-auto text-gray-700 mb-6">अहिले खुला रोजगारी छैन। तर हामीसँग धेरै सपना र योजना छन्। हामी चाँडै नयाँ अवसर ल्याउनेछौं, र तपाईंलाई हाम्रो यात्रामा सामेल गराउन चाहन्छौं।</p>
+      <a href="{% url 'contact' %}" class="bg-[#276749] text-white px-6 py-3 rounded-lg shadow hover:bg-[#22543d] transition">सम्पर्कमा रहौं</a>
+    </section>
+
+    <!-- Simple Stats -->
+    <section class="bg-[#e6fffa] py-10">
+      <div class="container mx-auto px-4 grid md:grid-cols-3 gap-6 text-center">
+        <div class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition">
+          <h2 class="text-3xl font-bold text-[#2f855a]">१,०००+</h2>
+          <p class="text-gray-600">किसान जोडिएका</p>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition">
+          <h2 class="text-3xl font-bold text-[#2f855a]">४००+</h2>
+          <p class="text-gray-600">उत्पादन सूची</p>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition">
+          <h2 class="text-3xl font-bold text-[#2f855a]">१०ं वडा</h2>
+          <p class="text-gray-600">Beni नगरपालिका भित्र सेवा</p>
+        </div>
+      </div>
+    </section>
+
+    {% include 'landingpage/footer.html' %}
+  </body>
+</html>

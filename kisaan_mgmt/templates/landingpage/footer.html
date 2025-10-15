@@ -1,56 +1,57 @@
 {% load static %}
 {% load i18n %}
 
-<footer class="bg-[#2e4600] text-white px-4 py-3 md:py-5 md:px-10 font-sans w-full">
+<footer class="bg-[#2e4600] text-white px-4 py-6 md:py-8 md:px-10 font-sans w-full">
 
-  <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-y-6 md:gap-y-0 md:gap-x-32 xl:gap-x-40">
+  <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-y-8 md:gap-x-32 xl:gap-x-40">
 
     <!-- Logo and Message -->
     <div class="w-full md:w-auto max-w-sm text-center sm:text-left">
       <img src="{% static 'accounts/images/download.jpg' %}" alt="{% trans 'Kisaan Logo' %}"
-        class="w-11 h-11 md:w-14 md:h-14 rounded-full border-4 border-white-400 shadow-md mx-auto sm:mx-0 mb-2" />
-      <h2 class="text-xl md:text-3xl font-bold text-white-400 mb-1 tracking-wide">{% trans "Kisaan" %}</h2>
-      <p class="text-gray-200 text-xs md:text-sm font-light leading-relaxed">
+        class="w-12 h-12 md:w-14 md:h-14 rounded-full border-4 border-white shadow-md mx-auto sm:mx-0 mb-3" />
+      <h2 class="text-xl md:text-3xl font-bold text-white mb-2 tracking-wide">{% trans "Kisaan" %}</h2>
+      <p class="text-gray-200 text-sm md:text-base font-light leading-relaxed">
         {% blocktrans %}A trusted digital bridge <br /> between farmers and consumers.{% endblocktrans %}
       </p>
     </div>
 
     <!-- Links Section -->
-    <div class="w-full grid grid-cols-2 sm:grid-cols-2 md:flex md:flex-wrap justify-center md:justify-start gap-y-4 gap-x-8 lg:gap-x-20 xl:gap-x-28">
+    <div class="w-full grid grid-cols-2 sm:grid-cols-2 md:flex md:flex-wrap justify-center md:justify-start gap-y-6 gap-x-10 lg:gap-x-20 xl:gap-x-28">
 
       <!-- Company -->
       <div class="min-w-[120px] text-center sm:text-left">
-        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Company" %}</h3>
-        <a href="{% url 'about' %}" class="text-gray-300 hover:text-white hover:underline block text-xs md:text-sm mb-1">{% trans "About Us" %}</a>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Our Projects" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Our Services" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm">{% trans "Careers" %}</p>
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-3">{% trans "Company" %}</h3>
+        <a href="{% url 'about' %}" class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "About Us" %}</a>
+        <a href="{% url 'project' %}" class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "Our Projects" %}</a>
+        <a href="{% url 'service' %}" class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "Our Services" %}</a>       
+        <a href="{% url 'careers' %}" class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline">{% trans "Careers" %}</a>       
       </div>
 
       <!-- Products -->
       <div class="min-w-[120px] text-center sm:text-left">
-        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Products" %}</h3>
-        <a href="{% url 'fruits' %}" class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Fruits" %}</a> 
-        <a href="{% url 'vegetables' %}"class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Vegetables" %} </a>        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Seeds" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm">{% trans "Organic Goods" %}</p>
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-3">{% trans "Products" %}</h3>
+        <a href="{% url 'fruits' %}" class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "Fruits" %}</a>
+        <a href="{% url 'vegetables' %}" class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "Vegetables" %}</a>
+        <a href="{% url 'grains' %}" class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "Grains" %}</a>
+        <p class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline cursor-pointer">{% trans "Organic Goods" %}</p>
       </div>
 
       <!-- Support -->
       <div class="min-w-[120px] text-center sm:text-left">
-        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Support" %}</h3>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Help Center" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "FAQs" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm mb-1">{% trans "Terms & Conditions" %}</p>
-        <p class="text-gray-300 hover:text-white hover:underline cursor-pointer block text-xs md:text-sm">{% trans "Privacy Policy" %}</p>
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-3">{% trans "Support" %}</h3>
+        <p class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "Help Center" %}</p>
+        <p class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "FAQs" %}</p>
+        <p class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline mb-1">{% trans "Terms & Conditions" %}</p>
+        <p class="block text-xs md:text-sm text-gray-300 hover:text-white hover:underline">{% trans "Privacy Policy" %}</p>
       </div>
 
       <!-- Contact -->
       <div class="min-w-[120px] text-center sm:text-left">
-        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-2">{% trans "Contact" %}</h3>
+        <h3 class="text-yellow-400 text-base md:text-lg font-semibold mb-3">{% trans "Contact" %}</h3>
         <p class="text-gray-100 text-xs md:text-sm mb-1">✉ kisaan.helps@gmail.com</p>
         <p class="text-gray-100 text-xs md:text-sm mb-1">📞 +977-9862904097</p>
         <p class="text-gray-100 text-xs md:text-sm mb-2">📍 {% trans "Beni, Myagdi, Nepal" %}</p>
-        <div class="flex justify-center sm:justify-start gap-2 mt-1">
+        <div class="flex justify-center sm:justify-start gap-3 mt-2">
           <img src="{% static 'accounts/images/facebook.png' %}" alt="Facebook" class="w-5 h-5 rounded-full border border-gray-300 hover:scale-110 transition" />
           <img src="{% static 'accounts/images/github.png' %}" alt="Github" class="w-5 h-5 rounded-full border border-gray-300 hover:scale-110 transition" />
           <img src="{% static 'accounts/images/insta.jpg' %}" alt="Instagram" class="w-5 h-5 rounded-full border border-gray-300 hover:scale-110 transition" />
@@ -61,9 +62,8 @@
   </div>
 
   <!-- Bottom -->
-  <div class="border-t border-white/10 mt-4 pt-2 text-center text-xs md:text-sm text-gray-400 tracking-wider">
+  <div class="border-t border-white/10 mt-6 pt-3 text-center text-xs md:text-sm text-gray-400 tracking-wider">
     &copy; 2025 {% trans "Kisaan. All rights reserved." %}
   </div>
 
 </footer>
-

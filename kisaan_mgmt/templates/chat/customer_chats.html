@@ -67,6 +67,13 @@
       </div>
     {% endif %}
 
+     <!-- Back Button -->
+  <a href="{% url 'customer-dashboard' %}" 
+       class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+      ← {% trans "Back to Dashboard" %}
+    </a>
+
+
   </main>
 </body>
 </html>
