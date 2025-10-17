@@ -1,19 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils.safestring import mark_safe
+import json
 import requests
 import xml.etree.ElementTree as ET
-from products.models import Product  # Adjust if your product model is elsewhere
-from payments.models import Transaction  # 🔸 Import the Transaction model
-from accounts.views.role_based_redirect import farmer_required, customer_required
-from accounts.models import FarmerReview
-from accounts.views.update_farmer_profile import FarmerReview
-from django.db.models import Avg
-from django.contrib import messages
 
+# Local models
+from accounts.models import FarmerReview
+from accounts.views.role_based_redirect import farmer_required, customer_required
+from accounts.views.update_farmer_profile import FarmerReview 
+from products.models import Product
+from payments.models import Transaction
+from accounts.models import FarmerProfile
+
+# Aggregation
+from django.db.models import Avg, Sum, Count, Q
 @customer_required
 def choose_quantity(request, product_id):
     try:
@@ -27,9 +33,10 @@ def choose_quantity(request, product_id):
                 qty = 1
             
             amount = product.price * qty
-            pid = get_random_string(10)  # random payment ID
+            pid = get_random_string(10)  # random payment ID will be genereted  but shown same for farmer and customer
 
-            # Pass data to payment choice page
+            
+            #sending these data to ui 
             context = {
                 'product': product,
                 'quantity': qty,
@@ -49,6 +56,8 @@ def payment_request(request, product_id):
     try:
         product = get_object_or_404(Product, pk=product_id)
 
+
+#checking the choosen quantitty is less than available quantity or not
         if request.method == 'POST':
             qty = float(request.POST.get('quantity', 1))
             if qty < 1 or qty > product.quantity:
@@ -226,22 +235,7 @@ def payment_failure(request):
         return render(request, 'payments/error.html', {'message': 'Error displaying failure page.'})
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.utils.safestring import mark_safe
-import json
-from payments.models import Transaction
 
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
-# from ..models import Transaction, FarmerReview
-from accounts.views.role_based_redirect import farmer_required
-from django.shortcuts import render
-from django.db.models import Sum, Avg, Q, Count
-from .models import Transaction  # Import your Transaction model
-from accounts.models import FarmerProfile  # Import your FarmerProfile model
 
 def income_summary(request):
     # Get the logged-in farmer's profile
@@ -286,16 +280,6 @@ def income_summary(request):
     }
 
     return render(request, 'payments/income_summary.html', context)  # Adjust template path as needed
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
-from django.conf import settings
-
-from payments.models import Transaction
-from products.models import Product
-from accounts.views.role_based_redirect import farmer_required, customer_required
 
 
 @login_required
@@ -359,7 +343,7 @@ def dispute_delivery(request, transaction_id):
             # ✅ Notify admin
             try:
                 admin_email = settings.DEFAULT_FROM_EMAIL
-                subject = f"⚠️ Dispute Alert: Transaction {transaction.pid}"
+                subject = f" Dispute Alert: Transaction {transaction.pid}"
                 message = (
                     f"Customer {request.user.username} has marked the product "
                     f"'{transaction.product.sub_category}' (PID: {transaction.pid}) as Not Received.\n\n"

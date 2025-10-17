@@ -20,14 +20,14 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 
 
-# ✅ FIXED: confirm_chat — now skips if chat already exists
+#  FIXED: confirm_chat — now skips if chat already exists
 @customer_required
 def confirm_chat(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     farmer_profile = product.farmer
     customer_profile = request.user.customerprofile  # Get customer profile
 
-    # ✅ Check if chat room already exists between this farmer + customer
+    #  Check if chat room already exists between this farmer + customer
     existing_chat = ChatRoom.objects.filter(
         farmer=farmer_profile,
         customer=customer_profile

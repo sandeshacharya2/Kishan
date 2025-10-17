@@ -39,6 +39,9 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='admin')
+    is_blocked= models.BooleanField(default=False)
+    
+
 
     def __str__(self):
         return f"{self.user.username} Profile"
@@ -55,8 +58,8 @@ class FarmerProfile(models.Model):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
-    # def __str__(self):
-    #     return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
+    def __str__(self):
+        return f"{self.user.first_name or ''} {self.user.last_name or ''}".strip() or self.user.username
 
 
 # Customer specific profile 
@@ -72,8 +75,8 @@ class CustomerProfile(models.Model):
     
     
 
-    # def __str__(self):
-    #     return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
+    def __str__(self):
+        return f"{self.user.first_name or ''} {self.user.last_name or ''}".strip() or self.user.username
 
 
 # Signal to create or update profiles automatically
@@ -123,3 +126,14 @@ class FarmerReview(models.Model):
 
     def __str__(self):
         return f"{self.customer.username} → {self.farmer.username}: {self.rating}⭐"
+    
+
+class DeletedUser(models.Model):
+    email=models.EmailField()
+    username=models.CharField(max_length=150)
+    role=models.CharField(max_length=50, blank=True)
+    deleted_at=models.DateTimeField(default=timezone.now)
+    reason=models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Deleted: {self.email} on {self.deleted_at.strftime('%Y-%m-%d')}"

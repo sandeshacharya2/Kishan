@@ -10,6 +10,14 @@ from django.contrib.auth.models import User
 from accounts.views.customer_dashboard_view import haversine
 from accounts.models import FarmerReview
 from django.db.models import Avg
+from django.db import transaction
+from accounts.models import DeletedUser
+from django.contrib.auth.models import User
+from payments.models import Transaction
+from django.db import transaction
+
+
+
 
 
 @farmer_required
@@ -138,3 +146,183 @@ def farmer_detail(request, farmer_id):
         "avg_rating": avg_rating,
     }
     return render(request, "accounts/farmer_detail.html", context)
+
+
+
+
+
+
+# user deletion code
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db import transaction
+from django.contrib.auth import logout
+from django.utils import timezone
+
+# Import your models
+
+from chat.models import ChatRoom, Message
+from products.models import Product, ProductSynonym
+
+@farmer_required
+@login_required
+def delete_farmer_account(request):
+    if request.method == "POST":
+        user = request.user
+        confirmation_email = request.POST.get('confirmation_email', '').strip()
+        expected_email = user.email
+
+        # 🔒 Validate email match
+        if confirmation_email != expected_email:
+            return render(request, 'accounts/delete_farmer_account_confirm.html', {
+                'error': 'The email you entered does not match your account email.'
+            })
+
+        # ✅ Email matches — proceed with deletion
+        email = user.email
+        username = user.username
+        role = getattr(user, 'profile', None).role if hasattr(user, 'profile') else 'unknown'
+
+        with transaction.atomic():
+            # 1. Audit log
+            DeletedUser.objects.create(
+                email=email,
+                username=username,
+                role=role,
+                reason="User confirmed deletion via email verification"
+            )
+
+            # 2. Delete all related data
+            Message.objects.filter(sender=user).delete()
+            
+            if role == 'farmer':
+                try:
+                    farmer_profile = user.farmerprofile
+                    ChatRoom.objects.filter(farmer=farmer_profile).delete()
+                except FarmerProfile.DoesNotExist:
+                    pass
+            elif role == 'customer':
+                try:
+                    customer_profile = user.customerprofile
+                    ChatRoom.objects.filter(customer=customer_profile).delete()
+                except CustomerProfile.DoesNotExist:
+                    pass
+
+            FarmerReview.objects.filter(farmer=user).delete()
+            FarmerReview.objects.filter(customer=user).delete()
+            Transaction.objects.filter(user=user).delete()
+
+            if role == 'farmer':
+                ProductSynonym.objects.filter(product__farmer__user=user).delete()
+                Product.objects.filter(farmer__user=user).delete()
+
+            FarmerProfile.objects.filter(user=user).delete()
+            CustomerProfile.objects.filter(user=user).delete()
+            Profile.objects.filter(user=user).delete()
+            # EmailOTP.objects.filter(email=email).delete()  # Clean up OTPs
+
+            # 3. Delete user last
+            user.delete()
+
+        logout(request)
+        # messages.success(
+        #     request,
+        #     "Your account and all associated data have been permanently deleted. "
+        #     "You may register again with this email in the future."
+        # )
+        return redirect('landing')  # or your homepage
+
+    # GET request: show confirmation page
+    return render(request, 'accounts/delete_farmer_account_confirm.html')
+
+
+
+
+
+
+
+# user deletion code
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db import transaction
+from django.contrib.auth import logout
+from django.utils import timezone
+
+# Import your models
+
+from chat.models import ChatRoom, Message
+from products.models import Product, ProductSynonym
+
+@customer_required
+
+@login_required
+def delete_customer_account(request):
+    if request.method == "POST":
+        user = request.user
+        confirmation_email = request.POST.get('confirmation_email', '').strip()
+        expected_email = user.email
+
+        # 🔒 Validate email match
+        if confirmation_email != expected_email:
+            return render(request, 'accounts/delete_customer_account_confirm.html', {
+                'error': 'The email you entered does not match your account email.'
+            })
+
+        # ✅ Email matches — proceed with deletion
+        email = user.email
+        username = user.username
+        role = getattr(user, 'profile', None).role if hasattr(user, 'profile') else 'unknown'
+
+        with transaction.atomic():
+            # 1. Audit log
+            DeletedUser.objects.create(
+                email=email,
+                username=username,
+                role=role,
+                reason="User confirmed deletion via email verification"
+            )
+
+            # 2. Delete all related data
+            Message.objects.filter(sender=user).delete()
+            
+            if role == 'farmer':
+                try:
+                    farmer_profile = user.farmerprofile
+                    ChatRoom.objects.filter(farmer=farmer_profile).delete()
+                except FarmerProfile.DoesNotExist:
+                    pass
+            elif role == 'customer':
+                try:
+                    customer_profile = user.customerprofile
+                    ChatRoom.objects.filter(customer=customer_profile).delete()
+                except CustomerProfile.DoesNotExist:
+                    pass
+
+            FarmerReview.objects.filter(farmer=user).delete()
+            FarmerReview.objects.filter(customer=user).delete()
+            Transaction.objects.filter(user=user).delete()
+
+            if role == 'farmer':
+                ProductSynonym.objects.filter(product__farmer__user=user).delete()
+                Product.objects.filter(farmer__user=user).delete()
+
+            FarmerProfile.objects.filter(user=user).delete()
+            CustomerProfile.objects.filter(user=user).delete()
+            Profile.objects.filter(user=user).delete()
+            # EmailOTP.objects.filter(email=email).delete()  # Clean up OTPs
+
+            # 3. Delete user last
+            user.delete()
+
+        logout(request)
+        # messages.success(
+        #     request,
+        #     "Your account and all associated data have been permanently deleted. "
+        #     "You may register again with this email in the future."
+        # )
+        return redirect('landing')  # or your homepage
+
+    # GET request: show confirmation page
+    return render(request, 'accounts/delete_customer_account_confirm.html')
