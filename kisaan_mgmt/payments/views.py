@@ -179,7 +179,7 @@ def payment_success(request):
 
             # ✅ Send email to farmer with buyer details
             try:
-                farmer = product.farmer.user # assuming FK to User
+                farmer = product.farmer.user # assuming FK to User → ✅ correct: product.farmer is FarmerProfile
                 customer = request.user
 
                 try:
@@ -239,7 +239,8 @@ def payment_failure(request):
 
 def income_summary(request):
     # Get the logged-in farmer's profile
-    farmer_profile = FarmerProfile.objects.get(user=request.user)
+    # ✅ CORRECTED: request.user.farmerprofile is already FarmerProfile
+    farmer_profile = request.user.farmerprofile
     print(f"User Profile: {farmer_profile}")  # This matches your log
 
     # Calculate total income
@@ -247,9 +248,9 @@ def income_summary(request):
         product__farmer=farmer_profile
     ).aggregate(total=Sum('amount'))['total'] or 0
 
-    # Calculate average rating (assuming you have a Review model)
+    # ✅ UPDATED: FarmerReview.farmer expects FarmerProfile
     avg_rating = FarmerReview.objects.filter(
-        farmer=request.user  # Assuming farmer is the User object
+        farmer=farmer_profile
     ).aggregate(avg=Avg('rating'))['avg'] or 0
 
     # Calculate counts

@@ -269,12 +269,12 @@ def farmer_dashboard_view(request):
 
     form = FarmerProfileForm(instance=farmer_profile)
 
-    # ✅ FarmerReview.farmer still expects User → so use request.user
-    avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
+    # ✅ UPDATED: FarmerReview.farmer now expects FarmerProfile → use user.farmerprofile
+    avg_rating = FarmerReview.objects.filter(farmer=user.farmerprofile).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
-    # ✅ Fetch reviews from customers — farmer is User
-    reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
+    # ✅ UPDATED: Fetch reviews using FarmerProfile
+    reviews = FarmerReview.objects.filter(farmer=user.farmerprofile).select_related('customer').order_by('-created_at')
 
     context = {
         'products': products,
@@ -315,7 +315,7 @@ from django.db.models import Avg
 #     # Get the FarmerProfile to display info, but review uses User
 #     farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
 #     farmer_user = farmer_profile.user  # Extract the User object
-    
+#     
 #     # Use User objects for review
 #     review, created = FarmerReview.objects.get_or_create(
 #         farmer=farmer_user,           # ← Farmer is a User
@@ -346,8 +346,8 @@ def farmer_reviews_view(request):
     except FarmerProfile.DoesNotExist:
         return HttpResponseForbidden("You are not a farmer.")
 
-    # Filter reviews by User (request.user), not FarmerProfile
-    reviews = FarmerReview.objects.filter(farmer=request.user).select_related('customer')        .order_by('-created_at')
+    # ✅ UPDATED: Filter reviews by FarmerProfile, not User
+    reviews = FarmerReview.objects.filter(farmer=farmer_profile).select_related('customer').order_by('-created_at')
 
     return render(request, 'accounts/farmer_reviews.html', {
         'reviews': reviews,
@@ -359,13 +359,14 @@ def farmer_reviews_view(request):
 def customer_farmer_reviews_view(request, farmer_id):
     """Customer sees reviews of a specific farmer"""
     farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
-    farmer_user = farmer_profile.user
+    # farmer_user = farmer_profile.user  # Not needed for query anymore
     
-    reviews = FarmerReview.objects.filter(farmer=farmer_user) .select_related('customer') .order_by('-created_at')
+    # ✅ UPDATED: Filter by FarmerProfile
+    reviews = FarmerReview.objects.filter(farmer=farmer_profile).select_related('customer').order_by('-created_at')
 
     return render(request, 'accounts/farmer_reviews_customer.html', {
         'reviews': reviews,
-        'farmer': farmer_user,  # Pass User for display
+        'farmer': farmer_profile.user,  # Still pass User for display in template
     })
 
 
@@ -373,12 +374,17 @@ def customer_farmer_reviews_view(request, farmer_id):
 # @farmer_required
 def customer_detail_view(request, customer_id):
     customer_profile = get_object_or_404(CustomerProfile, id=customer_id)
-    customer_user = customer_profile.user  # Extract User object
+    # customer_user = customer_profile.user  # Not needed for query
     
-    # Reviews this farmer (request.user) received FROM this customer (customer_user)
+    # ✅ UPDATED: Reviews use FarmerProfile (request.user.farmerprofile) and CustomerProfile
+    try:
+        farmer_profile = request.user.farmerprofile
+    except FarmerProfile.DoesNotExist:
+        return HttpResponseForbidden("You are not a farmer.")
+
     reviews = FarmerReview.objects.filter(
-        farmer=request.user,      # ← Farmer is User
-        customer=customer_user    # ← Customer is User
+        farmer=farmer_profile,      # ← Farmer is FarmerProfile
+        customer=customer_profile   # ← Customer is CustomerProfile
     )
 
     return render(request, 'accounts/customer_detail.html', {
@@ -395,27 +401,33 @@ def customer_detail_view(request, customer_id):
 
 @login_required
 @customer_required
+@login_required
+@customer_required
 def submit_farmer_review(request, farmer_id):
-    farmer = get_object_or_404(User, id=farmer_id)
-    
-    review, created = FarmerReview.objects.get_or_create(
-        farmer=farmer,
-        customer=request.user,
-        defaults={'rating': 5}
-    )
+    farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
+    customer_profile = request.user.customerprofile
+
+    # ✅ Only fetch existing review (don't create one yet)
+    try:
+        review = FarmerReview.objects.get(farmer=farmer_profile, customer=customer_profile)
+        form = FarmerReviewForm(instance=review)
+    except FarmerReview.DoesNotExist:
+        review = None
+        form = FarmerReviewForm()  # Empty form — no default rating
 
     if request.method == 'POST':
         form = FarmerReviewForm(request.POST, instance=review)
         if form.is_valid():
-            form.save()
-            return redirect('customer-dashboard')  # Redirect to customer dashboard after saving
-    else:
-        form = FarmerReviewForm(instance=review)
+            review = form.save(commit=False)
+            review.farmer = farmer_profile
+            review.customer = customer_profile
+            review.save()
+            return redirect('customer-dashboard')
 
-    return render(request, 'accounts/submit_farmer_review.html', {'form': form, 'farmer': farmer})
-
-
-
+    return render(request, 'accounts/submit_farmer_review.html', {
+        'form': form,
+        'farmer': farmer_profile.user,
+    })
 
 # @login_required
 # # @farmer_required
@@ -433,13 +445,14 @@ def submit_farmer_review(request, farmer_id):
 @login_required
 def customer_farmer_reviews_view(request, farmer_id):
     """Customer sees reviews of a specific farmer"""
-    farmer = get_object_or_404(User, id=farmer_id)
-    reviews = FarmerReview.objects.filter(farmer=farmer) \
+    # ✅ UPDATED: farmer_id is FarmerProfile.id
+    farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
+    reviews = FarmerReview.objects.filter(farmer=farmer_profile) \
                                   .select_related('customer') \
                                   .order_by('-created_at')
     return render(request, 'accounts/farmer_reviews_customer.html', {
         'reviews': reviews,
-        'farmer': farmer,
+        'farmer': farmer_profile.user,  # Pass User for display
     })
 
 
@@ -448,7 +461,7 @@ def customer_farmer_reviews_view(request, farmer_id):
 # def customer_detail_view(request, customer_id):
 #     """Farmer sees customer details along with reviews given to this farmer"""
 #     customer = get_object_or_404(User, id=customer_id)
-    
+#     
 #     # Fetch review(s) this customer gave to the logged-in farmer
 #     reviews = FarmerReview.objects.filter(farmer=request.user, customer=customer)
 

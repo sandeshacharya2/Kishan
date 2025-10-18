@@ -14,29 +14,29 @@
         {% for review in reviews %}
         <div class="bg-white shadow-md rounded-lg p-4 flex gap-4">
             <!-- Profile picture -->
-            {% if review.customer.customerprofile.profile_picture %}
-                <img src="{{ review.customer.customerprofile.profile_picture.url }}" 
-                     alt="Profile" class="w-12 h-12 rounded-full object-cover">
-            {% else %}
-                <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                    <span class="text-gray-700 font-bold text-lg">
-                        {{ review.customer.first_name|default:review.customer.username|slice:":1"|upper }}
-                    </span>
-                </div>
-            {% endif %}
+{% if review.customer.customerprofile.profile_picture %}
+    <img src="{{ review.customer.profile_picture.url }}" 
+         alt="Profile" class="w-12 h-12 rounded-full object-cover">
+{% else %}
+    <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+        <span class="text-gray-700 font-bold text-lg">
+            {{ review.customer.user.first_name|default:review.customer.user.username|slice:":1"|upper }}
+        </span>
+    </div>
+{% endif %}
 
             <!-- Review details -->
             <div class="flex-1">
                 <!-- Name clickable -->
                 <p class="font-bold">
-                    <a href="{% url 'customer-detail' review.customer.customerprofile.id %}" class="hover:text-green-700">
-                        {{ review.customer.first_name }} {{ review.customer.last_name }}
+                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
+                        {{ review.customer.user.first_name }} {{ review.customer.user.last_name }}
                     </a>
                 </p>
                 <!-- Username clickable -->
                 <p class="text-sm text-gray-500">
-                    <a href="{% url 'customer-detail' review.customer.customerprofile.id %}" class="hover:text-green-700">
-                        @{{ review.customer.username }}
+                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
+                        @{{ review.customer.user.username }}
                     </a>
                 </p>
 

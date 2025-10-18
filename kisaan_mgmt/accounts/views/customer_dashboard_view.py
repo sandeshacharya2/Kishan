@@ -214,18 +214,13 @@ def customer_dashboard_view(request):
 
 @login_required
 def view_farmer_location(request, farmer_id):
-    farmer = get_object_or_404(User, id=farmer_id)
-    try:
-        profile = farmer.farmerprofile  #Use FarmerProfile
-        latitude = profile.latitude
-        longitude = profile.longitude
-    except FarmerProfile.DoesNotExist:
-        latitude = 0
-        longitude = 0
+    farmer_profile = get_object_or_404(FarmerProfile, id=farmer_id)
+    latitude = farmer_profile.latitude
+    longitude = farmer_profile.longitude
 
     context = {
         'latitude': latitude,
         'longitude': longitude,
-        'farmer_name': farmer.username,
+        'farmer_name': farmer_profile.user.username,
     }
     return render(request, 'accounts/view_farmer_location.html', context)

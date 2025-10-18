@@ -115,8 +115,8 @@ def create_or_update_user_profiles(sender, instance, created, **kwargs):
 
 
 class FarmerReview(models.Model):
-    farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    farmer = models.ForeignKey(FarmerProfile, on_delete=models.CASCADE, related_name='reviews')
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(default=5)  # 1-5 stars
     comment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
