@@ -10,7 +10,6 @@ from products.models import Product  # Adjust if your product model is elsewhere
 from payments.models import Transaction  # 🔸 Import the Transaction model
 from accounts.views.role_based_redirect import farmer_required, customer_required
 from accounts.models import FarmerReview
-from accounts.views.update_farmer_profile import FarmerReview
 from django.db.models import Avg
 from django.contrib import messages
 
@@ -75,7 +74,10 @@ def payment_request(request, product_id):
                     product.quantity = 0
                 product.save()
 
-                return redirect('payments:customer_purchases')
+                #Show confirmation page instead of redirecting
+                return render(request, 'payments/cod_confirmation.html', {
+                    'transaction': transaction,
+                })
 
             else:  # eSewa payment
                 pid = get_random_string(10)
@@ -167,7 +169,7 @@ def payment_success(request):
 
             # ✅ Send email to farmer with buyer details
             try:
-                farmer = product.farmer  # assuming FK to User
+                farmer = product.farmer.user # assuming FK to User
                 customer = request.user
 
                 try:
@@ -230,67 +232,77 @@ import json
 from payments.models import Transaction
 
 
-@login_required
-@farmer_required
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
+# from ..models import Transaction, FarmerReview
+from accounts.views.role_based_redirect import farmer_required
+from django.shortcuts import render
+from django.db.models import Sum, Avg, Q, Count
+from .models import Transaction  # Import your Transaction model
+from accounts.models import FarmerProfile  # Import your FarmerProfile model
+
 def income_summary(request):
-    try:
-        user = request.user
-        print("User:", user)
+    # Get the logged-in farmer's profile
+    farmer_profile = request.user.farmerprofile
+    print(f"User Profile: {farmer_profile}")  # This matches your log
 
-        # Completed: payment done + delivery finished
-        completed_transactions = Transaction.objects.filter(
-            product__farmer=user,
-            payment_status='Success',
-            delivery_status='Completed'
-        )
+    # Calculate total income
+    total_income = Transaction.objects.filter(
+        product__farmer=farmer_profile
+    ).aggregate(total=Sum('amount'))['total'] or 0
 
-        # Waiting: COD payments not yet confirmed
-        waiting_transactions = Transaction.objects.filter(
-            product__farmer=user,
-            payment_status='Waiting'
-        )
+    # Calculate average rating (assuming you have a Review model)
+    avg_rating = FarmerReview.objects.filter(
+        farmer=farmer_profile  # Assuming farmer is the User object
+    ).aggregate(avg=Avg('rating'))['avg'] or 0
 
-        # Pending: orders not completed/disputed and not waiting COD
-        pending_transactions = Transaction.objects.filter(
-            product__farmer=user
-        ).exclude(
-            delivery_status__in=['Completed', 'Dispute']
-        ).exclude(
-            id__in=waiting_transactions.values_list('id', flat=True)
-        )
+    # Calculate counts
+    completed_count = Transaction.objects.filter(
+        product__farmer=farmer_profile,
+        delivery_status='Completed'
+    ).count()
+    print(f"Completed: {completed_count}")  # This matches your log
 
-        # ✅ Combine all into one table
-        all_transactions = (
-            completed_transactions |
-            waiting_transactions |
-            pending_transactions
-        ).order_by('-created_at')
+    pending_count = Transaction.objects.filter(
+        product__farmer=farmer_profile,
+        delivery_status='Pending'
+    ).count()
+    print(f"Pending: {pending_count}")  # This matches your log
 
-        print("Completed:", completed_transactions.count())
-        print("Waiting:", waiting_transactions.count())
-        print("Pending:", pending_transactions.count())
-        print("All combined:", all_transactions.count())
+    # Fetch all transactions for the table
+    all_transactions = Transaction.objects.filter(
+        product__farmer=farmer_profile
+    ).select_related('product', 'user').order_by('-created_at')
 
-        total_income = sum(t.amount for t in completed_transactions)
-        avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
-        avg_rating = round(avg_rating, 1)
+    # Pass ALL variables to the template context
+    context = {
+        'total_income': total_income,
+        'avg_rating': round(avg_rating, 1),  # Round to 1 decimal place
+        'completed_count': completed_count,
+        'pending_count': pending_count,
+        'all_transactions': all_transactions,
+    }
 
-        context = {
-            'all_transactions': all_transactions,
-            'total_income': total_income,
-            'avg_rating': avg_rating,
-        }
-        return render(request, 'payments/income_summary.html', context)
+    return render(request, 'payments/income_summary.html', context)  # Adjust template path as needed
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.conf import settings
 
-    except Exception as e:
-        print("❌ Error in income_summary:", e)
-        return render(request, 'payments/error.html', {'message': 'Error loading income summary.'})
+from payments.models import Transaction
+from products.models import Product
+from accounts.views.role_based_redirect import farmer_required, customer_required
+
 
 @login_required
 @farmer_required
 def update_delivery_status(request, transaction_id):
     try:
-        transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user)
+        # product__farmer expects FarmerProfile → use request.user.farmerprofile
+        transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user.farmerprofile)
         if request.method == 'POST':
             new_status = request.POST.get('delivery_status')
             if new_status in ['Dispatched', 'Delivered']:
@@ -300,11 +312,12 @@ def update_delivery_status(request, transaction_id):
     except Exception as e:
         print("❌ Error updating delivery status:", e)
         return render(request, 'payments/error.html', {'message': 'Cannot update delivery status.'})
-    
-    
+
+
 @login_required
 @customer_required
 def confirm_delivery(request, transaction_id):
+    # user expects User → use request.user, NOT request.user.customerprofile
     transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
 
     if request.method == 'POST' and transaction.delivery_status == 'Delivered':
@@ -315,31 +328,28 @@ def confirm_delivery(request, transaction_id):
             transaction.payment_status = 'Pay'
 
         transaction.save()
-        # messages.success(request, "Delivery confirmed successfully!")
 
     return redirect('payments:customer_purchases')
-
 
 
 @login_required
 @farmer_required
 def confirm_cod_payment(request, transaction_id):
-    transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user)
+    # product__farmer expects FarmerProfile → use request.user.farmerprofile
+    transaction = get_object_or_404(Transaction, pk=transaction_id, product__farmer=request.user.farmerprofile)
 
     if request.method == 'POST' and transaction.payment_method == 'COD' and transaction.payment_status == 'Waiting':
         transaction.payment_status = 'Success'
         transaction.save()
-        # messages.success(request, "COD payment confirmed successfully!")
 
     return redirect('payments:income_summary')
-
-
 
 
 @login_required
 @customer_required
 def dispute_delivery(request, transaction_id):
     try:
+        # user expects User → use request.user
         transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
         if request.method == 'POST' and transaction.delivery_status == 'Delivered':
             transaction.delivery_status = 'Dispute'
@@ -347,12 +357,12 @@ def dispute_delivery(request, transaction_id):
 
             # ✅ Notify admin
             try:
-                admin_email = settings.DEFAULT_FROM_EMAIL  # or set a separate ADMIN_EMAIL in settings
+                admin_email = settings.DEFAULT_FROM_EMAIL
                 subject = f"⚠️ Dispute Alert: Transaction {transaction.pid}"
                 message = (
                     f"Customer {request.user.username} has marked the product "
                     f"'{transaction.product.sub_category}' (PID: {transaction.pid}) as Not Received.\n\n"
-                    f"Farmer: {transaction.product.farmer.username}\n"
+                    f"Farmer: {transaction.product.farmer.user.username}\n"  # ✅ farmer is FarmerProfile → access .user
                     f"Quantity: {transaction.quantity}\n"
                     f"Amount: Rs. {transaction.amount}\n"
                     f"Date: {transaction.created_at.strftime('%Y-%m-%d')}\n\n"
@@ -374,10 +384,13 @@ def dispute_delivery(request, transaction_id):
         print("❌ Error in dispute_delivery:", e)
         return render(request, 'payments/error.html', {'message': 'Cannot mark as dispute.'})
 
+
 @customer_required
 def customer_purchases(request):
     try:
-        transactions = Transaction.objects.filter(user=request.user).select_related('product', 'product__farmer')
+        # user expects User → use request.user
+        # Order by newest first → '-created_at'
+        transactions = Transaction.objects.filter(user=request.user).select_related('product', 'product__farmer').order_by('-created_at')
 
         return render(request, 'payments/purchases.html', {
             'transactions': transactions,
@@ -385,6 +398,7 @@ def customer_purchases(request):
     except Exception as e:
         print("❌ Error in customer_purchases:", e)
         return render(request, 'payments/error.html', {'message': 'Error loading purchase history.'})
+
 
 @customer_required
 def payment_selection(request, product_id):
@@ -394,7 +408,6 @@ def payment_selection(request, product_id):
         qty = int(request.POST.get("quantity", 1))
         amount = product.price * qty
 
-        # Store quantity in session or pass to template
         request.session['payment_qty'] = qty
 
         return render(request, "payments/payment_choice.html", {
@@ -405,21 +418,21 @@ def payment_selection(request, product_id):
     else:
         return redirect('payments:choose_quantity', product_id=product.id)
 
+
 @customer_required
 def cod_payment(request, product_id):
     try:
         product = get_object_or_404(Product, pk=product_id)
         qty = float(request.POST.get('quantity', 1))
         amount = product.price * qty
-        pid = get_random_string(10)  # unique ID for this transaction
+        pid = get_random_string(10)
 
-        # Reduce product quantity
         product.quantity -= qty
         if product.quantity < 0:
             product.quantity = 0
         product.save()
 
-        # Save transaction with pending payment
+        # user expects User → use request.user
         Transaction.objects.create(
             user=request.user,
             product=product,
@@ -428,29 +441,28 @@ def cod_payment(request, product_id):
             amount=amount,
             quantity=qty,
             payment_method='COD',
-            payment_status='Pending',  # initially pending
+            payment_status='Pending',
             delivery_status='Pending',
         )
 
-
-        # Redirect to customer purchase page or success page
         return redirect('payments:customer_purchases')
 
     except Exception as e:
         print("❌ Error in COD payment:", e)
         return render(request, 'payments/error.html', {'message': 'COD Payment Failed.'})
+
+
 @login_required
 @customer_required
 def cod_pay(request, transaction_id):
     try:
+        # user expects User → use request.user
         transaction = get_object_or_404(Transaction, pk=transaction_id, user=request.user)
 
         if request.method == 'POST' and transaction.payment_method == 'COD' and transaction.payment_status == 'Pay':
-            # Customer sends payment → farmer must confirm
             transaction.payment_status = 'Waiting'
             transaction.save()
 
-            # messages.success(request, "Payment sent. Waiting for farmer confirmation.")
         return redirect('payments:customer_purchases')
 
     except Exception as e:

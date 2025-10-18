@@ -1,0 +1,253 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Admin Login - AgriPortal" %}</title>
+    <style>
+        :root {
+            --primary: #15803d;      /* Dark Green */
+            --secondary: #16a34a;    /* Fresh Green */
+            --light: #F8F5F0;        /* Cream Background */
+            --dark: #333333;         /* Charcoal Text */
+            --error: #D64141;        /* Soft Red for Errors */
+            --shadow: 0 6px 24px rgba(21, 128, 61, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .login-container {
+            background: white;
+            padding: 45px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle leaf pattern */
+        .login-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: 
+                radial-gradient(circle at 30% 30%, var(--primary) 2px, transparent 2px),
+                radial-gradient(circle at 70% 70%, var(--secondary) 1px, transparent 1px);
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 36px;
+            position: relative;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .login-header::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            margin: 12px auto 0;
+            border-radius: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+            letter-spacing: 0.3px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e6e6e6;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: var(--transition);
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+        }
+
+        /* Gradient Button */
+        .my-gradient {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to bottom right, #15803d, #16a34a);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                        0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .my-gradient:hover {
+            background: linear-gradient(to bottom right, #136534, #138f3f);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(21, 128, 61, 0.3);
+        }
+
+        .my-gradient:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            background: #fef0f0;
+            color: var(--error);
+            padding: 14px;
+            border-radius: 10px;
+            margin: 24px 0;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #f5c6c6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .error i {
+            font-style: normal;
+            font-weight: bold;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 14px;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .footer-note a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .footer-note a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        .icon-leaf {
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 25px;
+            }
+            .login-header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1><span class="icon-leaf">🌾</span> AgriAdmin</h1>
+            <p>Secure access to agricultural management system</p>
+        </div>
+
+        {% if form.errors %}
+            <div class="error">
+                <strong>✕</strong> {% trans "Invalid email or password. Please try again." %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">{% trans "Email Address" %}</label>
+                <input 
+                    type="text" 
+                    id="id_username"
+                    name="username" 
+                    placeholder="name@farm.org" 
+                    required 
+                    autofocus
+                    autocomplete="email"
+                >
+            </div>
+            <div class="form-group">
+                <label for="id_password">{% trans "Password" %}</label>
+                <input 
+                    type="password" 
+                    id="id_password"
+                    name="password" 
+                    placeholder="••••••••" 
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
+            <input type="hidden" name="next" value="{{ next }}">
+            <input type="submit" class="my-gradient" value="{% trans 'Login' %}">
+        </form>
+
+        <!-- {% if user.is_authenticated %}
+            <p class="footer-note">
+                ✅ {% trans "You're already logged in as" %} <strong>{{ user.email }}</strong>
+            </p>
+        {% endif %} -->
+        <a href="{% url 'landing' %}">⟵ Back</a>
+
+    </div>
+</body>
+</html>

@@ -39,12 +39,6 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='admin')
-    address = models.CharField(max_length=255, default="Beni Municipality", editable=False)
-    phonenumber = models.CharField(max_length=20)
-    ward = models.CharField(max_length=100, blank=True, null=True)
-    tole = models.CharField(max_length=100)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} Profile"
@@ -54,20 +48,28 @@ class Profile(models.Model):
 class FarmerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='farmer_profiles/', blank=True, null=True)
-    # first_name = models.CharField(max_length=30, blank=True, null=True)
-    # last_name = models.CharField(max_length=30, blank=True, null=True)
+    address = models.CharField(max_length=255, default="Beni Municipality", editable=False)
+    phonenumber = models.CharField(max_length=20)
+    ward = models.CharField(max_length=100, blank=True, null=True)
+    tole = models.CharField(max_length=100)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     # def __str__(self):
     #     return f"{self.first_name or ''} {self.last_name or ''}".strip() or self.user.username
 
 
-# Customer specific profile (नयाँ थपिएको)
+# Customer specific profile 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='customer_profiles/', blank=True, null=True)
-    # first_name = models.CharField(max_length=30, blank=True, null=True)
-    # last_name = models.CharField(max_length=30, blank=True, null=True)
-    # थप fields चाहियो भने यहाँ थप्न सक्नुहुन्छ
+    address = models.CharField(max_length=255, default="Beni Municipality", editable=False)
+    phonenumber = models.CharField(max_length=20)
+    ward = models.CharField(max_length=100, blank=True, null=True)
+    tole = models.CharField(max_length=100)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    
     
 
     # def __str__(self):
@@ -88,32 +90,30 @@ def create_or_update_user_profiles(sender, instance, created, **kwargs):
             CustomerProfile.objects.create(user=instance)
 
     else:
-        # General Profile update/बनाउने
+        # General Profile update
         try:
             instance.profile.save()
         except Profile.DoesNotExist:
             Profile.objects.create(user=instance)
 
-        # FarmerProfile update/बनाउने (role 'farmer' हो भने मात्र)
+        # FarmerProfile update
         if instance.profile.role == 'farmer':
             try:
                 instance.farmerprofile.save()
             except FarmerProfile.DoesNotExist:
                 FarmerProfile.objects.create(user=instance)
 
-        # CustomerProfile update/बनाउने (role 'customer' हो भने मात्र)
+        # CustomerProfile update/
         elif instance.profile.role == 'customer':
             try:
                 instance.customerprofile.save()
             except CustomerProfile.DoesNotExist:
                 CustomerProfile.objects.create(user=instance)
 
-from django.db import models
-from django.contrib.auth.models import User
 
 class FarmerReview(models.Model):
-    farmer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    farmer = models.ForeignKey(FarmerProfile, on_delete=models.CASCADE, related_name='reviews')
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(default=5)  # 1-5 stars
     comment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

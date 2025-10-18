@@ -1,179 +1,310 @@
 {% load static %}
 {% load i18n %}
-  <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="p-6">
-  <!-- Farmer Info -->
-  <div class="bg-white shadow-lg rounded-2xl p-6 border border-green-300">
-    <div class="flex gap-6 items-center">
-      {% if farmer.farmerprofile.profile_picture %}
-        <img src="{{ farmer.farmerprofile.profile_picture.url }}" 
-             class="w-24 h-24 rounded-full border-4 border-green-500 shadow-md" />
-      {% else %}
-        <img src="{% static 'default_profile.jpg' %}" 
-             class="w-24 h-24 rounded-full border-4 border-green-400 shadow-md" />
-      {% endif %}
+<!-- Use Tailwind without extra spaces -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#f0fdfa',   // light teal
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#14b8a6',   // teal-500 (main)
+          600: '#0d9488',
+          700: '#0f766e',
+          800: '#115e59',
+          900: '#134e4a',
+        },
+        secondary: {
+          50: '#f7fee7',   // light lime
+          100: '#ecfccb',
+          200: '#d9f99d',
+          300: '#bef264',
+          400: '#a3e635',
+          500: '#84cc16',   // lime-500 (accent)
+          600: '#65a30d',
+          700: '#4d7c0f',
+          800: '#3f6212',
+          900: '#365314',
+        },
+        accent: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',   // amber-500 (warmth)
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+        },
+        neutral: {
+          50: '#fafafa',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
+        }
+      },
+      fontFamily: {
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
 
-      <div>
-        <h2 class="text-xl font-bold text-green-900">
-          👨‍🌾 {{ farmer.first_name }} {{ farmer.last_name }}
-        </h2>
-        <p class="text-green-700">@{{ farmer.username }}</p>
-        <p class="text-green-700">📧 {{ farmer.email }}</p>
-        <p class="text-green-700">📞 {{ farmer.profile.phonenumber }}</p>
-        <p class="text-green-700">
-          📍 {{ farmer.profile.address }}, {{ farmer.profile.tole }}, 
-          वाड नं. {{ farmer.profile.ward }}
-        </p>
-        <p class="text-yellow-600">⭐ Avg Rating: {{ avg_rating }}/5</p>
+<div class="p-4 sm:p-6 max-w-7xl mx-auto">
+  <!-- Farmer Info Header -->
+  <div class="bg-white rounded-3xl shadow-xl border border-emerald-100 overflow-hidden mb-8">
+    <div class="md:flex">
+      <!-- Profile Picture Section -->
+      <div class="md:w-1/3 bg-gradient-to-br from-emerald-50 to-teal-50 p-6 flex flex-col items-center justify-center">
+        <div class="relative">
+          {% if farmer.profile_picture %}
+            <img src="{{ farmer.profile_picture.url }}" 
+                 alt="{% trans 'Farmer Profile' %}"
+                 class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-emerald-500 shadow-lg object-cover" />
+          {% else %}
+            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-lime-400 to-emerald-500 flex items-center justify-center text-white text-4xl font-bold border-4 border-emerald-300 shadow-lg">
+              {{ farmer.user.username|first|upper }}
+            </div>
+          {% endif %}
+          <!-- Rating Badge -->
+          <div class="absolute -bottom-2 -right-2 bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
+            ⭐ {{ avg_rating|floatformat:1 }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Farmer Details Section -->
+      <div class="md:w-2/3 p-6 md:p-8">
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 flex items-center gap-3">
+          <span class="text-emerald-600">👨‍🌾</span>
+          {{ farmer.user.first_name }} {{ farmer.user.last_name }}
+        </h1>
+        
+        <div class="space-y-2 text-slate-700">
+          <p class="flex items-center gap-2">
+            <span class="text-emerald-600 font-medium">@</span>
+            <span>{{ farmer.user.username }}</span>
+          </p>
+          <p class="flex items-center gap-2">
+            <span class="text-emerald-600 font-medium">📧</span>
+            <span>{{ farmer.user.email }}</span>
+          </p>
+          <p class="flex items-center gap-2">
+            <span class="text-emerald-600 font-medium">📞</span>
+            <span>{{ farmer.phonenumber }}</span>
+          </p>
+          <p class="flex items-start gap-2 pt-2 border-t border-slate-200 mt-4">
+            <span class="text-emerald-600 font-medium pt-1">📍</span>
+            <span class="flex-1">
+              {{ farmer.address }}, {{ farmer.tole }}, वाड नं. {{ farmer.ward }}
+            </span>
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-3 mt-6">
+          <a href="{% url 'view_farmer_location' farmer.user.id %}" 
+             class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-medium shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {% trans "View Location" %}
+          </a>
+          <a href="{% url 'submit-farmer-review' farmer.id %}"
+             class="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition font-medium shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+            {% trans "Leave Review" %}
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Farmer Products -->
-       <!-- Product Cards -->
-    <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
-    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {% if products %}
-        {% for product in products %}
-          <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-green-300 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
-            <!-- Farmer Info -->
-       <!-- Farmer Info -->
-<!-- Farmer Info -->
-<div class="flex items-start gap-4 p-4 bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
-  
-  <!-- Farmer Profile Picture -->
-  <div class="flex flex-col items-center">
-    {% if product.farmer.farmerprofile.profile_picture %}
-      <img src="{{ product.farmer.farmerprofile.profile_picture.url }}"
-           alt="{% trans 'Farmer Picture' %}"
-           class="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-sm" />
-    {% else %}
-      <img src="{% static 'default_profile.jpg' %}"
-           alt="{% trans 'Default Picture' %}"
-           class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm" />
-    {% endif %}
-
-    <!-- Rating Stars as Clickable Link -->
-    <a href="{% url 'submit-farmer-review' product.farmer.id %}"
-       class="flex mt-1 text-yellow-500 text-xs hover:scale-110 transition">
-      {% for i in "12345" %}
-        {% if i|add:"0" <= product.farmer_avg_rating %}
-          ⭐
-        {% elif i|add:"-0.5" <= product.farmer_avg_rating %}
-          ⭐️
-        {% else %}
-          ☆
-        {% endif %}
-      {% endfor %}
-    </a>
-
-    <!-- Rating Text -->
-    <!-- <span class="text-[10px] text-gray-600">
-      ({{ product.farmer_avg_rating|floatformat:1 }}/5)
-    </span> -->
+  <!-- Products Section Title -->
+  <div class="mb-6">
+    <h2 class="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-3">
+      <span class="text-lime-600">🌾</span>
+      {% trans "Available Products" %}
+    </h2>
+    <div class="w-24 h-1 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-full mt-2"></div>
   </div>
 
-  <!-- Farmer Details -->
-  <div class="flex flex-col">
-    <span class="font-semibold text-green-900 text-base flex items-center gap-1">
-      👨‍🌾 <a href="{% url 'farmer_detail' product.farmer.id %}" 
-   class="font-semibold text-green-900 text-base flex items-center gap-1">
-  👨‍🌾 {{ product.farmer.first_name }} {{ product.farmer.last_name }}
-</a>
-    </span>
-    <span class="text-xs text-green-700">@{{ product.farmer.username }}</span>
-    <span class="text-xs text-green-600 mt-1">
-      📅 {% trans "पोस्ट गरिएको मिति" %}: {{ product.date_posted|date:"Y-m-d" }}
-    </span>
-  </div>
-</div>
+  <!-- Product Cards -->
+  <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% if products %}
+      {% for product in products %}
+        <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+          <!-- Farmer Info Mini -->
+          <div class="p-4 bg-gradient-to-r from-emerald-50 to-lime-50 border-b border-slate-200">
+            <div class="flex items-start gap-3">
+              <!-- Farmer Profile Picture -->
+              <div class="flex-shrink-0">
+                {% if farmer.profile_picture %}
+                  <img src="{{ farmer.profile_picture.url }}"
+                       alt="{% trans 'Farmer Picture' %}"
+                       class="w-12 h-12 rounded-full object-cover border-2 border-emerald-400 shadow-sm hover:scale-105 transition" />
+                {% else %}
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-lime-500 flex items-center justify-center text-white text-sm font-bold border-2 border-emerald-300 shadow-sm">
+                    {{ farmer.user.username|first|upper }}
+                  </div>
+                {% endif %}
+              </div>
 
+              <!-- Farmer Details -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1">
+                  <span class="font-semibold text-slate-800 text-sm">
+                    👨‍🌾 {{ farmer.user.first_name }} {{ farmer.user.last_name }}
+                  </span>
+                </div>
+                <div class="text-xs text-slate-600">@{{ farmer.user.username }}</div>
+                <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  {{ product.date_posted|date:"M j, Y" }}
+                </div>
+              </div>
 
-            <!-- Product Image -->
+              <!-- Rating -->
+              <div class="flex-shrink-0">
+                <div class="flex text-amber-500 text-xs">
+                  {% for i in "12345" %}
+                    {% if i|add:"0" <= product.farmer_avg_rating %}
+                      ⭐
+                    {% elif i|add:"-0.5" <= product.farmer_avg_rating %}
+                      ⭐
+                    {% else %}
+                      ☆
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Image -->
+          <div class="aspect-square bg-slate-50 flex items-center justify-center">
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-48 object-cover" />
+              <img src="{{ product.image.url }}" alt="{{ product.sub_category }}" class="w-full h-full object-cover hover:scale-105 transition duration-300" />
             {% else %}
-              <img src="{% static 'default_product.png' %}" alt="{% trans 'Default Product' %}" class="w-full h-48 object-cover" />
+              <div class="w-full h-full bg-gradient-to-br from-lime-100 to-emerald-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Product Details -->
+          <div class="p-5 space-y-3">
+            <h3 class="text-lg font-bold text-slate-800 line-clamp-2">
+              🌾 {{ product.sub_category }}
+            </h3>
+
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-lime-100 text-lime-800 px-2.5 py-1 rounded-full text-xs font-medium border border-lime-200">
+                🧮 {{ product.quantity }} {{ product.unit }}
+              </span>
+              <span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-medium border border-emerald-200">
+                💵 Rs. {{ product.price }}/unit
+              </span>
+            </div>
+
+            <div class="text-sm text-slate-700 leading-relaxed">
+              📍 {{ farmer.address }}, {{ farmer.tole }}, वाड नं. {{ farmer.ward }}
+            </div>
+
+            <!-- Distance Display -->
+            {% if product.display_distance %}
+              <div class="text-sm font-medium text-emerald-700 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {{ product.display_distance }}
+              </div>
+            {% else %}
+              <div class="text-sm text-amber-700 font-medium flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                {% trans "दूरी उपलब्ध छैन" %}
+              </div>
             {% endif %}
 
-            <!-- Product Details -->
-            <div class="p-5 space-y-2 text-green-900">
-              <h3 class="text-lg font-bold text-green-800 flex items-center gap-2">
-                🌾 {{ product.sub_category }}
-              </h3>
+            <div class="pt-3 flex flex-col sm:flex-row gap-3">
+              <a href="{% url 'payments:payment_request' product.id %}" 
+                 class="flex-1 text-center text-sm font-semibold bg-emerald-600 text-white py-2.5 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition shadow-sm">
+                🛒 {% trans "Buy Now" %}
+              </a>
 
-              <div class="flex flex-wrap gap-2 text-sm text-green-700">
-                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
-                  🧮 {% trans "मात्रा" %}: {{ product.quantity }} {{ product.unit }}
-                </span>
-                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
-                  💵 {% trans "प्रति एकाइ मूल्य" %}: Rs. {{ product.price }}
-                </span>
-                <span class="bg-green-100 px-2 py-1 rounded-full text-xs font-medium border border-green-300">
-                  🧾 {% trans "कुल" %}: Rs. {{ product.total_price }}
-                </span>
-              </div>
-
-              <div class="text-sm mt-2 text-green-700 leading-relaxed">
-                📍 <strong>{% trans "स्थान" %}</strong>: {{ product.farmer.profile.address }}, {{ product.farmer.profile.tole }},
-                {% blocktrans with ward=product.farmer.profile.ward %}
-                  वाड नं. {{ ward }}
-                {% endblocktrans %}
-              </div>
-
-             <!-- Distance Display -->
-    {% if product.display_distance %}
-      <div class="text-sm mt-2 text-green-800 font-semibold flex items-center gap-1">
-        📍 <strong>{% trans "दूरी" %}:</strong> {{ product.display_distance }}
-      </div>
+              <a href="{% url 'chat:start_chat' product.id %}" 
+                 class="flex-1 text-center text-sm font-semibold bg-lime-600 text-white py-2.5 rounded-lg hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 transition shadow-sm">
+                💬 {% trans "Chat" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     {% else %}
-      <div class="text-sm mt-2 text-red-600 font-semibold">
-        ⚠️ {% trans "दूरी उपलब्ध छैन" %}
+      <!-- Empty State -->
+      <div class="col-span-full flex flex-col items-center justify-center py-16 px-4 text-center bg-white rounded-2xl border border-dashed border-slate-300">
+        <div class="w-24 h-24 mb-4 text-emerald-400">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2">{% trans "No products available" %}</h3>
+        <p class="text-slate-600 max-w-md">{% trans "This farmer hasn't posted any products yet. Please check back later!" %}</p>
       </div>
     {% endif %}
-    <a href="{% url 'view_farmer_location' product.farmer.id %}" class="text-blue-600 underline text-sm">
-        👨‍🌾 किसानको स्थान हेर्नुहोस्
-    </a>
-<div class="mt-4 flex justify-between gap-3">
-  <a href="{% url 'payments:payment_request' product.id %}" 
-     class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-    🛒 Buy Now
-  </a>
+  </div>
 
-  <a href="{% url 'chat:start_chat' product.id %}" 
-     class="flex-1 text-center text-sm font-semibold bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-    💬 {% trans "Chat with farmer" %}
-  </a>
-</div>
+  <!-- Pagination Controls -->
+  {% if products.paginator.num_pages > 1 %}
+    <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-3 text-slate-700 font-medium">
+      {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" 
+           class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-100 transition flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          {% trans "अघिल्लो" %}
+        </a>
+      {% endif %}
 
-            </div>
-            
-          </div>
-        {% endfor %}
-      {% else %}
-        <p class="text-center col-span-full text-green-600">{% trans "हाल कुनै उत्पादन उपलब्ध छैन।" %}</p>
+      <span class="px-4 py-2 rounded-lg border border-slate-300 bg-slate-100">
+        {% trans "पृष्ठ" %} {{ products.number }} {% trans "बाट" %} {{ products.paginator.num_pages }}
+      </span>
+
+      {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" 
+           class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-100 transition flex items-center gap-1">
+          {% trans "अर्को" %}
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
       {% endif %}
     </div>
-
-    <!-- Pagination Controls -->
-    <div class="mt-8 flex justify-center items-center gap-3 text-green-800 font-semibold">
-  {% if products.has_previous %}
-    <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
-      &laquo; {% trans "अघिल्लो" %}
-    </a>
   {% endif %}
-
-  <span class="px-3 py-1 rounded border border-green-400 bg-green-100">
-    {% trans "पृष्ठ" %} {{ products.number }} {% trans "बाट" %} {{ products.paginator.num_pages }}
-  </span>
-
-  {% if products.has_next %}
-    <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if filter_type %}&filter_type={{ filter_type }}{% endif %}{% if distance_filter %}&distance_filter={{ distance_filter }}{% endif %}" class="px-3 py-1 rounded border border-green-400 hover:bg-green-200">
-      {% trans "अर्को" %} &raquo;
-    </a>
-  {% endif %}
-</div>
-
-  </main>
 </div>

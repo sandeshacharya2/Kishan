@@ -1,29 +1,37 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
+from accounts.models import Profile  # Explicit import for clarity
+
 
 class EmailBackend(ModelBackend):
     """
-    Authenticate using email (strict case-sensitive) and password.
-    Optional role check included.
+    Authenticate using email (case-insensitive) and password.
+    Optional role check included for role-based login (e.g., farmer/customer).
     """
     def authenticate(self, request, username=None, password=None, role=None, **kwargs):
         if not username or not password:
             return None
 
         try:
-            user = User.objects.get(email__iexact=username)  # DB may be case-insensitive
+            # Case-insensitive email lookup
+            user = User.objects.get(email__iexact=username)
         except User.DoesNotExist:
             return None
 
-        # Enforce strict case-sensitive email check in Python
+        # Optional: Enforce case-sensitive email (uncomment if needed)
         # if user.email != username:
         #     return None
 
         # Optional role check
-        if role and (not hasattr(user, "profile") or user.profile.role != role):
-            return None
+        if role:
+            try:
+                profile = user.profile
+                if profile.role != role:
+                    return None
+            except Profile.DoesNotExist:
+                return None  # User has no profile → deny access if role is required
 
-        # Password check
+        # Verify password
         if user.check_password(password):
             return user
 

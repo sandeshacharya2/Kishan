@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm COD Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+    <div class="container max-w-md mx-auto">
+        <h3 class="text-center mb-4">Confirm Cash on Delivery</h3>
+
+        <div class="card p-4 shadow">
+            <p><strong>Transaction ID:</strong> {{ transaction.pid }}</p>
+            <p><strong>Product:</strong> {{ transaction.product.sub_category }}</p>
+            <p><strong>Quantity:</strong> {{ transaction.quantity }}</p>
+            <p><strong>Total Amount:</strong> Rs. {{ transaction.amount }}</p>
+            <p><strong>Payment Method:</strong> Cash on Delivery (COD)</p>
+            <p class="text-warning"><em>Please ensure you are ready to pay upon delivery.</em></p>
+
+            <hr>
+
+            <div class="d-grid gap-2">
+                <form method="POST" action="{% url 'payments:cod_pay' transaction.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-lg">✅ Confirm Payment</button>
+                </form>
+
+                <form method="GET" action="{% url 'payments:customer_purchases' %}">
+                    <button type="submit" class="btn btn-secondary btn-lg">⬅️ Back to Dashboard</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

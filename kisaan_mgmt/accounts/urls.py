@@ -1,7 +1,7 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth.views import LogoutView
 
-from . import views  # views बाट सबै import गरियो
+from . import views  # views
 
 from .views import (
     signup_view,
@@ -15,13 +15,15 @@ from .views import (
     update_customer_profile,
     check_availability,
     farmer_detail,
-    farmer_reviews_view,  # views बाट import गरियो
+    farmer_reviews_view, 
+    customer_farmer_reviews_view,
+    customer_detail_view,      # views
 )
 
 urlpatterns = [
     
     # Farmer review submission by customer
-    path('farmer/<int:farmer_id>/rate/', views.submit_farmer_review, name='submit-farmer-review'),
+    path('farmer/<int:farmer_id>/rate/',views.submit_farmer_review, name='submit-farmer-review'),
 
     # View farmer reviews & average rating
     # path('farmer/<int:farmer_id>/reviews/', views.view_farmer_reviews, name='view-farmer-reviews'),
@@ -43,12 +45,12 @@ urlpatterns = [
 
     # Profile updates
     path('farmer/profile/update/', update_farmer_profile, name='update-farmer-profile'),
-    path('customer/profile/update/', update_customer_profile, name='update-customer-profile'),  # URL path सुधारियो
+    path('customer/profile/update/', update_customer_profile, name='update-customer-profile'),  # URL path 
     path('farmer-location/<int:farmer_id>/', views.view_farmer_location, name='view_farmer_location'),
     path('ajax/check-availability/', check_availability, name='check_availability'),
     path('farmer/<int:farmer_id>/', farmer_detail, name='farmer_detail'),
     path('farmer/reviews/', farmer_reviews_view, name='farmer-reviews'),
-    path('farmer/<int:farmer_id>/reviews/', views.customer_farmer_reviews_view, name='customer-farmer-reviews'),
-    path('farmer/customer/<int:customer_id>/', views.customer_detail_view, name='customer-detail'),
+    path('farmer/<int:farmer_id>/reviews/', customer_farmer_reviews_view, name='customer-farmer-reviews'),
+    path('farmer/customer/<int:customer_id>/', customer_detail_view, name='customer-detail'),
 
 ]

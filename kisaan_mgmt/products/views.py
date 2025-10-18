@@ -1,18 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProductForm
-from .models import Product
+from .models import Product, ProductSynonym  # Make sure ProductSynonym exists
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.utils.translation import gettext_lazy as _
 import requests
 from django.conf import settings
 from django.db.models import Sum, Count, Min, Max, OuterRef, Subquery
+from django.core.mail import send_mail
+from django.contrib import messages
+from accounts.models import FarmerReview
+from django.db.models import Avg
+from accounts.views.role_based_redirect import farmer_required, customer_required
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import ProductForm
-from .models import Product, ProductSynonym  # Make sure ProductSynonym exists
-from django.utils.translation import gettext_lazy as _
+
+
+
+
+def project(request):
+    return render(request, 'landingpage/project.html')
+def service(request):
+    return render(request, 'landingpage/service.html')
+
+def carrers(request):
+    return render(request, 'landingpage/careers.html')
 
 # Define Roman and English synonyms
 synonyms_dict = {
@@ -58,46 +69,102 @@ synonyms_dict = {
     "तोरी": {"roman": ["tori"], "english": ["rapeseed"]}
     # Add more as needed
 }
-
+@farmer_required
 @login_required
 def add_product(request):
+    farmer = request.user.farmerprofile  #Get farmer profile
+
+    # ✅ Calculate average rating
+    avg_rating = FarmerReview.objects.filter(farmer=request.user.farmerprofile).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=request.user.farmerprofile).select_related('customer').order_by('-created_at')
+
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
-            
-            # Handle 'अन्य' subcategory
+
+            is_other = False
             if product.sub_category == 'अन्य':
                 product.sub_category = request.POST.get('other_subcategory')
-            
-            product.farmer = request.user
+                is_other = True
+
+            product.farmer = farmer   #link to the product where current farmer is adding the product
             product.save()
 
-            # Add synonyms automatically
-            ProductSynonym.objects.create(product=product, language="nepali", synonym=product.sub_category)
+            # Always create Nepali synonym
+            ProductSynonym.objects.create(
+                product=product,
+                language="nepali",
+                synonym=product.sub_category
+            )
+
+            # Auto-add Roman/English if known
             if product.sub_category in synonyms_dict:
                 for roman_name in synonyms_dict[product.sub_category]["roman"]:
                     ProductSynonym.objects.create(product=product, language="roman", synonym=roman_name)
                 for eng_name in synonyms_dict[product.sub_category]["english"]:
                     ProductSynonym.objects.create(product=product, language="english", synonym=eng_name)
+            else:
+                # It's unknown → likely "अन्य" → notify admin
+                if is_other:
+                    try:
+                        farmer_name = request.user.get_full_name() or request.user.username
+                        admin_url = request.build_absolute_uri(f"/admin/products/product/{product.id}/change/")
+
+                        send_mail(
+                            subject=f'🔔 New Custom Product Added: {product.sub_category}',
+                            message=f'''
+Hello Admin,
+
+A new custom product has been added by a farmer and needs your attention.
+
+Farmer: {farmer_name}
+Product: {product.sub_category}
+Quantity: {product.quantity} {product.unit}
+Price: {product.price} per unit
+Date Posted: {product.date_posted.strftime("%Y-%m-%d %H:%M")}
+
+Please log in to Django Admin and add Roman & English synonyms:
+{admin_url}
+
+Thank you!
+                            ''',
+                            from_email=settings.DEFAULT_FROM_EMAIL,
+                            recipient_list=[admin[1] for admin in settings.ADMINS],
+                            fail_silently=False,
+                        )
+                    except Exception as e:
+                        print("Failed to send admin email:", e)
 
             return redirect('farmer-dashboard')
     else:
         form = ProductForm()
-    
-    return render(request, 'products/add_product.html', {'form': form})
 
+    return render(request, 'products/add_product.html', {
+        'form': form,
+        'avg_rating': avg_rating,   # ✅ Pass to template
+        'reviews': reviews,         # ✅ Pass to template
+    })
+@farmer_required
 @login_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can edit
-    if product.farmer != request.user:
+    if product.farmer != request.user.farmerprofile:
         return HttpResponseForbidden(_("You are not allowed to edit this product."))
 
+    # ✅ Calculate average rating
+    avg_rating = FarmerReview.objects.filter(farmer=request.user.farmerprofile).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=request.user.farmerprofile).select_related('customer').order_by('-created_at')
+
     if request.method == 'POST':
-        """(instance= product) # Create a form pre-filled with the existing product data so the user can edit it
-"""
-        form = ProductForm(request.POST, request.FILES, instance=product)  # include request.FILES here
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             updated_product = form.save(commit=False)
             if updated_product.sub_category == 'अन्य':
@@ -106,23 +173,42 @@ def edit_product(request, product_id):
             return redirect('farmer-dashboard')
     else:
         form = ProductForm(instance=product)
-    return render(request, 'products/edit_product.html', {'form': form, 'product': product})
+
+    return render(request, 'products/edit_product.html', {
+        'form': form,
+        'product': product,
+        'avg_rating': avg_rating,   # ✅ Pass to template
+        'reviews': reviews,         # ✅ Pass to template
+    })
 
 
-    
+@farmer_required
 
 @login_required
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # Only owner can delete
-    if product.farmer != request.user:
+    if product.farmer != request.user.farmerprofile:
         return HttpResponseForbidden(_("You are not allowed to delete this product."))
+
+    # ✅ Calculate average rating
+    avg_rating = FarmerReview.objects.filter(farmer=request.user.farmerprofile).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=request.user.farmerprofile).select_related('customer').order_by('-created_at')
 
     if request.method == 'POST':
         product.delete()
+        # messages.success(request, _("Your product has been deleted successfully."))
         return redirect('farmer-dashboard')
 
-    return render(request, 'products/confirm_delete.html', {'product': product})
+    return render(request, 'products/confirm_delete.html', {
+        'product': product,
+        'avg_rating': avg_rating,   # ✅ Pass to template
+        'reviews': reviews,         # ✅ Pass to template
+    })
+
 
 
 
@@ -144,7 +230,7 @@ from django.shortcuts import render
 
 def weather_view(request):
     city = 'Beni, Myagdi'
-    url = f'https://wttr.in/{city}?format=j1'
+    url = f'https://wttr.in/  {city}?format=j1'
 
     try:
         response = requests.get(url)
@@ -179,7 +265,7 @@ def weather_view(request):
     return render(request, 'landingpage/weather_info.html', {'weather': weather, 'city': city})
 
     city = 'Beni, Myagdi'
-    url = f'https://wttr.in/{city}?format=j1'  # j1 means JSON format
+    url = f'https://wttr.in/  {city}?format=j1'  # j1 means JSON format
 
     try:
         response = requests.get(url)
@@ -234,9 +320,13 @@ def category_list_view(request):
 
 def fruits(request):
     selected_subcategory = request.GET.get('subcategory', '')
+    # SELECT DISTINCT sub_category FROM app_product WHERE main_category = 'फलफुल' ORDER BY sub_category ASC;
+
+
 
     all_subcategories = Product.objects.filter(main_category='फलफुल') \
-        .values_list('sub_category', flat=True).distinct().order_by('sub_category')
+        .values_list('sub_category', flat=True).distinct().order_by('sub_category')  #flat is also like list but it returns without requring a tuple inside it 
+
 
     # Get latest image path for each subcategory
     latest_image_subquery = Product.objects.filter(
@@ -284,7 +374,7 @@ def grains(request):
 
     subcategory_data = (
         Product.objects.filter(main_category='खाद्यान्न')
-        .values('sub_category', 'sub_category_roman', 'unit')
+        .values('sub_category',  'unit')
         .annotate(
             total_quantity=Sum('quantity'),
             min_price=Min('price'),
@@ -321,7 +411,7 @@ def vegetables(request):
 
     subcategory_data = (
         Product.objects.filter(main_category='तरकारी')
-        .values('sub_category', 'sub_category_roman', 'unit')
+        .values('sub_category', 'unit')
         .annotate(
             total_quantity=Sum('quantity'),
             min_price=Min('price'),

@@ -1,137 +1,94 @@
 from django.shortcuts import redirect, render
-from ..forms import FarmerProfileForm
-from ..models import Profile, FarmerProfile
+from ..forms import FarmerProfileForm, CustomerProfileForm
+from ..models import Profile, FarmerProfile, CustomerProfile
 from django.contrib.auth.decorators import login_required
-from ..forms import CustomerProfileForm
-from ..models import CustomerProfile
 from django.utils.translation import gettext_lazy as _
 from accounts.views.role_based_redirect import farmer_required, customer_required
 from products.models import Product
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required        
 from django.contrib.auth.models import User
 from accounts.views.customer_dashboard_view import haversine
-
+from accounts.models import FarmerReview
+from django.db.models import Avg
 
 @farmer_required
 @login_required
 def update_farmer_profile(request):
-    user = request.user
-    
-    # Ensure the user is a farmer
-    try:
-        profile = user.profile
-        if profile.role != 'farmer':
-            return redirect('login')
-    except Profile.DoesNotExist:
-        return redirect('login')
+    # Get the FarmerProfile (correct)
+    farmer_profile = request.user.farmerprofile
 
-    # Ensure FarmerProfile exists
-    farmer_profile, _ = FarmerProfile.objects.get_or_create(user=user)
-    avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
+    # No need to re-check role — @farmer_required already ensures it
+
+    # Calculate rating using FarmerProfile (NOT User)
+    avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
-    # ✅ Fetch reviews from customers
-    reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
+    reviews = FarmerReview.objects.filter(farmer=farmer_profile).select_related('customer').order_by('-created_at')
 
     if request.method == 'POST':
         form = FarmerProfileForm(request.POST, request.FILES, instance=farmer_profile)
         if form.is_valid():
             form.save()
+            # messages.success(request, _("Profile updated successfully!"))
             return redirect('farmer-dashboard')
     else:
         form = FarmerProfileForm(instance=farmer_profile)
 
     context = {
         'form': form,
-        'profile': profile,  # Profile includes phone, ward, tole
         'farmerprofile': farmer_profile,
-        'user': user,
         'avg_rating': avg_rating,
         'reviews': reviews,
     }
     return render(request, 'accounts/update_farmer_profile.html', context)
-
 @login_required
 @customer_required
 def update_customer_profile(request):
-    user = request.user
-
-    try:
-        profile = user.profile
-        if profile.role != 'customer':
-            return redirect('login')
-    except Profile.DoesNotExist:
-        return redirect('login')
-
-    # Get or create the CustomerProfile instance
-    customer_profile, _ = CustomerProfile.objects.get_or_create(user=user)
-    avg_rating = FarmerReview.objects.filter(farmer=user).aggregate(Avg('rating'))['rating__avg'] or 0
-    avg_rating = round(avg_rating, 1)
-
-    # ✅ Fetch reviews from customers
-    reviews = FarmerReview.objects.filter(farmer=user).select_related('customer').order_by('-created_at')
+    customer_profile = request.user.customerprofile
 
     if request.method == 'POST':
-        form = CustomerProfileForm(request.POST, request.FILES, instance=profile)  # `request.FILES` added here too
+        form = CustomerProfileForm(request.POST, request.FILES, instance=customer_profile)
         if form.is_valid():
             form.save()
-
-            # Save names and profile picture in CustomerProfile
-            # customer_profile.first_name = request.POST.get('first_name', customer_profile.first_name)
-            # customer_profile.last_name = request.POST.get('last_name', customer_profile.last_name)
-
-            if 'profile_picture' in request.FILES:
-                customer_profile.profile_picture = request.FILES['profile_picture']
-
-            customer_profile.save()
-
+            # messages.success(request, _("Profile updated successfully!"))
             return redirect('customer-dashboard')
     else:
-        form = CustomerProfileForm(instance=profile)
+        form = CustomerProfileForm(instance=customer_profile)
 
-    context = {
-        'form': form,
-        'profile': profile,
-        'customer_profile': customer_profile,
-        'user': user,
-        'avg_rating': avg_rating,
-        'reviews': reviews,
-    }
-    return render(request, 'accounts/update_customer_profile.html', context)
-
-from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.models import User
-from products.models import Product
-from accounts.models import FarmerReview
-import math
-
-# Use your existing haversine() function
+    return render(request, 'accounts/update_customer_profile.html', {'form': form})
 
 @login_required
 def farmer_detail(request, farmer_id):
-    farmer = get_object_or_404(User, id=farmer_id, profile__role="farmer")
+    # Use 'user__profile__role' to traverse from FarmerProfile -> User -> Profile -> role
+    farmer = get_object_or_404(FarmerProfile, id=farmer_id, user__profile__role="farmer")
+    
+    # If Product.farmer is ForeignKey to User, use farmer.user
     products = Product.objects.filter(farmer=farmer)
 
-    # Farmer's average rating
-    avg_rating = FarmerReview.objects.filter(farmer=farmer).aggregate(Avg("rating"))["rating__avg"] or 0
+    #  Filter reviews by farmer.user, not farmer (FarmerReview.farmer is FK to User)
+    avg_rating = FarmerReview.objects.filter(farmer=farmer.user.farmerprofile).aggregate(Avg("rating"))["rating__avg"] or 0
     avg_rating = round(avg_rating, 1)
 
-    # Customer location (if available)
-    customer_profile = getattr(request.user, 'profile', None)
-    customer_lat = getattr(customer_profile, 'latitude', None)
-    customer_lon = getattr(customer_profile, 'longitude', None)
+    # Get customer location from CustomerProfile
+    try:
+        customer_profile = request.user.customerprofile
+        customer_lat = customer_profile.latitude
+        customer_lon = customer_profile.longitude
+    except (CustomerProfile.DoesNotExist, AttributeError):
+        customer_lat = customer_lon = None
 
+    # Attach data to each product for the template
     for product in products:
-        # Attach farmer avg rating (same for all this farmer’s products)
+        # Attach farmer avg rating
         product.farmer_avg_rating = avg_rating
 
-        # Attach distance
-        farmer_profile = getattr(product.farmer, 'profile', None)
-        if customer_lat and customer_lon and farmer_profile and farmer_profile.latitude and farmer_profile.longitude:
-            dist = haversine(customer_lat, customer_lon, farmer_profile.latitude, farmer_profile.longitude)
+        # Get farmer location from FarmerProfile (already have it!)
+        farmer_lat = farmer.latitude
+        farmer_lon = farmer.longitude
+
+        # Calculate and attach distance
+        if customer_lat is not None and customer_lon is not None and farmer_lat is not None and farmer_lon is not None:
+            dist = haversine(customer_lat, customer_lon, farmer_lat, farmer_lon)
             product.distance = round(dist, 3)
             product.display_distance = f"{round(dist * 1000)} m" if dist < 1 else f"{dist:.2f} km"
         else:

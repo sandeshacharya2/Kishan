@@ -4,21 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>खाद्यान्नहरु</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
     :root {
-      --black: #222;
-      --light-color: #666;
       --green: #4caf50;
-      --box-shadow: 0 .3rem .8rem rgba(0, 0, 0, 0.1);
-      --outline: .1rem solid rgba(0, 0, 0, 0.1);
-      --outline-hover: .2rem solid var(--green);
     }
-
     body {
       background: linear-gradient(to bottom right, #edf6e5, #f7ffe5, #e2f3d8);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,39 +17,38 @@
       color: #374151;
       margin: 0;
     }
-
-    .heading {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      color: var(--black);
-      text-transform: capitalize;
-      font-weight: 600;
+    .btn-custom {
+      background-color: var(--green);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.3rem;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.2s;
     }
-
-    /* Product box */
-    .box {
-      background: #fff;
+    .btn-custom:hover {
+      background-color: #388e3c;
+      color: white;
+    }
+    .product-card {
+      background: white;
       border-radius: 0.5rem;
       padding: 1.25rem 1rem 1.5rem;
-      box-shadow: var(--box-shadow);
-      border: var(--outline);
+      box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
+      border: 0.1rem solid rgba(0, 0, 0, 0.1);
       text-align: center;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      cursor: default;
+      transition: border-color 0.2s, box-shadow 0.2s;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
     }
-
-    .box:hover {
+    .product-card:hover {
       border-color: var(--green);
-      box-shadow: 0 .5rem 1rem rgba(76, 175, 80, 0.3);
-      cursor: pointer;
+      box-shadow: 0 0.5rem 1rem rgba(76, 175, 80, 0.3);
     }
-
-    .box img {
+    .product-image {
       height: 14rem;
       width: 100%;
       object-fit: contain;
@@ -68,103 +58,65 @@
       background: white;
       flex-shrink: 0;
     }
-
-    .box h3 {
-      font-size: 1.3rem;
-      color: var(--black);
-      text-transform: capitalize;
-      margin-bottom: 0.5rem;
-      min-height: 2.5rem;
-    }
-
-    .box p {
+    .price-range {
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 0.8rem;
       font-size: 1rem;
-      color: var(--light-color);
-      margin-bottom: 1rem;
-      flex-grow: 1;
     }
-
-    .btn-custom {
-      background: var(--green);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 0.3rem;
-      font-size: 1rem;
-      transition: background 0.2s ease;
-      text-decoration: none;
+    @media (max-width: 768px) {
+      .product-image { height: 12rem; }
     }
-    .btn-custom:hover {
-      background: #388e3c;
-      color: white;
-      text-decoration: none;
-    }
-
-    /* Responsive tweaks */
-    @media (max-width: 767.98px) {
-      .box img {
-        height: 12rem;
-      }
-      .box h3 {
-        font-size: 1.1rem;
-      }
-      .box p {
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 479.98px) {
-      .box img {
-        height: 10rem;
-      }
-      .box h3 {
-        font-size: 1rem;
-      }
-      .box p {
-        font-size: 0.85rem;
-      }
-      .btn-custom {
-        font-size: 0.9rem;
-        padding: 0.4rem 0.8rem;
-      }
+    @media (max-width: 480px) {
+      .product-image { height: 10rem; }
+      .btn-custom { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen">
+
   {% include 'landingpage/header.html' %}
 
-  <main class="container bg-white rounded-3 shadow p-5 my-5">
-    <section class="products" id="products">
-      <h1 class="heading">खाद्यान्नहरु</h1>
+  <main class="container mx-auto px-4 py-8">
+    <section id="products" class="bg-white rounded-xl shadow p-6">
+      <h1 class="text-center text-3xl md:text-4xl font-bold mb-8 text-gray-800 capitalize">
+        खाद्यान्नहरु
+      </h1>
 
-      <form method="get" class="mb-4 d-flex justify-content-center align-items-center gap-2 flex-wrap">
-        <select name="subcategory" class="form-select w-auto" aria-label="Select Subcategory">
+      <!-- Search Form -->
+      <form method="get" class="flex flex-wrap justify-center items-center gap-3 mb-8">
+        <select name="subcategory" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none">
           <option value="">-- सबै उपश्रेणीहरू --</option>
           {% for name in all_subcategories %}
-            <option value="{{ name }}" {% if selected_subcategory == name %}selected{% endif %}>{{ name }}</option>
+            <option value="{{ name }}" {% if selected_subcategory == name %}selected{% endif %}>
+              {{ name }}
+            </option>
           {% endfor %}
         </select>
-        <button type="submit" class="btn btn-success">खोज्नुहोस्</button>
+        <button type="submit" class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+          खोज्नुहोस्
+        </button>
       </form>
 
-      <div class="row g-4">
+      <!-- Product Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {% for chunk in chunks %}
           {% for item in chunk %}
             {% if item %}
-              <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
-                <div class="box w-100">
+              <div class="flex">
+                <div class="product-card w-full">
                   {% if item.latest_image %}
-                    <img src="{{ MEDIA_URL }}{{ item.latest_image }}" alt="{{ item.sub_category }}">
+                    <img src="{{ MEDIA_URL }}{{ item.latest_image }}" alt="{{ item.sub_category }}" class="product-image">
                   {% else %}
-                    <img src="{% static 'default_product.png' %}" alt="Default Image">
+                    <img src="{% static 'default_product.png' %}" alt="Default Image" class="product-image">
                   {% endif %}
-                  <h3>{{ item.sub_category }}</h3>
+                  <h3 class="text-lg font-semibold mb-2">{{ item.sub_category }}</h3>
                   <p class="price-range">
                     मूल्य दायरा: Rs. {{ item.min_price|floatformat:2 }} - Rs. {{ item.max_price|floatformat:2 }} प्रति {{ item.unit }}
                   </p>
                   <p>कुल परिमाण: {{ item.total_quantity }} {{ item.unit }}</p>
                   <p>प्रडक्टहरू: {{ item.product_count }}</p>
-                  <a href="#" class="btn-custom mt-auto">Add to Cart</a>
+                  <a href="#" class="btn-custom mt-auto text-center">Add to Cart</a>
                 </div>
               </div>
             {% endif %}
@@ -175,6 +127,6 @@
   </main>
 
   {% include 'landingpage/footer.html' %}
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

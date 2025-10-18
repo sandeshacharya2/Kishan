@@ -9,25 +9,25 @@
 <body class="bg-green-50 min-h-screen p-6">
 
 <h1 class="text-2xl font-bold text-center mb-6">
-    Reviews for {{ farmer.first_name }} {{ farmer.last_name }}
+    Reviews for {{ farmer.user.first_name }} {{ farmer.user.last_name }}
 </h1>
 
 <div class="max-w-3xl mx-auto space-y-4">
     {% for review in reviews %}
     <div class="bg-white shadow-md rounded-lg p-4 flex gap-4">
-        {% if review.customer.profile.profile_picture %}
-            <img src="{{ review.customer.profile.profile_picture.url }}" 
+        {% if review.customer.profile_picture %}
+            <img src="{{ review.customer.profile_picture.url }}" 
                  alt="Profile" class="w-12 h-12 rounded-full object-cover">
         {% else %}
             <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
                 <span class="text-gray-700 font-bold text-lg">
-                    {{ review.customer.first_name|default:review.customer.username|slice:":1" }}
+                    {{ review.customer.user.first_name|default:review.customer.user.username|slice:":1" }}
                 </span>
             </div>
         {% endif %}
         <div class="flex-1">
-            <p class="font-bold">{{ review.customer.first_name }} {{ review.customer.last_name }}</p>
-            <p class="text-sm text-gray-500">@{{ review.customer.username }}</p>
+            <p class="font-bold">{{ review.customer.user.first_name }} {{ review.customer.user.last_name }}</p>
+            <p class="text-sm text-gray-500">@{{ review.customer.user.username }}</p>
             <div class="flex my-1">
                 {% for i in "12345" %}
                     {% if i|add:"0" <= review.rating %}<span class="text-yellow-400">★</span>{% else %}<span class="text-gray-300">★</span>{% endif %}
@@ -44,12 +44,11 @@
 </div>
 
 <div class="text-center mt-6">
-    <a href="{% url 'customer-dashboard'%}" 
+    <a href="{% url 'customer-dashboard' %}" 
        class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
         Back to Reviews
     </a>
 </div>
-
 
 </body>
 </html>

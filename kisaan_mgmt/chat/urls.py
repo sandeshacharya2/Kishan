@@ -8,6 +8,8 @@ urlpatterns = [
     path('room/<int:chatroom_id>/', views.chatroom_detail, name='chatroom_detail'),
     path('accept/<int:chatroom_id>/', views.accept_chat, name='accept_chat'),
     path('reject/<int:chatroom_id>/', views.reject_chat, name='reject_chat'),
-    path('accept_bid/<int:message_id>/', views.accept_bid, name='accept_bid'),
-    
+    path('farmer/chats/', views.farmer_chats_view, name='farmer-chats'),
+    path('customer/chats/', views.customer_chats_view, name='customer-chats'),
+    path('confirm/<int:product_id>/', views.confirm_chat, name='confirm_chat'),
+    # Bid URL removed ✅
 ]

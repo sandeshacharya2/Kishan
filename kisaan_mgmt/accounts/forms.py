@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, FarmerProfile, CustomerProfile
 from django.utils.translation import gettext_lazy as _
-
+from accounts.models import FarmerReview
 WARD_CHOICES = [
     ('Ward 1 – Ratnechaur', 'वडा १ – रातनेचौर'),
     ('Ward 2 – Jyamrukot', 'वडा २ – ज्यामरुकोट'),
@@ -16,6 +16,7 @@ WARD_CHOICES = [
     ('Ward 9 – Ghatan', 'वडा ९ – घतान'),
     ('Ward 10 – Patlekhet', 'वडा १० – पात्लेखेत'),
 ]
+
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(
@@ -96,23 +97,25 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError(_('please enter a valid phone number containing only digits.'))
         if len(phonenumber) < 8:
             raise forms.ValidationError(_('the phone number is too short. It should be at least 8 digits.'))
-        if Profile.objects.filter(phonenumber=phonenumber).exists():
+
+        # ✅ Validate against FarmerProfile and CustomerProfile — NOT Profile
+        if FarmerProfile.objects.filter(phonenumber=phonenumber).exists() or \
+           CustomerProfile.objects.filter(phonenumber=phonenumber).exists():
             raise forms.ValidationError(_('the phone number is already in use. Please use a different phone number.'))
+
         return phonenumber
+
+    # ✅ DO NOT OVERRIDE save() — let signup_view handle saving based on role + geolocation
 
 
 class FarmerProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FarmerProfileForm, self).__init__(*args, **kwargs)
-        # self.fields['first_name'].required = True
-        # self.fields['last_name'].required = True
 
     class Meta:
         model = FarmerProfile
-        fields = [ 'profile_picture']
+        fields = ['profile_picture']
         widgets = {
-            # 'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
@@ -120,23 +123,24 @@ class FarmerProfileForm(forms.ModelForm):
 class CustomerProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomerProfileForm, self).__init__(*args, **kwargs)
-   
 
     class Meta:
         model = CustomerProfile
         fields = ['profile_picture']
         widgets = {
-          
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
-from django import forms
-from .models import FarmerReview
+
 
 class FarmerReviewForm(forms.ModelForm):
     class Meta:
         model = FarmerReview
-        fields = ['rating', 'comment']  # include comment field
+        fields = ['rating', 'comment']
         widgets = {
-            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5}),
-            'comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your review...'}),
+            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5, 'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': _('Write your review...'),
+                'class': 'form-control'
+            }),
         }

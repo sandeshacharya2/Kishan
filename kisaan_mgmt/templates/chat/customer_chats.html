@@ -1,0 +1,79 @@
+<!-- templates/chat/customer_chats.html -->
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "My Chats" %}</title>
+  <script src="https://cdn.tailwindcss.com  "></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Main wrapper -->
+  <main class="lg:ml-60 p-6 min-h-screen">
+
+    <!-- Page Header -->
+    <section class="mb-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-green-900 mb-4 flex items-center gap-2">
+        <svg class="w-7 h-7 text-green-700" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z"></path>
+        </svg>
+        {% trans "My Chats with Farmers" %}
+      </h2>
+      <p class="text-green-700 text-sm">{% trans "Stay connected with farmers you’ve interacted with." %}</p>
+    </section>
+
+    <!-- Chats List -->
+    {% if grouped_chats %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for group in grouped_chats %}
+          <a href="{% url 'chat:chatroom_detail' group.latest_chat.id %}"
+             class="block border border-green-200 rounded-2xl p-5 bg-white hover:shadow-xl hover:-translate-y-1 transition transform duration-300">
+
+            <!-- Farmer Info -->
+            <div class="flex items-center gap-3 mb-4">
+              {% if group.farmer.user.profile.profile_picture %}
+                <img src="{{ group.farmer.user.profile.profile_picture.url }}"
+                     class="w-14 h-14 rounded-full object-cover border-2 border-green-400 shadow-sm"
+                     alt="{{ group.farmer.user.username }}" />
+              {% else %}
+                <div class="w-14 h-14 bg-green-200 rounded-full flex items-center justify-center border-2 border-green-400">
+                  <span class="text-lg font-bold text-green-800">{{ group.farmer.user.username|first|upper }}</span>
+                </div>
+              {% endif %}
+              <div>
+                <p class="font-semibold text-green-900 text-lg flex items-center">
+                  👨‍🌾 {{ group.farmer.user.username }}
+                </p>
+                <small class="text-green-600">{{ group.total_chats }} {% trans "conversations" %}</small>
+              </div>
+            </div>
+
+            <!-- Latest Message -->
+            <div class="bg-green-50 border border-green-200 p-4 rounded-xl shadow-inner">
+              <p class="text-sm text-green-800 line-clamp-2">💬 {{ group.latest_message }}</p>
+              <p class="text-xs text-green-600 mt-2">📅 {{ group.latest_chat.created_at|date:"M d, Y H:i" }}</p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <!-- Empty State -->
+      <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center shadow-md">
+        <p class="text-green-800 font-semibold text-lg">💬 {% trans "You haven't chatted with any farmers yet." %}</p>
+        <p class="text-green-600 mt-2 text-sm">{% trans "Browse products and start a chat!" %}</p>
+      </div>
+    {% endif %}
+
+     <!-- Back Button -->
+  <a href="{% url 'customer-dashboard' %}" 
+       class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
+      ← {% trans "Back to Dashboard" %}
+    </a>
+
+
+  </main>
+</body>
+</html>
