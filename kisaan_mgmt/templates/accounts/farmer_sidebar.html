@@ -17,114 +17,143 @@
     {% else %}
       <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" class="mx-auto rounded-full border-4 border-teal-400 shadow-lg w-20 h-20 object-cover mb-2" />
     {% endif %}
-    <h2 class="text-green-800 font-bold text-lg tracking-wide"> @{{ user.first_name }} {{ user.last_name }}</h2>
-    <p class="text-green-900 font-semibold"></p>
-    <div class="text-center mt-2 flex justify-center items-center gap-1">
-        {% for i in "12345" %}
-            {% if i|add:"0" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
-            {% elif i|add:"-0.5" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
-            {% else %}
-                <span class="text-gray-300 text-xl">★</span>
-            {% endif %}
-        {% endfor %}
-        <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
-      </div>
-         <div class="text-center mt-3">
-    <a href="{% url 'farmer-reviews' %}"
-       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition">
-       See All Reviews
-    </a>
-</div>
-    
-    <p class="text-green-900 text-sm mt-6">
- {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
-        {{ address }},  {{ ward }}
-  {% endblocktrans %}
-</p>
-
-  </div>
-
-  <nav class="flex flex-col gap-3 px-4 py-4 text-green-700 font-semibold">
-    <a href="{% url 'farmer-dashboard' %}" class="hover:text-yellow-200 transition">{% trans "📋 ड्याशबोर्ड" %}</a>
-    <a href="{% url 'payments:income_summary' %}" class="hover:text-teal-200 transition">💰 {% trans "Income Summary" %}</a>
-    <a href="#" class="hover:text-teal-600 transition">🌿 {% trans "Agriculture Info" %}</a>
-    <a href="{% url 'add-product' %}" class="hover:text-teal-200 transition">➕ {% trans "Add New Product" %}</a>
-    <a href="{% url 'update-farmer-profile' %}" class="hover:text-teal-200 transition">✏️ {% trans "Edit Profile" %}</a>
-    <a href="{% url 'chat:farmer-chats' %}" class="hover:text-yellow-200 transition"> 💬  {% trans "Chat" %}</a>
-
-  </nav>
-<form method="post" action="{% url 'logout' %}" class="px-4 pb-4 border-t border-green-500">
-  {% csrf_token %}
-  <button type="submit" 
-    class="bg-teal-700 hover:bg-green-600 text-white w-full py-2 rounded-lg font-semibold tracking-wide transition">
-    🚪 {% trans "Logout" %}
-  </button>
-</form>
-
-</div>
-
-<!-- Sidebar (desktop) -->
-<aside class="w-56 hidden lg:flex fixed top-0 left-0 h-full flex-col 
-  bg-gradient-to-b from-green-500 via-emerald-500 to-teal-500 
-  border-r border-green-700 shadow-2xl p-6 z-40 rounded-r-2xl">
-
-  <div class="text-center border-b border-green-200 pb-6 mb-6">
-    {% if user.farmerprofile.profile_picture %}
-      <img src="{{ user.farmerprofile.profile_picture.url }}" alt="{% trans 'Profile' %}" 
-           class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
-    {% else %}
-      <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" 
-           class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
-    {% endif %}
-    <h2 class="text-white font-bold text-lg tracking-wide">👨‍🌾{{ user.first_name }} {{ user.last_name }}</h2>
-
-    <div class="text-center mt-2 flex justify-center items-center gap-1">
-        {% for i in "12345" %}
-            {% if i|add:"0" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
-            {% elif i|add:"-0.5" <= avg_rating %}
-                <span class="text-yellow-400 text-xl">★</span>
-            {% else %}
-                <span class="text-gray-300 text-xl">★</span>
-            {% endif %}
-        {% endfor %}
-        <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
-      </div>
-   <div class="text-center mt-3">
-    <a href="{% url 'farmer-reviews' %}"
-       class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800 transition">
-       See All Reviews
-    </a>
-</div>
-
-    <h2 class="text-white mt-6 font-bold text-lg tracking-wide"> @{{ user.username }}</h2>
-    <p class="text-green-50 text-sm">
+    <h2 class="text-green-800 font-bold text-lg tracking-wide">@{{ user.first_name }} {{ user.last_name }}</h2>
+    <div class="mt-2 flex justify-center items-center gap-1">
+      {% for i in "12345" %}
+        {% if i|add:"0" <= avg_rating %}
+          <span class="text-yellow-400 text-xl">★</span>
+        {% elif i|add:"-0.5" <= avg_rating %}
+          <span class="text-yellow-400 text-xl">★</span>
+        {% else %}
+          <span class="text-gray-300 text-xl">★</span>
+        {% endif %}
+      {% endfor %}
+      <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
+    </div>
+    <div class="mt-3">
+      <a href="{% url 'farmer-reviews' %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition">
+        See All Reviews
+      </a>
+    </div>
+    <p class="text-green-900 text-sm mt-4">
       {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
-        {{ address }},  {{ ward }}
+        {{ address }}, {{ ward }}
       {% endblocktrans %}
     </p>
   </div>
 
-  <nav class="flex flex-col gap-4 text-white font-semibold flex-1">
-    <a href="{% url 'farmer-dashboard' %}" class="hover:text-yellow-200 transition">📋 {% trans "Dashboard" %}</a>
-    <a href="{% url 'payments:income_summary' %}" class="hover:text-yellow-200 transition">💰 {% trans "Income Summary" %}</a>
-    <a href="#" class="hover:text-yellow-200 transition">🌿 {% trans "Agriculture Info" %}</a>
-    <a href="{% url 'add-product' %}" class="hover:text-yellow-200 transition">➕ {% trans "Add New Product" %}</a>
-    <a href="{% url 'update-farmer-profile' %}" class="hover:text-yellow-200 transition">✏️ {% trans "Edit Profile" %}</a>
-    <a href="{% url 'chat:farmer-chats' %}" class="hover:text-yellow-200 transition"> 💬  {% trans "Chat" %}</a>
-    <a href="{% url 'delete_farmer_account' %}" class="hover:text-yellow-200 transition"> 🗑️   {% trans "Delete Account" %}</a>
-
-    <!-- <a href="{% url 'delete_customer_account' %}" class="block px-3 py-2 rounded-lg hover:bg-emerald-300 hover:text-emerald-950 transition-colors duration-200">🗑️ Delete Account</a>
-    </a> -->
+  <nav class="px-4 py-4 text-green-700 font-semibold space-y-2">
+    <a href="{% url 'farmer-dashboard' %}" class="block hover:text-yellow-200 transition">{% trans "📋 ड्याशबोर्ड" %}</a>
+    <a href="{% url 'payments:transaction-list' %}" class="block hover:text-teal-200 transition">💰 {% trans "transaction-list" %}</a>
+    <a href="{% url 'payments:income_summary' %}" class="block hover:text-teal-200 transition">📋  {% trans "Income Summary" %}</a>
+    <a href="{% url 'add-product' %}" class="block hover:text-teal-200 transition">➕ {% trans "Add New Product" %}</a>
+    <a href="{% url 'update-farmer-profile' %}" class="block hover:text-teal-200 transition">✏️ {% trans "Edit Profile" %}</a>
+    <a href="{% url 'chat:farmer-chats' %}" class="block hover:text-yellow-200 transition">💬 {% trans "Chat" %}</a>
+    
+    <!-- Settings Toggle -->
+    <a href="#" id="settings-toggle-mobile" class="block hover:text-yellow-200 transition">⚙️ {% trans "Settings" %}</a>
+    
+    <!-- Hidden Settings Items -->
+    <div id="settings-menu-mobile" class="hidden space-y-2 mt-1 pl-5">
+      <a href="{% url 'delete_farmer_account' %}" class="block text-red-600 hover:text-red-800 transition">🔒 {% trans "Block My Account" %}</a>
+      <a href="{% url 'report_user' %}" class="block text-orange-600 hover:text-orange-800 transition">📢 {% trans "Report" %}</a>
+    </div>
   </nav>
 
-  <!-- Logout Button (Sidebar Bottom) -->
-  <form method="post" action="{% url 'logout' %}" class="mt-auto pt-6 border-t border-green-500">
+  <form method="post" action="{% url 'logout' %}" class="px-4 pb-4 border-t border-green-500">
     {% csrf_token %}
-    <button type="submit" 
-      class="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 rounded-lg font-semibold tracking-wide transition shadow">
-      🚪 {% trans "Logout" %}</button>
+    <button type="submit" class="bg-teal-700 hover:bg-green-600 text-white w-full py-2 rounded-lg font-semibold tracking-wide transition">
+      🚪 {% trans "Logout" %}
+    </button>
+  </form>
+</div>
+
+<!-- Sidebar (desktop) -->
+<aside class="w-56 hidden lg:flex fixed top-0 left-0 h-full flex-col bg-gradient-to-b from-green-500 via-emerald-500 to-teal-500 border-r border-green-700 shadow-2xl p-6 z-40 rounded-r-2xl">
+
+  <div class="text-center border-b border-green-200 pb-4 mb-4">
+    {% if user.farmerprofile.profile_picture %}
+      <img src="{{ user.farmerprofile.profile_picture.url }}" alt="{% trans 'Profile' %}" class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
+    {% else %}
+      <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
+    {% endif %}
+    <h2 class="text-white font-bold text-lg tracking-wide">👨‍🌾{{ user.first_name }} {{ user.last_name }}</h2>
+    
+    <div class="mt-2 flex justify-center items-center gap-1">
+      {% for i in "12345" %}
+        {% if i|add:"0" <= avg_rating %}
+          <span class="text-yellow-400 text-xl">★</span>
+        {% elif i|add:"-0.5" <= avg_rating %}
+          <span class="text-yellow-400 text-xl">★</span>
+        {% else %}
+          <span class="text-gray-300 text-xl">★</span>
+        {% endif %}
+      {% endfor %}
+      <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
+    </div>
+    
+    <div class="mt-3">
+      <a href="{% url 'farmer-reviews' %}" class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800 transition">
+        See All Reviews
+      </a>
+    </div>
+    
+    <h2 class="text-white mt-2 font-bold text-base">@{{ user.username }}</h2>
+    <p class="text-green-50 text-sm mt-1">
+      {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
+        {{ address }}, {{ ward }}
+      {% endblocktrans %}
+    </p>
+  </div>
+
+  <nav class="flex flex-col gap-3 text-white font-semibold flex-1 mt-0">
+    <a href="{% url 'farmer-dashboard' %}" class="hover:text-yellow-200 transition">📋 {% trans "Dashboard" %}</a>
+    <a href="{% url 'payments:transaction-list' %}" class="hover:text-yellow-200 transition">💰 {% trans "Transaction List" %}</a>
+    <a href="{% url 'payments:income_summary' %}" class="hover:text-yellow-200 transition">📋 {% trans "Income Summary" %}</a>
+    <a href="{% url 'add-product' %}" class="hover:text-yellow-200 transition">➕ {% trans "Add New Product" %}</a>
+    <a href="{% url 'update-farmer-profile' %}" class="hover:text-yellow-200 transition">✏️ {% trans "Edit Profile" %}</a>
+    <a href="{% url 'chat:farmer-chats' %}" class="hover:text-yellow-200 transition">💬 {% trans "Chat" %}</a>
+    
+    <!-- Settings Toggle -->
+<!-- Settings Toggle -->
+<a href="#" id="settings-toggle-desktop" class="hover:text-yellow-200 transition py-1">⚙️ {% trans "Settings" %}</a>
+
+<!-- Hidden Settings Items -->
+<div id="settings-menu-desktop" class="hidden">
+  <a href="{% url 'delete_farmer_account' %}" class="block text-red-200 hover:text-red-300 transition py-1 pl-6">🔒 {% trans "Delete Account" %}</a>
+  <a href="{% url 'report_user' %}" class="block text-orange-200 hover:text-orange-300 transition py-1 pl-6">📢 {% trans "Report" %}</a>
+</div>
+    
+    <!-- Optional: Keep Delete Account outside if preferred -->
+    <!-- <a href="{% url 'delete_farmer_account' %}" class="hover:text-yellow-200 transition mt-auto">🗑️ {% trans "Delete Account" %}</a> -->
+  </nav>
+
+  <form method="post" action="{% url 'logout' %}" class="mt-auto pt-4 border-t border-green-500">
+    {% csrf_token %}
+    <button type="submit" class="bg-red-500 hover:bg-green-600 text-white w-full py-2 rounded-lg font-semibold tracking-wide transition shadow">
+      🚪 {% trans "Logout" %}
+    </button>
   </form>
 </aside>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleMobile = document.getElementById('settings-toggle-mobile');
+    const menuMobile = document.getElementById('settings-menu-mobile');
+    if (toggleMobile) {
+      toggleMobile.addEventListener('click', e => {
+        e.preventDefault();
+        if (menuMobile) menuMobile.classList.toggle('hidden');
+      });
+    }
+
+    const toggleDesktop = document.getElementById('settings-toggle-desktop');
+    const menuDesktop = document.getElementById('settings-menu-desktop');
+    if (toggleDesktop) {
+      toggleDesktop.addEventListener('click', e => {
+        e.preventDefault();
+        if (menuDesktop) menuDesktop.classList.toggle('hidden');
+      });
+    }
+  });
+</script>

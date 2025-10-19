@@ -1,126 +1,246 @@
-{% extends "accounts/farmer_base.html" %}
+{% extends 'accounts/farmer_base.html' %}
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans "Farmer Income Dashboard" %}{% endblock %}
+{% block title %}{% trans "Income Summary" %}{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto p-4 sm:p-8 lg:ml-64">
+<style>
+  /* Prevent horizontal overflow globally */
+  html, body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
 
-  <!-- Back Button -->
-  <a href="{% url 'farmer-dashboard' %}"
-     class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base mt-20">
-    ← {% trans "Return to dashboard" %}
-  </a>
+  /* Fixed footer at bottom */
+  footer,
+  .footer,
+  #footer {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    padding: 0.6rem 0;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #4b5563;
+  }
+
+  /* Main scrollable area (full height minus footer) */
+  .main-content {
+    padding: 1rem;
+    box-sizing: border-box;
+    height: calc(100vh - 70px); /* Adjust if footer height changes */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (min-width: 1024px) {
+    .main-content {
+      margin-left: 14rem;
+      padding: 1.5rem 2rem;
+    }
+  }
+
+  /* Filter form */
+  .filter-form {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
+  .filter-form label {
+    font-size: 0.95rem;
+    color: #374151;
+    font-weight: 500;
+  }
+
+  .filter-form input {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 0.9rem;
+    min-width: 140px;
+  }
+
+  .filter-form button,
+  .filter-form a {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* Summary cards */
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+  }
+
+  .card h3 {
+    font-size: 1rem;
+    color: #4b5563;
+    margin-bottom: 0.3rem;
+  }
+
+  .card .amount {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #059669;
+  }
+
+  /* Table: NO internal scroll, NO horizontal overflow */
+  .table-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Critical for responsive columns */
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 0.75rem 0.7rem;
+    border-bottom: 1px solid #f1f1f1;
+    text-align: left;
+    font-size: 0.92rem;
+    /* ALLOW TEXT TO WRAP */
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .transaction-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  /* Align numeric columns right */
+  .transaction-table td:nth-child(4),
+  .transaction-table td:nth-child(5),
+  .transaction-table td:nth-child(6),
+  .transaction-table th:nth-child(4),
+  .transaction-table th:nth-child(5),
+  .transaction-table th:nth-child(6) {
+    text-align: right;
+  }
+
+  /* Balanced column widths (no gaps) */
+  .transaction-table th:nth-child(1),
+  .transaction-table td:nth-child(1) { width: 15%; }
+  .transaction-table th:nth-child(2),
+  .transaction-table td:nth-child(2) { width: 25%; }
+  .transaction-table th:nth-child(3),
+  .transaction-table td:nth-child(3) { width: 25%; }
+  .transaction-table th:nth-child(4),
+  .transaction-table td:nth-child(4) { width: 10%; }
+  .transaction-table th:nth-child(5),
+  .transaction-table td:nth-child(5) { width: 12%; }
+  .transaction-table th:nth-child(6),
+  .transaction-table td:nth-child(6) { width: 13%; }
+
+  /* No data */
+  .no-data {
+    text-align: center;
+    padding: 1.5rem;
+    color: #9ca3af;
+    background: #fff;
+    border-radius: 8px;
+    font-style: italic;
+  }
+</style>
+
+<div class="main-content">
+  <h1 class="text-2xl font-bold text-gray-800 mb-5">{% trans "Income Summary" %}</h1>
+
+  <!-- Date Filter -->
+  <form method="get" class="filter-form">
+    <div>
+      <label for="start_date">{% trans "From:" %}</label>
+      <input type="date" id="start_date" name="start_date" value="{{ start_date }}">
+    </div>
+    <div>
+      <label for="end_date">{% trans "To:" %}</label>
+      <input type="date" id="end_date" name="end_date" value="{{ end_date }}">
+    </div>
+    <button type="submit" class="bg-green-600 text-white hover:bg-green-700">{% trans "Apply Filter" %}</button>
+    {% if start_date or end_date %}
+      <a href="{% url 'payments:income_summary' %}" class="bg-gray-600 text-white hover:bg-gray-700 no-underline">{% trans "Clear Filter" %}</a>
+    {% endif %}
+  </form>
 
   <!-- Summary Cards -->
-  <section class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6 text-center mt-6">
-    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-      {% trans "Total income" %}<br>
-      <span class="text-green-700 font-bold text-2xl">रु {{ total_income }}</span>
-    </div>
-    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-      {% trans "Reviews" %}<br>
-      <span class="text-green-700 font-bold text-2xl">{{ avg_rating }}/5</span>
-    </div>
-    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-      {% trans "Completed Orders" %}<br>
-      <span class="text-green-700 font-bold text-2xl">{{ completed_count }}</span>
-    </div>
-    <div class="bg-white rounded-xl shadow p-6 font-semibold text-lg sm:text-xl">
-      {% trans "Pending Orders" %}<br>
-      <span class="text-red-600 font-bold text-2xl">{{ pending_count }}</span>
-    </div>
-  </section>
+  <div class="summary-cards">
+    <div class="card"><h3>{% trans "Total Income" %}</h3><div class="amount">Rs.{{ total_income }}</div></div>
+    <div class="card"><h3>{% trans "Today" %}</h3><div class="amount">Rs.{{ daily_income }}</div></div>
+    <div class="card"><h3>{% trans "This Week" %}</h3><div class="amount">Rs.{{ weekly_income }}</div></div>
+    <div class="card"><h3>{% trans "This Month" %}</h3><div class="amount">Rs.{{ monthly_income }}</div></div>
+    <div class="card"><h3>{% trans "This Year" %}</h3><div class="amount">Rs.{{ yearly_income }}</div></div>
+    {% if start_date or end_date %}
+      <div class="card"><h3>{% trans "Filtered Period" %}</h3><div class="amount">₹{{ filtered_income }}</div></div>
+    {% endif %}
+  </div>
 
-  <!-- Unified Transactions Table -->
-  <section class="bg-white rounded-xl shadow p-4 mb-8 overflow-x-auto">
-    <h2 class="text-lg font-semibold mb-3 text-blue-700">📦 {% trans "All Transactions" %}</h2>
-    <table class="min-w-full text-sm text-left border border-gray-300 rounded-lg overflow-hidden">
-      <thead class="bg-blue-600 text-white">
-        <tr>
-          <th class="px-4 py-2">{% trans "PID" %}</th>
-          <th class="px-4 py-2">{% trans "Product" %}</th>
-          <th class="px-4 py-2">{% trans "Buyer" %}</th>
-          <th class="px-4 py-2">{% trans "Quantity" %}</th>
-          <th class="px-4 py-2">{% trans "Amount" %}</th>
-          <th class="px-4 py-2">{% trans "Delivery Status" %}</th>
-          <th class="px-4 py-2">{% trans "Payment Status" %}</th>
-          <th class="px-4 py-2">{% trans "Update Status" %}</th>
-          <th class="px-4 py-2">{% trans "Date" %}</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        {% if all_transactions %}
-          {% for t in all_transactions %}
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-2 font-mono text-xs sm:text-sm text-gray-600">{{ t.pid|default:"—" }}</td>
-              <td class="px-4 py-2">{{ t.product.sub_category }}</td>
-              <td class="px-4 py-2">{{ t.user.username }}</td>
-              <td class="px-4 py-2">{{ t.quantity }}</td>
-              <td class="px-4 py-2 font-semibold">रु {{ t.amount }}</td>
-              
-              <!-- Delivery Status -->
-              <td class="px-4 py-2">
-                <span class="px-2 py-1 rounded text-xs font-semibold
-                  {% if t.delivery_status == 'Pending' %} bg-yellow-100 text-yellow-700
-                  {% elif t.delivery_status == 'Dispatched' %} bg-blue-100 text-blue-700
-                  {% elif t.delivery_status == 'Delivered' %} bg-purple-100 text-purple-700
-                  {% elif t.delivery_status == 'Completed' %} bg-green-100 text-green-700
-                  {% elif t.delivery_status == 'Dispute' %} bg-red-100 text-red-700
-                  {% else %} bg-gray-100 text-gray-600 {% endif %}">
-                  {{ t.delivery_status }}
-                </span>
-              </td>
-
-              <!-- Payment Status -->
-              <td class="px-4 py-2">
-                {% if t.payment_status == 'Waiting' and t.payment_method == 'COD' %}
-                  <form method="POST" action="{% url 'payments:confirm_cod_payment' t.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="bg-green-600 text-white px-2 py-1 rounded text-xs">
-                      ✅ {% trans "Confirm COD" %}
-                    </button>
-                  </form>
-                {% else %}
-                  <span class="px-2 py-1 rounded text-xs font-semibold
-                    {% if t.payment_status == 'Success' %} bg-green-100 text-green-700
-                    {% elif t.payment_status == 'Waiting' %} bg-purple-100 text-purple-700
-                    {% else %} bg-gray-100 text-gray-600 {% endif %}">
-                    {{ t.payment_status }}
-                  </span>
-                {% endif %}
-              </td>
-
-              <!-- Update Status -->
-              <td class="px-4 py-2">
-                <form method="POST" action="{% url 'payments:update_delivery_status' t.id %}">
-                  {% csrf_token %}
-                  <select name="delivery_status" class="border px-2 py-1 rounded text-xs">
-                    <option value="Pending" {% if t.delivery_status == 'Pending' %}selected{% endif %}>{% trans "Pending" %}</option>
-                    <option value="Dispatched" {% if t.delivery_status == 'Dispatched' %}selected{% endif %}>{% trans "Dispatched" %}</option>
-                    <option value="Delivered" {% if t.delivery_status == 'Delivered' %}selected{% endif %}>{% trans "Delivered" %}</option>
-                    <option value="Completed" {% if t.delivery_status == 'Completed' %}selected{% endif %}>{% trans "Completed" %}</option>
-                  </select>
-                  <button type="submit" class="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">
-                    {% trans "Update" %}
-                  </button>
-                </form>
-              </td>
-
-              <td class="px-4 py-2">{{ t.created_at|date:"Y-m-d" }}</td>
-            </tr>
-          {% endfor %}
-        {% else %}
+  <!-- Transaction Table -->
+  <h2 class="text-xl font-semibold text-gray-800 mb-3">{% trans "Sales Details" %}</h2>
+  {% if transactions %}
+    <div class="table-container">
+      <table class="transaction-table">
+        <thead>
           <tr>
-            <td colspan="9" class="text-center py-4 text-gray-400 italic">
-              {% trans "no transactions stll now." %}
-            </td>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Product" %}</th>
+            <th>{% trans "Customer" %}</th>
+            <th>{% trans "Qty" %}</th>
+            <th>{% trans "Unit Price" %}</th>
+            <th>{% trans "Total" %}</th>
           </tr>
-        {% endif %}
-      </tbody>
-    </table>
-  </section>
-
+        </thead>
+        <tbody>
+          {% for t in transactions %}
+          <tr>
+            <td>{{ t.created_at|date:"M d, Y" }}</td>
+            <td>{{ t.product__sub_category }}</td>
+            <td>{{ t.user__first_name|default:"—" }} {{ t.user__last_name|default:"" }}</td>
+            <td>{{ t.quantity }}</td>
+            <td>₹{{ t.price_per_unit|floatformat:0 }}</td>
+            <td>₹{{ t.amount|floatformat:0 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="no-data">{% trans "No sales found for the selected period." %}</p>
+  {% endif %}
 </div>
 {% endblock %}

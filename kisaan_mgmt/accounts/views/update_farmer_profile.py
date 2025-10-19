@@ -353,3 +353,10 @@ def delete_customer_account(request):
 
     # GET request: show confirmation page
     return render(request, 'accounts/delete_customer_account_confirm.html')
+
+
+
+
+
+def report_user(request):
+    return render(request, 'accounts/report_user.html')

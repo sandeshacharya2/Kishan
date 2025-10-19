@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 
 <header class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-green-700 via-emerald-600 to-lime-600 shadow-lg ">
@@ -9,14 +10,25 @@
         <img src="{% static 'accounts/images/download.jpg' %}" alt="Logo"
              class="w-11 h-11 rounded-full border-2 border-white shadow-md object-cover" />
         <div class="flex flex-col leading-tight">
-          <span class="text-white font-extrabold text-xl tracking-wide">किसान ड्याशबोर्ड</span>
-          <span class="text-sm text-lime-200 italic">“उत्पादन, प्रगति र बजार”</span>
+          <span class="text-white font-extrabold text-xl tracking-wide">{% trans "Farmer Dashboard" %}</span>
+          <span class="text-sm text-lime-200 italic">“{% trans "Production, Progress & Market" %}”</span>
         </div>
       </div>
 
       <!-- Right side -->
       <div class="flex items-center gap-4">
-        <span class="hidden sm:inline text-white font-medium">नमस्ते, {{ user.first_name }} {{ user.last_name }}</span>
+         <form action="{% url 'set_language' %}" method="post" class="flex items-center">
+            {% csrf_token %}
+            <select name="language" onchange="this.form.submit()" class="bg-white text-green-800 font-semibold px-3 py-2 rounded-lg cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+              {% get_current_language as LANGUAGE_CODE %}
+              {% get_available_languages as LANGUAGES %}
+              {% for lang_code, lang_name in LANGUAGES %}
+                <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>{{ lang_name }}</option>
+              {% endfor %}
+            </select>
+            <input type="hidden" name="next" value="{{ request.path }}">
+          </form>
+        <span class="hidden sm:inline text-white font-medium">{% trans "Hello," %} {{ user.first_name }} {{ user.last_name }}</span>
         {% if user.farmerprofile.profile_picture %}
           <img src="{{ user.farmerprofile.profile_picture.url }}" alt="Profile"
                class="w-10 h-10 rounded-full border-2 border-white shadow-md" />
@@ -26,11 +38,11 @@
         {% endif %}
 
         <!-- Mobile Menu Button (Hamburger) -->
-
-<button id="mobile-sidebar-toggle" 
-        class="lg:hidden text-white text-3xl focus:outline-none">
-  ☰
-</button>      </div>
+        <button id="mobile-sidebar-toggle" 
+                class="lg:hidden text-white text-3xl focus:outline-none">
+          ☰
+        </button>
+      </div>
     </div>
   </div>
 </header>

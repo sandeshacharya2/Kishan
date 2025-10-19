@@ -54,6 +54,8 @@ urlpatterns = [
     path('farmer/customer/<int:customer_id>/', customer_detail_view, name='customer-detail'),
     path('delete/customer/', views.delete_customer_account, name='delete_customer_account'),
     path('delete/farmer/', views.delete_farmer_account, name='delete_farmer_account'),
+    path('report/user', views.report_user, name='report_user'),
+
 
 
 ]

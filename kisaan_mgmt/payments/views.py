@@ -237,21 +237,14 @@ def payment_failure(request):
 
 
 
-def income_summary(request):
+def transaction_list(request):
     # Get the logged-in farmer's profile
     # ✅ CORRECTED: request.user.farmerprofile is already FarmerProfile
     farmer_profile = request.user.farmerprofile
     print(f"User Profile: {farmer_profile}")  # This matches your log
+    avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(avg=Avg('rating'))['avg'] or 0
 
     # Calculate total income
-    total_income = Transaction.objects.filter(
-        product__farmer=farmer_profile
-    ).aggregate(total=Sum('amount'))['total'] or 0
-
-    # ✅ UPDATED: FarmerReview.farmer expects FarmerProfile
-    avg_rating = FarmerReview.objects.filter(
-        farmer=farmer_profile
-    ).aggregate(avg=Avg('rating'))['avg'] or 0
 
     # Calculate counts
     completed_count = Transaction.objects.filter(
@@ -273,16 +266,103 @@ def income_summary(request):
 
     # Pass ALL variables to the template context
     context = {
-        'total_income': total_income,
-        'avg_rating': round(avg_rating, 1),  # Round to 1 decimal place
+         # Round to 1 decimal place
         'completed_count': completed_count,
         'pending_count': pending_count,
         'all_transactions': all_transactions,
+        'avg_rating': round(avg_rating, 1),
+
     }
 
-    return render(request, 'payments/income_summary.html', context)  # Adjust template path as needed
+    return render(request, 'payments/transaction_list.html', context)  # Adjust template path as needed
+from django.db.models import Sum, Avg, F, FloatField
+from django.db.models.functions import Cast
+from django.utils import timezone
+from datetime import timedelta, date
+from decimal import Decimal
+from django.shortcuts import render
+from .models import Transaction
+from accounts.models import FarmerReview  # Adjust if needed
 
+def income_summary(request):
+    farmer = request.user.farmerprofile
+    transactions = Transaction.objects.filter(product__farmer=farmer)
 
+    # Get date filters
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    start_date = end_date = None
+    if start_date_str:
+        try:
+            start_date = date.fromisoformat(start_date_str)
+        except ValueError:
+            pass
+    if end_date_str:
+        try:
+            end_date = date.fromisoformat(end_date_str)
+        except ValueError:
+            pass
+
+    filtered_transactions = transactions
+    if start_date:
+        filtered_transactions = filtered_transactions.filter(created_at__date__gte=start_date)
+    if end_date:
+        filtered_transactions = filtered_transactions.filter(created_at__date__lte=end_date)
+
+    # Exclude zero quantity to avoid division issues
+    filtered_transactions = filtered_transactions.filter(quantity__gt=0)
+
+    def safe_sum(queryset):
+        total = queryset.aggregate(total=Sum('amount'))['total']
+        return total if total is not None else Decimal('0.00')
+
+    now = timezone.now()
+    today = now.date()
+    start_of_week = today - timedelta(days=today.weekday())
+    start_of_month = today.replace(day=1)
+    start_of_year = today.replace(month=1, day=1)
+
+    total_income = safe_sum(transactions)
+    daily_income = safe_sum(transactions.filter(created_at__date=today))
+    weekly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_week))
+    monthly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_month))
+    yearly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_year))
+    filtered_income = safe_sum(filtered_transactions)
+
+    avg_rating = FarmerReview.objects.filter(farmer=farmer).aggregate(avg=Avg('rating'))['avg'] or 0
+
+    # ✅ Correct annotation with explicit FloatField
+    transaction_details = filtered_transactions.select_related(
+        'product', 'user'
+    ).annotate(
+        price_per_unit=Cast(F('amount') / F('quantity'), FloatField())
+    ).values(
+        'id',
+        'product__sub_category',
+        'quantity',
+        'amount',
+        'price_per_unit',
+        'user__first_name',
+        'user__last_name',
+        'created_at'
+    ).order_by('-created_at')
+
+    context = {
+        'total_income': total_income,
+        'daily_income': daily_income,
+        'weekly_income': weekly_income,
+        'monthly_income': monthly_income,
+        'yearly_income': yearly_income,
+        'filtered_income': filtered_income,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        'avg_rating': round(avg_rating, 1),
+        'transactions': transaction_details,
+    }
+
+    return render(request, 'payments/income_summary.html', context)
+    return render(request, 'payments/income_summary.html', context)
 @login_required
 @farmer_required
 def update_delivery_status(request, transaction_id):

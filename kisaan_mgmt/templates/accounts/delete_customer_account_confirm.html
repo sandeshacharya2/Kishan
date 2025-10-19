@@ -1,18 +1,18 @@
 <!-- templates/accounts/delete_account_confirm.html -->
 <div style="max-width: 600px; margin: 2rem auto; padding: 1.5rem; border: 1px solid #ddd; border-radius: 8px;">
-    <h2 style="color: #d32f2f;">⚠️ Delete Your Account</h2>
+    <h2 style="color: #d32f2f;">⚠️ {% trans "Delete Your Account" %}</h2>
     <p>
-        This action is <strong>permanent and irreversible</strong>. All your data will be erased:
+        {% trans "This action is permanent and irreversible. All your data will be erased:" %}
     </p>
     <ul>
-        <li>Your profile (farmer or customer)</li>
-        <li>All products you listed (if farmer)</li>
-        <li>All reviews you wrote or received</li>
-        <li>All chat messages and conversations</li>
-        <li>All transaction history</li>
+        <li>{% trans "Your profile (farmer or customer)" %}</li>
+        <li>{% trans "All products you listed (if farmer)" %}</li>
+        <li>{% trans "All reviews you wrote or received" %}</li>
+        <li>{% trans "All chat messages and conversations" %}</li>
+        <li>{% trans "All transaction history" %}</li>
     </ul>
     <p>
-        To confirm, please type your email address exactly as it appears below:
+        {% trans "To confirm, please type your email address exactly as it appears below:" %}
     </p>
 
     <div style="background: #f5f5f5; padding: 8px; margin: 1rem 0; font-family: monospace; border: 1px dashed #999;">
@@ -24,7 +24,7 @@
         
         <div style="margin-bottom: 1rem;">
             <label for="confirmation_email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
-                Type your email to confirm:
+                {% trans "Type your email to confirm:" %}
             </label>
             <input 
                 type="email" 
@@ -41,11 +41,11 @@
 
         <button type="submit" 
                 style="background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-            Yes, Delete My Account Forever
+            {% trans "Yes, Delete My Account Forever" %}
         </button>
         <a href="{% url 'customer-dashboard' %}" 
            style="margin-left: 1rem; text-decoration: none; color: #1976d2;">
-            Cancel
+            {% trans "Cancel" %}
         </a>
     </form>
 </div>

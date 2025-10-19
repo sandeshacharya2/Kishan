@@ -1,15 +1,16 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Farmer Reviews</title>
+    <title>{% trans "Farmer Reviews" %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-green-50 min-h-screen p-6">
 
 <h1 class="text-2xl font-bold text-center mb-6">
-    Reviews for {{ farmer.first_name }} {{ farmer.last_name }}
+    {% trans "Reviews for" %} {{ farmer.first_name }} {{ farmer.last_name }}
 </h1>
 
 <div class="max-w-3xl mx-auto space-y-4">
@@ -39,14 +40,14 @@
         </div>
     </div>
     {% empty %}
-    <p class="text-center text-gray-500">No reviews yet for this farmer.</p>
+    <p class="text-center text-gray-500">{% trans "No reviews yet for this farmer." %}</p>
     {% endfor %}
 </div>
 
 <div class="text-center mt-6">
     <a href="{% url 'customer-dashboard' %}" 
        class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
-        Back to Reviews
+        {% trans "Back to Reviews" %}
     </a>
 </div>
 

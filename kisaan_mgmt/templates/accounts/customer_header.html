@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <!-- Header -->
 <header class="fixed top-0 left-0 right-0 z-50 
@@ -14,20 +15,30 @@
        class="w-10 h-10 rounded-full border-2 border-white shadow-md object-cover flex-shrink-0" />
 
   <div class="flex flex-col leading-tight overflow-hidden">
-    <span class="text-white font-extrabold text-lg sm:text-xl tracking-wide truncate + min-w-0">
-      ग्राहक ड्याशबोर्ड
+    <span class="text-white font-extrabold text-lg sm:text-xl tracking-wide truncate min-w-0">
+      {% trans "Customer Dashboard" %}
     </span>
-    <span class="text-xs sm:text-sm text-lime-200 italic truncate+min-w-0">
-      “तपाईंको रोजाइ, हाम्रो बजार”
+    <span class="text-xs sm:text-sm text-lime-200 italic truncate min-w-0">
+      “{% trans "Your Choice, Our Market" %}”
     </span>
   </div>
 </div>
-
+ <form action="{% url 'set_language' %}" method="post" class="flex items-center">
+            {% csrf_token %}
+            <select name="language" onchange="this.form.submit()" class="bg-white text-green-800 font-semibold px-3 py-2 rounded-lg cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+              {% get_current_language as LANGUAGE_CODE %}
+              {% get_available_languages as LANGUAGES %}
+              {% for lang_code, lang_name in LANGUAGES %}
+                <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>{{ lang_name }}</option>
+              {% endfor %}
+            </select>
+            <input type="hidden" name="next" value="{{ request.path }}">
+          </form>
 
       <!-- Right side -->
 <div class="flex items-center gap-3 flex-shrink-0 ml-2">
   <span class="hidden md:inline text-white font-medium">
-   नमस्ते, {{ user.first_name }} {{ user.last_name }}
+   {% trans "Hello," %} {{ user.first_name }} {{ user.last_name }}
 </span>
 
 

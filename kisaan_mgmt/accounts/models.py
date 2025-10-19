@@ -41,11 +41,16 @@ class Profile(models.Model):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='admin')
     is_blocked= models.BooleanField(default=False)
     
+    
 
 
     def __str__(self):
         return f"{self.user.username} Profile"
-
+class BlockedProfile(Profile):
+    class Meta:
+        proxy = True
+        verbose_name = "Blocked User"
+        verbose_name_plural = "Blocked Users"
 
 # Farmer specific profile
 class FarmerProfile(models.Model):

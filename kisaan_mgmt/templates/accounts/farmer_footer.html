@@ -1,22 +1,26 @@
 <!-- Footer -->
+{% load i18n %}
+{% load static %}
+
+
 <footer class="bg-green-800 text-white">
   <div class="lg:ml-72 max-w-screen-2xl mx-auto px-4 py-6 flex flex-col sm:flex-row justify-between items-center">
 
     <!-- Left: Impactful message -->
     <div class="text-center sm:text-left text-lg font-semibold">
-      🌾 किसानका लागि सजिलो बजार पहुँच र कृषि अपडेट
+      🌾 {% trans "Easy market access and agricultural updates for farmers" %}
     </div>
 
     <!-- Right: Contact -->
     <div class="flex flex-col items-center sm:items-end text-lg font-medium mt-3 sm:mt-0">
-      <span>ईमेल: kisaan.helps@gmail.com</span>
-      <span>फोन: ++977 9862904064</span>
+      <span>{% trans "Email:" %} kisaan.helps@gmail.com</span>
+      <span>{% trans "Phone:" %} +977 9862904064</span>
     </div>
 
   </div>
 
   <!-- Bottom bar -->
   <div class="bg-green-900 text-center py-2 text-sm">
-      2082 किसान ड्याशबोर्ड — सबै अधिकार सुरक्षित
+    {% now "Y" %} {% trans "Farmer Dashboard" %} — {% trans "All rights reserved" %}
   </div>
 </footer>
