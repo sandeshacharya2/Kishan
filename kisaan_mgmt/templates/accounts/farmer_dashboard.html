@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}ड्याशबोर्ड{% endblock %}
+{% block title %}{% trans "Dashboard" %}{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
 <main class="lg:ml-60">
  
   <!-- Greeting -->
- <div class=" text-center mb-5 mt-12 tracking-wide font-medium  text-green-900 text-lg italic">{% trans " नमस्ते किसान साथी! यहाँबाट तपाईंले आफ्ना उत्पादनहरू सजिलै व्यवस्थापन गर्न सक्नुहुन्छ।" %}</div>
+ <div class=" text-center mb-5 mt-12 tracking-wide font-medium  text-green-900 text-lg italic">{% trans "Hello, fellow farmer! From here, you can easily manage your products." %}</div>
 
 
   <!-- Product cards -->
@@ -46,23 +46,23 @@
           <!-- Product Details -->
           <div class="p-4 flex flex-col flex-grow">
             <h5 class="text-green-900 text-xl font-bold mb-2 tracking-wide">🌾 {{ product.sub_category }}</h5>
-            <p class="font-medium text-green-800">📦 मात्रा: <span class="font-semibold">{{ product.quantity }} {{ product.unit }}</span></p>
-            <p class="font-medium text-green-800">💰 मूल्य प्रति एकाइ: <span class="font-semibold">Rs. {{ product.price }}</span></p>
-            <p class="font-medium text-green-800">💵 कुल मूल्य: <span class="font-semibold">Rs. {{ product.total_price }}</span></p>
-            <p class="font-medium text-green-800">📍 स्थान: <span class="font-semibold">{{ user.farmerprofile.address }}, {{ user.farmerprofile.tole }}, वाड नं. {{ user.profile.ward }}</span></p>
-            <p class="text-green-700 text-sm mt-2 font-medium">📅 पोस्ट मिति: {{ product.date_posted|date:"Y-m-d" }}</p>
-            <p class="mt-2 text-green-700 font-medium">📝 विवरण: {{ product.description }}</p>
+            <p class="font-medium text-green-800">{% trans "Quantity:" %} <span class="font-semibold">{{ product.quantity }} {{ product.unit }}</span></p>
+            <p class="font-medium text-green-800">{% trans "Price per unit:" %} <span class="font-semibold">Rs. {{ product.price }}</span></p>
+            <p class="font-medium text-green-800">{% trans "Total price:" %} <span class="font-semibold">Rs. {{ product.total_price }}</span></p>
+            <p class="font-medium text-green-800">{% trans "Location:" %} <span class="font-semibold">{{ user.farmerprofile.address }}, {{ user.farmerprofile.tole }}, {% trans "Ward No." %} {{ user.profile.ward }}</span></p>
+            <p class="text-green-700 text-sm mt-2 font-medium">{% trans "Posted on:" %} {{ product.date_posted|date:"Y-m-d" }}</p>
+            <p class="mt-2 text-green-700 font-medium">{% trans "Description:" %} {{ product.description }}</p>
 
             <!-- Actions -->
             <div class="flex justify-end gap-3 mt-4">
-              <a href="{% url 'edit-product' product.id %}" class="bg-teal-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">✏️ सम्पादन</a>
-              <a href="{% url 'delete-product' product.id %}" onclick="return confirm('पक्का हटाउन चाहनुहुन्छ?')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">🗑️ हटाउनुहोस्</a>
+              <a href="{% url 'edit-product' product.id %}" class="bg-teal-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">✏️ {% trans "Edit" %}</a>
+              <a href="{% url 'delete-product' product.id %}" onclick="return confirm('Are you sure ?')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">🗑️ {% trans "Delete" %}</a>
             </div>
           </div>
         </div>
       {% endfor %}
     {% else %}
-      <p class="text-center text-green-700 col-span-full font-medium tracking-wide">तपाईंले कुनै उत्पादन थप्नुभएको छैन।</p>
+      <p class="text-center text-green-700 col-span-full font-medium tracking-wide">{% trans "You haven't added any products yet." %}</p>
     {% endif %}
   </div>
 

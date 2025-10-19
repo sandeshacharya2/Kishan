@@ -1,18 +1,34 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils.safestring import mark_safe
+import json
 import requests
 import xml.etree.ElementTree as ET
+<<<<<<< HEAD
 from products.models import Product  # Adjust if your product model is elsewhere
 from payments.models import Transaction  # 🔸 Import the Transaction model
 from accounts.views.role_based_redirect import farmer_required, customer_required
 from accounts.models import FarmerReview
 from django.db.models import Avg
 from django.contrib import messages
+=======
+>>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
+# Local models
+from accounts.models import FarmerReview
+from accounts.views.role_based_redirect import farmer_required, customer_required
+from accounts.views.update_farmer_profile import FarmerReview 
+from products.models import Product
+from payments.models import Transaction
+from accounts.models import FarmerProfile
+
+# Aggregation
+from django.db.models import Avg, Sum, Count, Q
 @customer_required
 def choose_quantity(request, product_id):
     try:
@@ -26,9 +42,10 @@ def choose_quantity(request, product_id):
                 qty = 1
             
             amount = product.price * qty
-            pid = get_random_string(10)  # random payment ID
+            pid = get_random_string(10)  # random payment ID will be genereted  but shown same for farmer and customer
 
-            # Pass data to payment choice page
+            
+            #sending these data to ui 
             context = {
                 'product': product,
                 'quantity': qty,
@@ -48,6 +65,8 @@ def payment_request(request, product_id):
     try:
         product = get_object_or_404(Product, pk=product_id)
 
+
+#checking the choosen quantitty is less than available quantity or not
         if request.method == 'POST':
             qty = float(request.POST.get('quantity', 1))
             if qty < 1 or qty > product.quantity:
@@ -169,7 +188,7 @@ def payment_success(request):
 
             # ✅ Send email to farmer with buyer details
             try:
-                farmer = product.farmer.user # assuming FK to User
+                farmer = product.farmer.user # assuming FK to User → ✅ correct: product.farmer is FarmerProfile
                 customer = request.user
 
                 try:
@@ -225,29 +244,20 @@ def payment_failure(request):
         return render(request, 'payments/error.html', {'message': 'Error displaying failure page.'})
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.utils.safestring import mark_safe
-import json
-from payments.models import Transaction
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
-# from ..models import Transaction, FarmerReview
-from accounts.views.role_based_redirect import farmer_required
-from django.shortcuts import render
-from django.db.models import Sum, Avg, Q, Count
-from .models import Transaction  # Import your Transaction model
-from accounts.models import FarmerProfile  # Import your FarmerProfile model
-
-def income_summary(request):
+def transaction_list(request):
     # Get the logged-in farmer's profile
+<<<<<<< HEAD
+=======
+    # ✅ CORRECTED: request.user.farmerprofile is already FarmerProfile
+>>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
     farmer_profile = request.user.farmerprofile
     print(f"User Profile: {farmer_profile}")  # This matches your log
+    avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(avg=Avg('rating'))['avg'] or 0
 
     # Calculate total income
+<<<<<<< HEAD
     total_income = Transaction.objects.filter(
         product__farmer=farmer_profile
     ).aggregate(total=Sum('amount'))['total'] or 0
@@ -256,6 +266,8 @@ def income_summary(request):
     avg_rating = FarmerReview.objects.filter(
         farmer=farmer_profile  # Assuming farmer is the User object
     ).aggregate(avg=Avg('rating'))['avg'] or 0
+=======
+>>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
     # Calculate counts
     completed_count = Transaction.objects.filter(
@@ -277,26 +289,103 @@ def income_summary(request):
 
     # Pass ALL variables to the template context
     context = {
-        'total_income': total_income,
-        'avg_rating': round(avg_rating, 1),  # Round to 1 decimal place
+         # Round to 1 decimal place
         'completed_count': completed_count,
         'pending_count': pending_count,
         'all_transactions': all_transactions,
+        'avg_rating': round(avg_rating, 1),
+
     }
 
-    return render(request, 'payments/income_summary.html', context)  # Adjust template path as needed
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
-from django.conf import settings
+    return render(request, 'payments/transaction_list.html', context)  # Adjust template path as needed
+from django.db.models import Sum, Avg, F, FloatField
+from django.db.models.functions import Cast
+from django.utils import timezone
+from datetime import timedelta, date
+from decimal import Decimal
+from django.shortcuts import render
+from .models import Transaction
+from accounts.models import FarmerReview  # Adjust if needed
 
-from payments.models import Transaction
-from products.models import Product
-from accounts.views.role_based_redirect import farmer_required, customer_required
+def income_summary(request):
+    farmer = request.user.farmerprofile
+    transactions = Transaction.objects.filter(product__farmer=farmer)
 
+    # Get date filters
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
 
+    start_date = end_date = None
+    if start_date_str:
+        try:
+            start_date = date.fromisoformat(start_date_str)
+        except ValueError:
+            pass
+    if end_date_str:
+        try:
+            end_date = date.fromisoformat(end_date_str)
+        except ValueError:
+            pass
+
+    filtered_transactions = transactions
+    if start_date:
+        filtered_transactions = filtered_transactions.filter(created_at__date__gte=start_date)
+    if end_date:
+        filtered_transactions = filtered_transactions.filter(created_at__date__lte=end_date)
+
+    # Exclude zero quantity to avoid division issues
+    filtered_transactions = filtered_transactions.filter(quantity__gt=0)
+
+    def safe_sum(queryset):
+        total = queryset.aggregate(total=Sum('amount'))['total']
+        return total if total is not None else Decimal('0.00')
+
+    now = timezone.now()
+    today = now.date()
+    start_of_week = today - timedelta(days=today.weekday())
+    start_of_month = today.replace(day=1)
+    start_of_year = today.replace(month=1, day=1)
+
+    total_income = safe_sum(transactions)
+    daily_income = safe_sum(transactions.filter(created_at__date=today))
+    weekly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_week))
+    monthly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_month))
+    yearly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_year))
+    filtered_income = safe_sum(filtered_transactions)
+
+    avg_rating = FarmerReview.objects.filter(farmer=farmer).aggregate(avg=Avg('rating'))['avg'] or 0
+
+    # ✅ Correct annotation with explicit FloatField
+    transaction_details = filtered_transactions.select_related(
+        'product', 'user'
+    ).annotate(
+        price_per_unit=Cast(F('amount') / F('quantity'), FloatField())
+    ).values(
+        'id',
+        'product__sub_category',
+        'quantity',
+        'amount',
+        'price_per_unit',
+        'user__first_name',
+        'user__last_name',
+        'created_at'
+    ).order_by('-created_at')
+
+    context = {
+        'total_income': total_income,
+        'daily_income': daily_income,
+        'weekly_income': weekly_income,
+        'monthly_income': monthly_income,
+        'yearly_income': yearly_income,
+        'filtered_income': filtered_income,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        'avg_rating': round(avg_rating, 1),
+        'transactions': transaction_details,
+    }
+
+    return render(request, 'payments/income_summary.html', context)
+    return render(request, 'payments/income_summary.html', context)
 @login_required
 @farmer_required
 def update_delivery_status(request, transaction_id):
@@ -358,7 +447,7 @@ def dispute_delivery(request, transaction_id):
             # ✅ Notify admin
             try:
                 admin_email = settings.DEFAULT_FROM_EMAIL
-                subject = f"⚠️ Dispute Alert: Transaction {transaction.pid}"
+                subject = f" Dispute Alert: Transaction {transaction.pid}"
                 message = (
                     f"Customer {request.user.username} has marked the product "
                     f"'{transaction.product.sub_category}' (PID: {transaction.pid}) as Not Received.\n\n"

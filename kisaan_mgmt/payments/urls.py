@@ -16,7 +16,7 @@ urlpatterns = [
     path('failure/', views.payment_failure, name='payment_failure'),
 
     # Farmer income dashboard
-    path('income-summary/', views.income_summary, name='income_summary'),
+    path('transaction-list/', views.transaction_list, name='transaction-list'),
 
     # Customer purchases
     path('my-purchases/', views.customer_purchases, name='customer_purchases'),
@@ -31,5 +31,6 @@ urlpatterns = [
     path('dispute-delivery/<int:transaction_id>/', views.dispute_delivery, name='dispute-delivery'),
     path('cod-pay/<int:transaction_id>/', views.cod_pay, name='cod_pay'),
     path('confirm-cod/<int:transaction_id>/', views.confirm_cod_payment, name='confirm_cod_payment'),
+    path('income-summary/', views.income_summary, name='income_summary'),
 
 ]

@@ -1,23 +1,21 @@
 {% extends "accounts/farmer_base.html" %}
+{% load i18n %}
 
-{% block title %}उत्पादन सम्पादन गर्नुहोस्{% endblock %}
+{% block title %}{% trans "Edit Product" %}{% endblock %}
 
 {% block content %}
   <!-- Title -->
     <div class="p-4 sm:p-6 lg:ml-80"> 
 
   <h1 class="flex items-center gap-2 text-2xl sm:text-3xl font-bold text-green-700 mt-28 mb-2">
-    🌾 उत्पादन सम्पादन गर्नुहोस्: {{ product.name }}
+    🌾 {% trans "Edit Product" %}: {{ product.name }}
   </h1>
   <p class="bg-green-100 text-green-800 px-4 py-2 rounded-xl shadow text-center text-sm sm:text-base max-w-md">
-    किसान साथी, यहाँबाट आफ्नो उत्पादन सजिलै सम्पादन गर्न सक्नुहुन्छ।
+    {% trans "Dear farmer, you can easily edit your product here." %}
   </p>
 
   <!-- Form Card with Close Button -->
   <div class="relative bg-white shadow-lg rounded-2xl p-6 w-full max-w-md lg:max-w-3xl mt-6 border border-green-200">
-
-  
-    
 
     <form method="post" enctype="multipart/form-data" class="space-y-4">
       {% csrf_token %}
@@ -25,27 +23,27 @@
 
       <!-- Main Category -->
       <div>
-        <label for="main-category" class="block font-semibold text-green-800">प्रकार छान्नुहोस् 🌱:</label>
+        <label for="main-category" class="block font-semibold text-green-800">{% trans "Select Type" %} 🌱:</label>
         <select id="main-category" name="main_category" required
           class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
-          <option value="">-- छान्नुहोस् --</option>
-          <option value="तरकारी" {% if form.main_category.value == 'तरकारी' %}selected{% endif %}>तरकारी</option>
-          <option value="फलफुल" {% if form.main_category.value == 'फलफुल' %}selected{% endif %}>फलफुल</option>
-          <option value="खाद्यान्न" {% if form.main_category.value == 'खाद्यान्न' %}selected{% endif %}>खाद्यान्न</option>
+          <option value="">{% trans "-- Select --" %}</option>
+          <option value="तरकारी" {% if form.main_category.value == 'तरकारी' %}selected{% endif %}>{% trans "Vegetables" %}</option>
+          <option value="फलफुल" {% if form.main_category.value == 'फलफुल' %}selected{% endif %}>{% trans "Fruits" %}</option>
+          <option value="खाद्यान्न" {% if form.main_category.value == 'खाद्यान्न' %}selected{% endif %}>{% trans "Grains" %}</option>
         </select>
         {{ form.main_category.errors }}
       </div>
 
       <!-- Sub Category -->
       <div>
-        <label for="sub-category" class="block font-semibold text-green-800">विवरण (उप-प्रकार) 📝:</label>
+        <label for="sub-category" class="block font-semibold text-green-800">{% trans "Detail (Sub-type)" %} 📝:</label>
         <select id="sub-category" name="sub_category" required
           class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
-          <option value="">-- कृपया प्रकार छान्नुहोस् --</option>
+          <option value="">{% trans "-- Please select a type --" %}</option>
         </select>
         {{ form.sub_category.errors }}
 
-        <input type="text" id="other-subcategory" name="other_subcategory" placeholder="अन्य विवरण लेख्नुहोस्"
+        <input type="text" id="other-subcategory" name="other_subcategory" placeholder="{% trans "Enter other detail" %}"
           value="{{ form.other_subcategory.value }}"
           class="w-full mt-2 p-2 rounded-lg border border-green-200 hidden focus:border-green-500 focus:ring focus:ring-green-200">
         {{ form.other_subcategory.errors }}
@@ -54,19 +52,19 @@
       <!-- Quantity & Unit -->
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label for="quantity" class="block font-semibold text-green-800">परिमाण 📦:</label>
+          <label for="quantity" class="block font-semibold text-green-800">{% trans "Quantity" %} 📦:</label>
           <input type="number" name="quantity" min="1" required id="quantity" value="{{ form.quantity.value }}"
             class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
           {{ form.quantity.errors }}
         </div>
         <div>
-          <label for="unit" class="block font-semibold text-green-800">इकाइ ⚖️:</label>
+          <label for="unit" class="block font-semibold text-green-800">{% trans "Unit" %} ⚖️:</label>
           <select name="unit" required
             class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
-            <option value="किलो" {% if form.unit.value == 'किलो' %}selected{% endif %}>किलो</option>
-            <option value="क्विन्टल" {% if form.unit.value == 'क्विन्टल' %}selected{% endif %}>क्विन्टल</option>
-            <option value="दर्जन" {% if form.unit.value == 'दर्जन' %}selected{% endif %}>दर्जन</option>
-            <option value="मुरी" {% if form.unit.value == 'मुरी' %}selected{% endif %}>मुरी</option>
+            <option value="किलो" {% if form.unit.value == 'किलो' %}selected{% endif %}>{% trans "Kg" %}</option>
+            <option value="क्विन्टल" {% if form.unit.value == 'क्विन्टल' %}selected{% endif %}>{% trans "Quintal" %}</option>
+            <option value="दर्जन" {% if form.unit.value == 'दर्जन' %}selected{% endif %}>{% trans "Dozen" %}</option>
+            <option value="मुरी" {% if form.unit.value == 'मुरी' %}selected{% endif %}>{% trans "Muri" %}</option>
           </select>
           {{ form.unit.errors }}
         </div>
@@ -74,47 +72,47 @@
 
       <!-- Price -->
       <div>
-        <label for="price" class="block font-semibold text-green-800">प्रति इकाइ मूल्य 💵:</label>
+        <label for="price" class="block font-semibold text-green-800">{% trans "Price per Unit" %} 💵:</label>
         <input type="number" name="price" id="price" min="0" step="0.01" required
           value="{{ form.price.value }}"
           class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200"
-          placeholder="प्रति इकाइ मूल्य">
+          placeholder="{% trans "Price per unit" %}">
         {{ form.price.errors }}
         <p id="total-price" class="text-green-700 font-semibold mt-1"></p>
       </div>
 
       <!-- Description -->
       <div>
-        <label for="description" class="block font-semibold text-green-800">विवरण 📝:</label>
+        <label for="description" class="block font-semibold text-green-800">{% trans "Description" %} 📝:</label>
         <textarea name="description" id="description" rows="4" maxlength="150"
-          placeholder="उत्पादनको छोटकरीमा विवरण लेख्नुहोस् (अधिकतम 150 अक्षर)"
+          placeholder="{% trans "Briefly describe your product (max 150 characters)" %}"
           class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200 resize-y">{{ form.description.value }}</textarea>
         {{ form.description.errors }}
-        <p id="char-count" class="text-sm text-gray-500 mt-1">0 / 150 अक्षर</p>
+        <p id="char-count" class="text-sm text-gray-500 mt-1">0 / 150 {% trans "characters" %}</p>
       </div>
 
       <!-- Image -->
       <div>
-        <label for="image" class="block font-semibold text-green-800">उत्पादनको फोटो 🖼️:</label>
+        <label for="image" class="block font-semibold text-green-800">{% trans "Product Photo" %} 🖼️:</label>
         <input type="file" name="image" id="image" accept="image/*"
           class="w-full p-2 rounded-lg border border-green-200 focus:border-green-500 focus:ring focus:ring-green-200">
         {{ form.image.errors }}
 
         <!-- Image Preview Container -->
         <div id="image-preview-container" class="relative mt-4 hidden max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
-          <img id="image-preview" src="#" alt="Image Preview" class="rounded-lg w-full object-contain max-h-80" />
+          <img id="image-preview" src="#" alt="{% trans "Image Preview" %}" class="rounded-lg w-full object-contain max-h-80" />
         </div>
       </div>
 
       <!-- Submit -->
       <button type="submit"
         class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition-transform transform hover:scale-[1.02]">
-        ✅ सेभ गर्नुहोस्
+        ✅ {% trans "Save" %}
       </button>
       <div class="mb-6">
       <a href="{% url 'farmer-dashboard' %}"
          class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition text-sm sm:text-base">
-        ← Dashboard मा फर्कनुहोस्
+        ← {% trans "Back to Dashboard" %}
       </a>
     </div>
     </form>
@@ -134,7 +132,7 @@
 
     mainCategorySelect.addEventListener("change", function () {
       const mainCat = this.value;
-      subCategorySelect.innerHTML = "<option value=''>-- छान्नुहोस् --</option>";
+      subCategorySelect.innerHTML = "<option value=''>{-- Select --</option>";
       otherInput.classList.add("hidden");
       if (subcategories[mainCat]) {
         subcategories[mainCat].forEach(item => {
@@ -156,7 +154,7 @@
       const price = parseFloat(document.getElementById("price").value) || 0;
       const total = qty * price;
       document.getElementById("total-price").textContent =
-        (qty && price) ? `कुल मूल्य: रु ${total.toFixed(2)}` : "";
+        (qty && price) ? `{% trans "Total Price:" %} रु ${total.toFixed(2)}` : "";
     }
     document.getElementById("quantity").addEventListener("input", updateTotalPrice);
     document.getElementById("price").addEventListener("input", updateTotalPrice);
@@ -165,7 +163,7 @@
     const desc = document.getElementById("description");
     const charCount = document.getElementById("char-count");
     desc.addEventListener("input", function () {
-      charCount.textContent = `${this.value.length} / 150 अक्षर`;
+      charCount.textContent = `${this.value.length} / 150 {% trans "characters" %}`;
     });
 
     // Image preview logic
@@ -194,7 +192,7 @@
       const selectedSub = "{{ form.sub_category.value|default_if_none:'' }}";
       if(selectedMain) {
         // populate subcategories options
-        subCategorySelect.innerHTML = "<option value=''>-- छान्नुहोस् --</option>";
+        subCategorySelect.innerHTML = "<option value=''>-- Select --</option>";
         if(subcategories[selectedMain]) {
           subcategories[selectedMain].forEach(item => {
             const option = document.createElement("option");

@@ -7,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 
 # Relative imports (since this file is in accounts/views/)
 from ..models import CustomerProfile, FarmerProfile, Profile
+from accounts.models import Profile
+from accounts.models import FarmerProfile, CustomerProfile
 from ..forms import FarmerProfileForm, CustomerProfileForm
 
 # redirects users to their specific dashboards based on their roles after login

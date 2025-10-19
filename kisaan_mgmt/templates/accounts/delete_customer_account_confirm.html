@@ -1,0 +1,51 @@
+<!-- templates/accounts/delete_account_confirm.html -->
+<div style="max-width: 600px; margin: 2rem auto; padding: 1.5rem; border: 1px solid #ddd; border-radius: 8px;">
+    <h2 style="color: #d32f2f;">⚠️ {% trans "Delete Your Account" %}</h2>
+    <p>
+        {% trans "This action is permanent and irreversible. All your data will be erased:" %}
+    </p>
+    <ul>
+        <li>{% trans "Your profile (farmer or customer)" %}</li>
+        <li>{% trans "All products you listed (if farmer)" %}</li>
+        <li>{% trans "All reviews you wrote or received" %}</li>
+        <li>{% trans "All chat messages and conversations" %}</li>
+        <li>{% trans "All transaction history" %}</li>
+    </ul>
+    <p>
+        {% trans "To confirm, please type your email address exactly as it appears below:" %}
+    </p>
+
+    <div style="background: #f5f5f5; padding: 8px; margin: 1rem 0; font-family: monospace; border: 1px dashed #999;">
+        {{ user.email }}
+    </div>
+
+    <form method="post" style="margin-top: 1.5rem;">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 1rem;">
+            <label for="confirmation_email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                {% trans "Type your email to confirm:" %}
+            </label>
+            <input 
+                type="email" 
+                name="confirmation_email" 
+                id="confirmation_email"
+                required
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;"
+                placeholder="your.email@example.com"
+            >
+            {% if error %}
+                <p style="color: #d32f2f; font-size: 0.9rem; margin-top: 0.3rem;">{{ error }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" 
+                style="background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+            {% trans "Yes, Delete My Account Forever" %}
+        </button>
+        <a href="{% url 'customer-dashboard' %}" 
+           style="margin-left: 1rem; text-decoration: none; color: #1976d2;">
+            {% trans "Cancel" %}
+        </a>
+    </form>
+</div>

@@ -1,3 +1,4 @@
+{% load i18n %}
 <div class="pt-20 lg:ml-72">
   <main class="p-6 pt-0 overflow-y-auto bg-green-50">
     <!-- products and content -->
@@ -9,22 +10,22 @@
 
       <!-- Left: Logo & Tagline -->
       <div class="space-y-2 text-center md:text-left md:basis-1/4 flex-shrink-0">
-        <h2 class="text-2xl font-extrabold tracking-wide">🌿 किसान बजार</h2>
-        <p class="text-sm text-green-300 italic">“तपाईंको रोजाइ, हाम्रो बजार”</p>
+        <h2 class="text-2xl font-extrabold tracking-wide">🌿 {% trans "Farmer Market" %}</h2>
+        <p class="text-sm text-green-300 italic">“{% trans "Your choice, our market" %}”</p>
       </div>
 
       <!-- Middle: Navigation -->
       <div class="flex flex-wrap md:flex-nowrap justify-center md:justify-center gap-6 text-sm font-medium md:basis-1/2">
-        <a href="{% url 'customer-dashboard' %}" class="hover:text-lime-400 transition-colors">🏠 ड्याशबोर्ड</a>
-        <a href="{% url 'payments:customer_purchases' %}" class="hover:text-lime-400 transition-colors">🛒 अर्डर</a>
-        <a href="{% url 'update-customer-profile' %}" class="hover:text-lime-400 transition-colors">👤 प्रोफाइल</a>
-        <a href="#" class="hover:text-lime-400 transition-colors">📞 सपोर्ट</a>
+        <a href="{% url 'customer-dashboard' %}" class="hover:text-lime-400 transition-colors">🏠 {% trans "Dashboard" %}</a>
+        <a href="{% url 'payments:customer_purchases' %}" class="hover:text-lime-400 transition-colors">🛒 {% trans "Orders" %}</a>
+        <a href="{% url 'update-customer-profile' %}" class="hover:text-lime-400 transition-colors">👤 {% trans "Profile" %}</a>
+        <a href="#" class="hover:text-lime-400 transition-colors">📞 {% trans "Support" %}</a>
       </div>
 
       <!-- Right: Copyright -->
       <div class="text-center md:text-right text-xs text-green-300 md:basis-1/4 flex-shrink-0">
-        <p>&copy; 2025 किसान बजार. सबै अधिकार सुरक्षित।</p>
-        <p class="mt-1">💚 Made with love for किसानहरू</p>
+        <p>&copy; 2025 {% trans "Farmer Market. All rights reserved." %}</p>
+        <p class="mt-1">💚 {% trans "Made with love for farmers" %}</p>
       </div>
 
     </div>

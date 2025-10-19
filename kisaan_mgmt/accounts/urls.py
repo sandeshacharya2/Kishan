@@ -52,5 +52,10 @@ urlpatterns = [
     path('farmer/reviews/', farmer_reviews_view, name='farmer-reviews'),
     path('farmer/<int:farmer_id>/reviews/', customer_farmer_reviews_view, name='customer-farmer-reviews'),
     path('farmer/customer/<int:customer_id>/', customer_detail_view, name='customer-detail'),
+    path('delete/customer/', views.delete_customer_account, name='delete_customer_account'),
+    path('delete/farmer/', views.delete_farmer_account, name='delete_farmer_account'),
+    path('report/user', views.report_user, name='report_user'),
+
+
 
 ]

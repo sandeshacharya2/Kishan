@@ -1,8 +1,9 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>किसानको स्थान</title>
+  <title>{% trans "Farmer Location" %}</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -45,10 +46,10 @@
 </head>
 <body>
 
-  <h2>{{ farmer_name|default:"अज्ञात किसान" }} को फार्म स्थान</h2>
+  <h2>{{ farmer_name|default:"Unknown Farmer" }} {% trans "Farm Location" %}</h2>
   <div id="map"></div>
-  <div class="distance-info" id="distanceText">तपाईंको स्थान खोज्दै...</div>
-  <a href="javascript:window.history.back()" class="btn-close">बन्द गर्नुहोस्</a>
+  <div class="distance-info" id="distanceText">{% trans "Locating your position..." %}</div>
+  <a href="javascript:window.history.back()" class="btn-close">{% trans "Close" %}</a>
 
   <script>
     // Template variables from backend (Django)
@@ -68,7 +69,7 @@
     // Add marker for farmer's location
     var farmerMarker = L.marker([latitude, longitude])
       .addTo(map)
-      .bindPopup(farmerName + " को फार्म यहीं छ")
+      .bindPopup(farmerName + " {% trans 'farm is here' %}")
       .openPopup();
 
     // Show user's location and distance if available
@@ -79,8 +80,8 @@
 
         // Add user marker
         var customerMarker = L.marker([userLat, userLng], {
-          title: "तपाईंको स्थान"
-        }).addTo(map).bindPopup("तपाईं यहाँ हुनुहुन्छ");
+          title: "{% trans 'Your Location' %}"
+        }).addTo(map).bindPopup("{% trans 'You are here' %}");
 
         // Draw a red line between user and farmer
         var line = L.polyline([[userLat, userLng], [latitude, longitude]], {
@@ -98,17 +99,17 @@
         var distanceText = "";
 
         if (distance >= 1000) {
-          distanceText = (distance / 1000).toFixed(2) + " कि.मी. टाढा";
+          distanceText = (distance / 1000).toFixed(2) + " km away";
         } else {
-          distanceText = distance.toFixed(0) + " मिटर टाढा";
+          distanceText = distance.toFixed(0) + " meters away";
         }
 
-        document.getElementById("distanceText").innerText = "तपाइँ भएको ठाउदेखि फार्मसम्मको दूरी: " + distanceText;
+        document.getElementById("distanceText").innerText = "{% trans 'Distance from your location to the farm:' %} " + distanceText;
       }, function () {
-        document.getElementById("distanceText").innerText = "तपाईंको स्थान पहुँच गर्न सकिएन।";
+        document.getElementById("distanceText").innerText = "{% trans 'Unable to access your location.' %}";
       });
     } else {
-      document.getElementById("distanceText").innerText = "यो ब्राउजरले भू-स्थान समर्थन गर्दैन।";
+      document.getElementById("distanceText").innerText = "{% trans 'This browser does not support geolocation.' %}";
     }
   </script>
 

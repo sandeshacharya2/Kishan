@@ -75,11 +75,19 @@ def add_product(request):
     farmer = request.user.farmerprofile  #Get farmer profile
 
     # ✅ Calculate average rating
+<<<<<<< HEAD
     avg_rating = FarmerReview.objects.filter(farmer=request.user.farmerprofile).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
     # ✅ Fetch reviews from customers
     reviews = FarmerReview.objects.filter(farmer=request.user.farmerprofile).select_related('customer').order_by('-created_at')
+=======
+    avg_rating = FarmerReview.objects.filter(farmer=farmer).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ Fetch reviews from customers
+    reviews = FarmerReview.objects.filter(farmer=farmer).select_related('customer').order_by('-created_at')
+>>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
