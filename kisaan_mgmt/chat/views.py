@@ -131,16 +131,12 @@ def farmer_chats_view(request):
         customer_chats[cust_id]['total_chats'] += 1
 
     grouped_chats = list(customer_chats.values())
-<<<<<<< HEAD
-    farmer_profile = request.user.farmerprofile
-=======
     # ✅ UPDATED: FarmerReview.farmer expects FarmerProfile
     avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
     # ✅ UPDATED: Fetch reviews using FarmerProfile
     reviews = FarmerReview.objects.filter(farmer=farmer_profile).select_related('customer').order_by('-created_at')
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
     avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(Avg('rating'))['rating__avg'] or 0
     reviews = FarmerReview.objects.filter(farmer=farmer_profile).select_related('customer__user').order_by('-created_at')

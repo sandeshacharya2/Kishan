@@ -27,21 +27,14 @@ def update_farmer_profile(request):
 
     # No need to re-check role — @farmer_required already ensures it
 
-<<<<<<< HEAD
-    # Calculate rating using FarmerProfile (NOT User)
-    avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(Avg('rating'))['rating__avg'] or 0
-    avg_rating = round(avg_rating, 1)
-
-=======
     # Ensure FarmerProfile exists
-    farmer_profile, _ = FarmerProfile.objects.get_or_create(user=user)
+    farmer_profile, _ = FarmerProfile.objects.get_or_create(user=request.user)
 
     # ✅ UPDATED: FarmerReview.farmer now expects FarmerProfile
     avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(Avg('rating'))['rating__avg'] or 0
     avg_rating = round(avg_rating, 1)
 
     # ✅ UPDATED: Fetch reviews using FarmerProfile
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
     reviews = FarmerReview.objects.filter(farmer=farmer_profile).select_related('customer').order_by('-created_at')
 
     if request.method == 'POST':
@@ -63,9 +56,6 @@ def update_farmer_profile(request):
 @login_required
 @customer_required
 def update_customer_profile(request):
-<<<<<<< HEAD
-    customer_profile = request.user.customerprofile
-=======
     user = request.user
 
     try:
@@ -85,7 +75,6 @@ def update_customer_profile(request):
 
     # ❌ Similarly, customers don't have reviews as farmers — but kept unchanged
     # reviews = FarmerReview.objects.filter(farmer=customer_profile).select_related('customer').order_by('-created_at')
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
     if request.method == 'POST':
         form = CustomerProfileForm(request.POST, request.FILES, instance=customer_profile)
@@ -96,9 +85,6 @@ def update_customer_profile(request):
     else:
         form = CustomerProfileForm(instance=customer_profile)
 
-<<<<<<< HEAD
-    return render(request, 'accounts/update_customer_profile.html', {'form': form})
-=======
     context = {
         'form': form,
         'profile': profile,
@@ -108,7 +94,6 @@ def update_customer_profile(request):
         # 'reviews': reviews,
     }
     return render(request, 'accounts/update_customer_profile.html', context)
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
 @login_required
 def farmer_detail(request, farmer_id):
@@ -118,13 +103,8 @@ def farmer_detail(request, farmer_id):
     # ✅ Product.farmer is ForeignKey to FarmerProfile → filter directly
     products = Product.objects.filter(farmer=farmer)
 
-<<<<<<< HEAD
-    #  Filter reviews by farmer.user, not farmer (FarmerReview.farmer is FK to User)
-    avg_rating = FarmerReview.objects.filter(farmer=farmer.user.farmerprofile).aggregate(Avg("rating"))["rating__avg"] or 0
-=======
     # ✅ UPDATED: FarmerReview.farmer is FarmerProfile → filter by farmer (not farmer.user)
     avg_rating = FarmerReview.objects.filter(farmer=farmer).aggregate(Avg("rating"))["rating__avg"] or 0
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
     avg_rating = round(avg_rating, 1)
 
     # Get customer location from CustomerProfile

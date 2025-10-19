@@ -9,15 +9,6 @@ from django.utils.safestring import mark_safe
 import json
 import requests
 import xml.etree.ElementTree as ET
-<<<<<<< HEAD
-from products.models import Product  # Adjust if your product model is elsewhere
-from payments.models import Transaction  # 🔸 Import the Transaction model
-from accounts.views.role_based_redirect import farmer_required, customer_required
-from accounts.models import FarmerReview
-from django.db.models import Avg
-from django.contrib import messages
-=======
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
 # Local models
 from accounts.models import FarmerReview
@@ -248,26 +239,12 @@ def payment_failure(request):
 
 def transaction_list(request):
     # Get the logged-in farmer's profile
-<<<<<<< HEAD
-=======
     # ✅ CORRECTED: request.user.farmerprofile is already FarmerProfile
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
     farmer_profile = request.user.farmerprofile
     print(f"User Profile: {farmer_profile}")  # This matches your log
     avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(avg=Avg('rating'))['avg'] or 0
 
     # Calculate total income
-<<<<<<< HEAD
-    total_income = Transaction.objects.filter(
-        product__farmer=farmer_profile
-    ).aggregate(total=Sum('amount'))['total'] or 0
-
-    # Calculate average rating (assuming you have a Review model)
-    avg_rating = FarmerReview.objects.filter(
-        farmer=farmer_profile  # Assuming farmer is the User object
-    ).aggregate(avg=Avg('rating'))['avg'] or 0
-=======
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 
     # Calculate counts
     completed_count = Transaction.objects.filter(
