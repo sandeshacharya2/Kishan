@@ -21,7 +21,15 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseForbidden
 from accounts.models import FarmerReview
 
+# views.py
+from django.contrib.auth.views import PasswordResetView
+from accounts.forms import CustomPasswordResetForm
 
+class CustomPasswordResetView(PasswordResetView):
+    form_class = CustomPasswordResetForm
+    template_name = 'registration/password_reset_form.html'
+
+    
 @require_GET
 def check_availability(request):
     field = request.GET.get('field')

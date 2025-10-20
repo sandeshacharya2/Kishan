@@ -4,6 +4,21 @@ from django.contrib.auth.models import User
 from .models import Profile, FarmerProfile, CustomerProfile
 from django.utils.translation import gettext_lazy as _
 from accounts.models import FarmerReview
+
+
+# forms.py
+from django import forms
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("This email address is not registered.")
+        return email
 WARD_CHOICES = [
     ('Ward 1 – Ratnechaur', 'वडा १ – रातनेचौर'),
     ('Ward 2 – Jyamrukot', 'वडा २ – ज्यामरुकोट'),

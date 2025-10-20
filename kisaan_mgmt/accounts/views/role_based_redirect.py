@@ -20,6 +20,11 @@ def role_based_redirect(request):
         messages.error(request, _("Profile not found. Please log in again."))
         return redirect('login')
 
+    if profile.is_blocked:
+        messages.error(request, _("You are blocked by the system."))
+        logout(request)
+        return redirect('login')
+
     if profile.role == 'farmer':
         try:
             farmer_profile = request.user.farmerprofile
@@ -73,6 +78,9 @@ class FarmerLoginView(LoginView):
         user = form.get_user()
         # Checking the user is actually a farmer or not
         if hasattr(user, 'profile') and user.profile.role == 'farmer':
+            if user.profile.is_blocked:
+                messages.error(self.request, _("You are blocked by the system."))
+                return redirect('farmer-login')
             login(self.request, user)  
             return redirect('role-redirect') 
         else:
@@ -106,6 +114,9 @@ class CustomerLoginView(LoginView):
         user = form.get_user()
         # Check if the user is actually a customer
         if hasattr(user, 'profile') and user.profile.role == 'customer':
+            if user.profile.is_blocked:
+                messages.error(self.request, _("You are blocked by the system."))
+                return redirect('customer-login')
             login(self.request, user)
             return redirect('role-redirect')
         else:
@@ -123,6 +134,10 @@ def farmer_required(view_func):
     def wrapper(request, *args, **kwargs):
         # Check if user has a profile and is a farmer
         if hasattr(request.user, 'profile') and request.user.profile.role == 'farmer':
+            if request.user.profile.is_blocked:
+                messages.error(request, _("You are blocked by the system."))
+                logout(request)
+                return redirect('farmer-login')
             return view_func(request, *args, **kwargs)  # Allow access
         else:
             # Show error and redirect to farmer login
@@ -137,6 +152,10 @@ def customer_required(view_func):
     def wrapper(request, *args, **kwargs):
         # Check if user has a profile and is a customer
         if hasattr(request.user, 'profile') and request.user.profile.role == 'customer':
+            if request.user.profile.is_blocked:
+                messages.error(request, _("You are blocked by the system."))
+                logout(request)
+                return redirect('customer-login')
             return view_func(request, *args, **kwargs)  # Allow access
         else:
             # Show error and redirect to customer login

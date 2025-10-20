@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django.views.i18n import set_language  # <-- Add this import
 
 from accounts import views  # views import गरियो
-from accounts.views import signup_view, landing_page, about, contact  # Import your views
+from accounts.views import signup_view, landing_page, about, contact, CustomPasswordResetView  # Import your views
 from products import views
 from django.views.i18n import set_language  # <-- Add this import
 
@@ -41,7 +41,7 @@ urlpatterns = [
     path('signup/', signup_view, name='signup'),
 
     # Password reset paths
-    path('password_reset/', auth_views.PasswordResetView.as_view(
+    path('password_reset/', CustomPasswordResetView.as_view(
         template_name='accounts/password_reset_form.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(
         template_name='accounts/password_reset_done.html'), name='password_reset_done'),
