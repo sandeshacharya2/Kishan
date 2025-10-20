@@ -10,19 +10,27 @@
 <body class="bg-green-50 min-h-screen p-6">
 
 <h1 class="text-2xl font-bold text-center mb-6">
+<<<<<<< HEAD
+    Reviews for {{ farmer.user.first_name }} {{ farmer.user.last_name }}
+=======
     {% trans "Reviews for" %} {{ farmer.first_name }} {{ farmer.last_name }}
+>>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
 </h1>
 
 <div class="max-w-3xl mx-auto space-y-4">
     {% for review in reviews %}
     <div class="bg-white shadow-md rounded-lg p-4 flex gap-4">
-        {% if review.customer.profile.profile_picture %}
-            <img src="{{ review.customer.profile.profile_picture.url }}" 
+        {% if review.customer.profile_picture %}
+            <img src="{{ review.customer.profile_picture.url }}" 
                  alt="Profile" class="w-12 h-12 rounded-full object-cover">
         {% else %}
             <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
                 <span class="text-gray-700 font-bold text-lg">
+<<<<<<< HEAD
+                    {{ review.customer.user.first_name|default:review.customer.user.username|slice:":1" }}
+=======
                     {{ review.customer.first_name|default:review.customer.user.username|slice:":1" }}
+>>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
                 </span>
             </div>
         {% endif %}
@@ -50,7 +58,6 @@
         {% trans "Back to Reviews" %}
     </a>
 </div>
-
 
 </body>
 </html>

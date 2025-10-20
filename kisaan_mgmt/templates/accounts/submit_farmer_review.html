@@ -11,17 +11,11 @@
 </head>
 <body class="bg-green-50 min-h-screen flex items-center justify-center">
 
-<!-- Modal-style Rating Box -->
 <div class="bg-white rounded-xl w-1/2 max-w-md p-6 shadow-xl relative">
-    
-    <!-- Close Button -->
-    <a href="{% url 'customer-dashboard' %}" 
-       class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</a>
+    <a href="{% url 'customer-dashboard' %}" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</a>
 
-    <!-- Title -->
-    <h2 class="text-xl font-bold mb-6 text-center">Rate Farmer: {{ farmer.username }}</h2>
+    <h2 class="text-xl font-bold mb-6 text-center">Rate Farmer: {{ farmer.user.username }}</h2>
 
-    <!-- Star Rating -->
     <div id="modalStars" class="flex justify-center mb-6 text-5xl cursor-pointer select-none">
         <span class="star text-gray-300 mx-1" data-value="1">★</span>
         <span class="star text-gray-300 mx-1" data-value="2">★</span>
@@ -30,7 +24,6 @@
         <span class="star text-gray-300 mx-1" data-value="5">★</span>
     </div>
 
-    <!-- Comment & Form -->
     <form method="POST" class="space-y-4">
         {% csrf_token %}
         <textarea name="comment" rows="4" maxlength="200" placeholder="Write your review (optional, max 200 characters)"
@@ -38,22 +31,22 @@
 
         <input type="hidden" name="rating" id="ratingInput" value="0">
 
-        <!-- Submit Rating Button -->
-        <button type="submit" 
-                class="w-full bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+        <button type="submit" class="w-full bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
             Submit Rating
         </button>
 
+<<<<<<< HEAD
+        <a href="{% url 'customer-farmer-reviews' farmer.id %}"
+=======
         <!-- See All Reviews Button -->
         <a href="{% url 'customer-farmer-reviews' farmer.farmerprofile.id %}"
+>>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
            class="block text-center bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition">
            See All Reviews
         </a>
     </form>
-
 </div>
 
-<!-- JS for Star Selection -->
 <script>
 let selectedRating = 0;
 const stars = document.querySelectorAll("#modalStars .star");

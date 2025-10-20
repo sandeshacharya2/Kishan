@@ -19,22 +19,16 @@ from django.db import transaction
 
 
 
-
 @farmer_required
 @login_required
 def update_farmer_profile(request):
-    user = request.user
+    # Get the FarmerProfile (correct)
+    farmer_profile = request.user.farmerprofile
 
-    # Ensure the user is a farmer
-    try:
-        profile = user.profile
-        if profile.role != 'farmer':
-            return redirect('login')
-    except Profile.DoesNotExist:
-        return redirect('login')
+    # No need to re-check role — @farmer_required already ensures it
 
     # Ensure FarmerProfile exists
-    farmer_profile, _ = FarmerProfile.objects.get_or_create(user=user)
+    farmer_profile, _ = FarmerProfile.objects.get_or_create(user=request.user)
 
     # ✅ UPDATED: FarmerReview.farmer now expects FarmerProfile
     avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(Avg('rating'))['rating__avg'] or 0
@@ -47,21 +41,18 @@ def update_farmer_profile(request):
         form = FarmerProfileForm(request.POST, request.FILES, instance=farmer_profile)
         if form.is_valid():
             form.save()
+            # messages.success(request, _("Profile updated successfully!"))
             return redirect('farmer-dashboard')
     else:
         form = FarmerProfileForm(instance=farmer_profile)
 
     context = {
         'form': form,
-        'profile': profile,
         'farmerprofile': farmer_profile,
-        'user': user,
         'avg_rating': avg_rating,
         'reviews': reviews,
     }
     return render(request, 'accounts/update_farmer_profile.html', context)
-
-
 @login_required
 @customer_required
 def update_customer_profile(request):
@@ -86,13 +77,12 @@ def update_customer_profile(request):
     # reviews = FarmerReview.objects.filter(farmer=customer_profile).select_related('customer').order_by('-created_at')
 
     if request.method == 'POST':
-        # Bind form to customer_profile, NOT profile
         form = CustomerProfileForm(request.POST, request.FILES, instance=customer_profile)
         if form.is_valid():
             form.save()
+            # messages.success(request, _("Profile updated successfully!"))
             return redirect('customer-dashboard')
     else:
-        # Bind form to customer_profile, NOT profile
         form = CustomerProfileForm(instance=customer_profile)
 
     context = {
