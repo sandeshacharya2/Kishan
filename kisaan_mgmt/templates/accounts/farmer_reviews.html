@@ -1,96 +1,17 @@
-<<<<<<< HEAD
+{% extends "accounts/farmer_base.html" %}
 {% load static %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Farmer Reviews</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-green-50 min-h-screen p-6">
-=======
-{% extends "accounts/farmer_base.html" %}
-{% load static i18n %}
->>>>>>> ff1a263bf83a9d48dee2b9499bab3be21f98337f
 
 {% block title %}{% trans "किसानको समीक्षाहरू" %}{% endblock %}
 
-<<<<<<< HEAD
 {% block content %}
 <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
   <div class="max-w-4xl mx-auto">
 
-    <!-- Header -->
-    <div class="flex items-center gap-4 mb-8">
-      {% if farmer.profile_picture %}
-        <img src="{{ farmer.profile_picture.url }}" alt="{% trans 'Farmer Profile' %}" class="w-16 h-16 rounded-full border-2 border-emerald-400 object-cover shadow-sm" />
-      {% else %}
-        <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'Default Profile' %}" class="w-16 h-16 rounded-full border-2 border-green-400 object-cover shadow-sm" />
-      {% endif %}
-=======
-    <div class="max-w-3xl mx-auto space-y-4">
-        {% for review in reviews %}
-        <div class="bg-white shadow-md rounded-lg p-4 flex gap-4">
-            <!-- Profile picture -->
-{% if review.customer.customerprofile.profile_picture %}
-    <img src="{{ review.customer.profile_picture.url }}" 
-         alt="Profile" class="w-12 h-12 rounded-full object-cover">
-{% else %}
-    <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-        <span class="text-gray-700 font-bold text-lg">
-            {{ review.customer.user.first_name|default:review.customer.user.username|slice:":1"|upper }}
-        </span>
-    </div>
-{% endif %}
-
-            <!-- Review details -->
-            <div class="flex-1">
-                <!-- Name clickable -->
-                <p class="font-bold">
-                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
-                        {{ review.customer.user.first_name }} {{ review.customer.user.last_name }}
-                    </a>
-                </p>
-                <!-- Username clickable -->
-                <p class="text-sm text-gray-500">
-                    <a href="{% url 'customer-detail' review.customer.id %}" class="hover:text-green-700">
-                        @{{ review.customer.user.username }}
-                    </a>
-                </p>
->>>>>>> fbedd1207d1e8e9530623c6a71375d99dbcb3459
-
-      <div>
-        <h1 class="text-2xl font-bold text-green-900">
-          {% trans "किसानको समीक्षाहरू" %}
-        </h1>
-        <p class="text-green-700 text-lg">
-          {{ farmer.user.first_name }} {{ farmer.user.last_name }} (@{{ farmer.user.username }})
-        </p>
-      </div>
-    </div>
-
-    <!-- Average Rating -->
-    <div class="bg-white p-6 rounded-xl shadow-md mb-8 border border-green-200">
-      <h2 class="text-xl font-semibold text-green-800 mb-2">{% trans "औसत मूल्यांकन" %}</h2>
-      <div class="flex items-center gap-1 text-yellow-500 text-3xl">
-        {% for i in "12345" %}
-          {% if i|add:"0" <= avg_rating %}
-            ⭐
-          {% elif i|add:"-0.5" <= avg_rating %}
-            ⭐️
-          {% else %}
-            ☆
-          {% endif %}
-        {% endfor %}
-        <span class="ml-2 text-green-700 font-medium">{{ avg_rating }}/5</span>
-      </div>
-      <p class="text-green-600 mt-2">
-        {% blocktrans with review_count=reviews.count %}
-          {{ review_count }} समीक्षाहरू
-        {% endblocktrans %}
-      </p>
-    </div>
+    <!-- Page Title -->
+    <h2 class="text-2xl font-bold text-green-900 mb-6">
+      {% trans "किसानको समीक्षाहरू" %}
+    </h2>
 
     <!-- Reviews List -->
     <h2 class="text-xl font-semibold text-green-800 mb-4">{% trans "समीक्षाहरू" %}</h2>
@@ -100,22 +21,36 @@
         {% for review in reviews %}
           <div class="bg-white p-5 rounded-xl shadow-md border border-green-200">
             <div class="flex items-start gap-4">
+              
               <!-- Customer Avatar -->
               {% if review.customer.profile_picture %}
-                <img src="{{ review.customer.profile_picture.url }}" alt="{% trans 'Customer Profile' %}" class="w-12 h-12 rounded-full object-cover border border-green-300" />
+                <img src="{{ review.customer.profile_picture.url }}" 
+                     alt="{% trans 'Customer Profile' %}" 
+                     class="w-12 h-12 rounded-full object-cover border border-green-300" />
               {% else %}
-                <img src="{% static 'default_customer.png' %}" alt="{% trans 'Default Customer' %}" class="w-12 h-12 rounded-full object-cover border border-green-300" />
+                <img src="{% static 'default_customer.png' %}" 
+                     alt="{% trans 'Default Customer' %}" 
+                     class="w-12 h-12 rounded-full object-cover border border-green-300" />
               {% endif %}
 
               <!-- Review Content -->
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-1">
-                  <strong class="text-green-900">{{ review.customer.user.first_name }} {{ review.customer.user.last_name }}</strong>
-                  <span class="text-xs text-green-600">({{ review.created_at|date:"M d, Y" }})</span>
+                  <strong class="text-green-900">
+                    {{ review.customer.user.first_name }} {{ review.customer.user.last_name }}
+                  </strong>
+                  <span class="text-xs text-green-600">
+                    ({{ review.created_at|date:"M d, Y" }})
+                  </span>
                 </div>
-    <a href="{% url 'customer-detail' review.customer.user.customerprofile.id %}" class="hover:text-green-700">
-                        @{{ review.customer.user.username }}
-                    </a>
+
+                <!-- Username -->
+                <a href="{% url 'customer-detail' review.customer.user.customerprofile.id %}" 
+                   class="hover:text-green-700 text-sm text-gray-500">
+                  @{{ review.customer.user.username }}
+                </a>
+
+                <!-- Rating -->
                 <div class="flex items-center gap-1 text-yellow-500 mb-2">
                   {% for i in "12345" %}
                     {% if i|add:"0" <= review.rating %}
@@ -129,6 +64,7 @@
                   <span class="text-sm text-green-700 ml-1">{{ review.rating }}/5</span>
                 </div>
 
+                <!-- Comment -->
                 {% if review.comment %}
                   <p class="text-green-800 leading-relaxed">{{ review.comment }}</p>
                 {% else %}
@@ -139,10 +75,13 @@
           </div>
         {% endfor %}
       </div>
+
     {% else %}
+      <!-- Empty State -->
       <div class="text-center py-12 bg-white rounded-xl shadow-md border border-green-200">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a9 9 0 11-12.728 0 9 9 0 0112.728 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a9 9 0 11-12.728 0 9 9 0 0112.728 0z" />
         </svg>
         <h3 class="text-xl text-gray-600 font-medium">{% trans "अहिले समीक्षा छैन।" %}</h3>
         <p class="text-gray-500 mt-2">{% trans "पहिलो क्रय गर्नुहोस् र तपाईंको पहिलो समीक्षा दिनुहोस्!" %}</p>
@@ -151,7 +90,8 @@
 
     <!-- Back Button -->
     <div class="mt-8 text-center">
-      <a href="{% url 'farmer-dashboard' %}" class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+      <a href="{% url 'farmer-dashboard' %}" 
+         class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
         ← {% trans "फर्कनुहोस्" %}
       </a>
     </div>
