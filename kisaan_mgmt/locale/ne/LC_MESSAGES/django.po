@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-19 20:58+0545\n"
+"POT-Creation-Date: 2025-10-21 21:33+0545\n"
 "PO-Revision-Date: 2020-07-14 21:42+0000\n"
 "Last-Translator: Transifex Bot <>\n"
 "Language-Team: Nepali (http://www.transifex.com/django/django/language/ne/)\n"
@@ -20,149 +20,315 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\accounts\forms.py:24
+#: .\accounts\forms.py:39
 #, fuzzy
 #| msgid "Enter a valid email address."
 msgid "please enter your email address."
 msgstr "सही ई-मेल ठेगाना राख्नु होस ।"
 
-#: .\accounts\forms.py:29
+#: .\accounts\forms.py:44
 #, fuzzy
 #| msgid "Enter a whole number."
 msgid "please enter your phone number."
 msgstr "कृपया आफ्नो फोन नम्बर राख्नुहोस्।"
 
-#: .\accounts\forms.py:34
+#: .\accounts\forms.py:49
 msgid "please select your ward."
 msgstr "कृपया आफ्नो वडा छान्नुहोस्।"
 
-#: .\accounts\forms.py:39
+#: .\accounts\forms.py:54
 msgid "First Name"
 msgstr "पहिलो नाम"
 
-#: .\accounts\forms.py:41
+#: .\accounts\forms.py:56
 msgid "please enter your first name."
 msgstr "कृपया आफ्नो पहिलो नाम लेख्नुहोस्।"
 
-#: .\accounts\forms.py:47
+#: .\accounts\forms.py:62
 msgid "Last Name"
 msgstr "थर"
 
-#: .\accounts\forms.py:48
+#: .\accounts\forms.py:63
 msgid "please enter your last name."
 msgstr "कृपया आफ्नो थर लेख्नुहोस्।"
 
-#: .\accounts\forms.py:54
+#: .\accounts\forms.py:69
 msgid "Tole (Neighborhood)"
 msgstr "टोल"
 
-#: .\accounts\forms.py:55
+#: .\accounts\forms.py:70
 msgid "please enter your tole"
 msgstr "कृपया आफ्नो टोल लेख्नुहोस्।"
 
-#: .\accounts\forms.py:60
+#: .\accounts\forms.py:75
 msgid "please select your role."
 msgstr "कृपया आफ्नो भूमिका छान्नुहोस्।"
 
-#: .\accounts\forms.py:63 .\templates\accounts\customer_login.html:272
+#: .\accounts\forms.py:78 .\templates\accounts\customer_login.html:272
 #: .\templates\accounts\farmer_login.html:272
 #: .\templates\accounts\signup.html:274 .\templates\admin\login.html:230
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: .\accounts\forms.py:65
+#: .\accounts\forms.py:80
 #, fuzzy
 #| msgid "This field is required."
 msgid "password is required."
 msgstr "पासवर्ड आवश्यक छ।"
 
-#: .\accounts\forms.py:68 .\templates\accounts\signup.html:276
+#: .\accounts\forms.py:83 .\templates\accounts\signup.html:276
 #, fuzzy
 #| msgid "Forget Password?"
 msgid "Confirm Password"
 msgstr "पासवर्ड पुष्टि गर्नुहोस्"
 
-#: .\accounts\forms.py:70 .\accounts\forms.py:84
+#: .\accounts\forms.py:85 .\accounts\forms.py:99
 msgid "please confirm your password."
 msgstr "कृपया आफ्नो पासवर्ड पुष्टि गर्नुहोस्।"
 
-#: .\accounts\forms.py:78
+#: .\accounts\forms.py:93
 msgid "please enter a username."
 msgstr "कृपया प्रयोगकर्ताको नाम लेख्नुहोस्।"
 
-#: .\accounts\forms.py:81
+#: .\accounts\forms.py:96
 msgid "please enter a password."
 msgstr "कृपया पासवर्ड लेख्नुहोस्।"
 
-#: .\accounts\forms.py:91
+#: .\accounts\forms.py:106
 msgid "the email is already in use. Please use a different email."
 msgstr "यो इमेल पहिले नै प्रयोगमा छ। कृपया अर्को इमेल प्रयोग गर्नुहोस्।"
 
-#: .\accounts\forms.py:97
+#: .\accounts\forms.py:112
 msgid "please enter a valid phone number containing only digits."
 msgstr "कृपया अंक मात्र भएको मान्य फोन नम्बर लेख्नुहोस्।"
 
-#: .\accounts\forms.py:99
+#: .\accounts\forms.py:114
 msgid "the phone number is too short. It should be at least 8 digits."
 msgstr "फोन नम्बर धेरै छोटो छ। कम्तिमा ८ अंक हुनुपर्छ।"
 
-#: .\accounts\forms.py:104
+#: .\accounts\forms.py:119
 msgid ""
 "the phone number is already in use. Please use a different phone number."
 msgstr "यो फोन नम्बर पहिले नै प्रयोगमा छ। कृपया अर्को फोन नम्बर प्रयोग गर्नुहोस्।"
 
-#: .\accounts\forms.py:143
+#: .\accounts\forms.py:158
 #, fuzzy
 #| msgid "Write your message..."
 msgid "Write your review..."
 msgstr "आफ्नो सन्देश लेख्नुहोस्..."
+
 #: .\accounts\views\role_based_redirect.py:20
 msgid "Profile not found. Please log in again."
 msgstr "प्रोफाइल भेटिएन। कृपया फेरि लगइन गर्नुहोस्।"
 
-#: .\accounts\views\role_based_redirect.py:48
+#: .\accounts\views\role_based_redirect.py:24
+#: .\accounts\views\role_based_redirect.py:82
+#: .\accounts\views\role_based_redirect.py:118
+#: .\accounts\views\role_based_redirect.py:138
+#: .\accounts\views\role_based_redirect.py:156
+msgid "You are blocked by the system."
+msgstr "तपाईलाई सिस्टम बाट ब्लक गरिएको छ "
+
+#: .\accounts\views\role_based_redirect.py:53
 msgid "illegal access"
 msgstr "अवैध पहुँच"
 
-#: .\accounts\views\role_based_redirect.py:67
+#: .\accounts\views\role_based_redirect.py:72
 msgid "You must be logged in as a farmer to access this page."
 msgstr "यस पृष्ठमा पहुँच गर्न तपाईंले किसानको रूपमा लगइन गर्नैपर्छ।"
 
-#: .\accounts\views\role_based_redirect.py:81
+#: .\accounts\views\role_based_redirect.py:89
 msgid "You are not a farmer. Please use the correct login page."
 msgstr "तपाईं किसान हुनुहुन्न। कृपया सही लगइन पृष्ठ प्रयोग गर्नुहोस्।"
 
-#: .\accounts\views\role_based_redirect.py:99
+#: .\accounts\views\role_based_redirect.py:107
 msgid "You must be logged in as a customer to access this page."
 msgstr "यस पृष्ठमा पहुँच गर्न तपाईंले ग्राहकको रूपमा लगइन गर्नैपर्छ।"
 
-#: .\accounts\views\role_based_redirect.py:114
+#: .\accounts\views\role_based_redirect.py:125
 msgid "You are not a customer. Please use the correct login page."
 msgstr "तपाईं ग्राहक हुनुहुन्न। कृपया सही लगइन पृष्ठ प्रयोग गर्नुहोस्।"
 
-#: .\accounts\views\role_based_redirect.py:129
+#: .\accounts\views\role_based_redirect.py:144
 msgid "Only farmers can access this page."
 msgstr "यस पृष्ठमा केवल किसानहरूले मात्र पहुँच पाउन सक्छन्।"
 
-#: .\accounts\views\role_based_redirect.py:143
+#: .\accounts\views\role_based_redirect.py:162
 msgid "Only customers can access this page."
 msgstr "यस पृष्ठमा केवल ग्राहकहरूले मात्र पहुँच पाउन सक्छन्।"
 
-#: .\accounts\views\signup_view.py:72
+#: .\accounts\views\signup_view.py:80
 msgid "Your message has been sent successfully!"
 msgstr "तपाईँको सन्देश सफलतापूर्वक पठाइयो!"
 
-#: .\accounts\views\signup_view.py:89
+#: .\accounts\views\signup_view.py:97
 msgid "Your OTP for Kisaan app"
 msgstr "किसान एपका लागि तपाईंको OTP"
 
-#: .\accounts\views\signup_view.py:104
+#: .\accounts\views\signup_view.py:112
 msgid ""
 "this email domain is not allowed. Please use a common email provider like "
 "Gmail, Yahoo, Outlook, etc."
 msgstr ""
 "यो इमेल डोमेन अनुमति छैन। कृपया Gmail, Yahoo, Outlook जस्ता सामान्य इमेल प्रयोग "
 "गर्नुहोस्।"
+
+#: .\chat\views.py:79 .\chat\views.py:133
+#, fuzzy
+#| msgid "No reviews yet."
+msgid "No messages yet"
+msgstr "अहिलेसम्म कुनै समीक्षा छैन।"
+
+#: .\chat\views.py:167
+#, fuzzy
+#| msgid "You must be logged in as a customer to access this page."
+msgid "You must be a registered customer to start a chat."
+msgstr "यस पृष्ठमा पहुँच गर्न तपाईंले ग्राहकको रूपमा लगइन गर्नैपर्छ।"
+
+#: .\chat\views.py:181
+#, python-format
+msgid "Hi %(farmer_username)s, I'm interested in your product '%(product_name)s'. Please accept this chat to continue."
+msgstr "नमस्ते %(farmer_username)s, म तपाईंको उत्पादन '%(product_name)s' मा रुचि राख्छु। कृपया यो च्याट स्वीकार गर्नुहोस्।"
+
+#: .\chat\views.py:191
+#, python-format
+msgid "[System Note] Customer returned to chat via product: '%(product_name)s'"
+msgstr "[सिस्टम नोट] ग्राहक उत्पादन '%(product_name)s' मार्फत च्याटमा फर्कियो।"
+
+#: .\chat\views.py:206
+msgid "You don't have permission to view this chat."
+msgstr "तपाईंलाई यो च्याट हेर्ने अनुमति छैन।"
+
+
+#: .\chat\views.py:249
+#, fuzzy
+#| msgid "Only farmers can access this page."
+msgid "Only the farmer can accept this chat."
+msgstr "यस पृष्ठमा केवल किसानहरूले मात्र पहुँच पाउन सक्छन्।"
+#: .\chat\views.py:259
+msgid "I've accepted your chat request. How can I help you?"
+msgstr "मैले तपाईंको च्याट अनुरोध स्वीकार गरें। म तपाईंलाई कसरी मद्दत गर्न सक्छु?"
+
+#: .\chat\views.py:272
+#, fuzzy
+#| msgid "Only farmers can access this page."
+msgid "Only the farmer can reject this chat."
+msgstr "यस पृष्ठमा केवल किसानहरूले मात्र पहुँच पाउन सक्छन्।"
+#: .\chat\views.py:282
+msgid "[System Notification] Unfortunately, the farmer has rejected your chat request."
+msgstr "[सिस्टम सूचना] दुर्भाग्यवश, किसानले तपाईंको च्याट अनुरोध अस्वीकृत गरेका छन्।"
+
+#: .\chat\views.py:286
+#, python-format
+msgid "Chat request from %(customer_username)s has been rejected."
+msgstr "%(customer_username)s बाट आएको च्याट अनुरोध अस्वीकृत गरिएको छ।"
+
+#: .\payments\views.py:52
+#, fuzzy
+#| msgid "Unable to access your location."
+msgid "Unable to load product."
+msgstr "तपाईंको स्थान पहुँच गर्न असमर्थ।"
+
+#: .\payments\views.py:114
+#, fuzzy
+#| msgid "No pending chat requests."
+msgid "Error processing payment request."
+msgstr "कुनै प्रतीक्षारत च्याट अनुरोधहरू छैनन्।"
+#: .\payments\views.py:191
+#, python-format
+msgid "✅ Your Product '%(product_name)s' Has Been Sold!"
+msgstr "✅ तपाईंको उत्पादन '%(product_name)s' बिक्री भइसकेको छ!"
+
+#: .\payments\views.py:193
+#, python-format
+msgid ""
+"Dear %(farmer_username)s,\n"
+"\n"
+"Your product '%(product_name)s' has just been purchased.\n"
+"\n"
+"📦 Quantity: %(quantity)s\n"
+"💰 Amount: Rs. %(amount)s\n"
+"\n"
+"👤 Customer Info:\n"
+"Username: %(customer_username)s\n"
+"Email: %(customer_email)s\n"
+"Phone: %(phone)s\n"
+"\n"
+"Please prepare for delivery and coordinate accordingly.\n"
+"\n"
+"Thank you,\n"
+"Your Platform Team"
+msgstr ""
+"प्रिय %(farmer_username)s,\n"
+"\n"
+"तपाईंको उत्पादन '%(product_name)s' भर्खरै खरीद गरिएको छ।\n"
+"\n"
+"📦 परिमाण: %(quantity)s\n"
+"💰 रकम: Rs. %(amount)s\n"
+"\n"
+"👤 ग्राहक विवरण:\n"
+"प्रयोगकर्ता नाम: %(customer_username)s\n"
+"ईमेल: %(customer_email)s\n"
+"फोन: %(phone)s\n"
+"\n"
+"कृपया वितरणको तयारी गर्नुहोस् र समन्वय गर्नुहोस्।\n"
+"\n"
+"धन्यवाद,\n"
+"तपाईंको प्लेटफर्म टीम"
+
+#: .\payments\views.py:244
+msgid "Error displaying failure page."
+msgstr "विफल पृष्ठ प्रदर्शनमा त्रुटि।"
+
+#: .\payments\views.py:482
+msgid "Cannot update delivery status."
+msgstr "डेलिभरी स्थिति अद्यावधिक गर्न सकिएन।"
+
+#: .\payments\views.py:529
+#, python-format
+msgid " Dispute Alert: Transaction %(pid)s"
+msgstr " विवाद सूचना: लेनदेन %(pid)s"
+
+#: .\payments\views.py:531
+#, python-format
+msgid ""
+"Customer %(customer_username)s has marked the product '%(product_name)s' "
+"(PID: %(pid)s) as Not Received.\n"
+"\n"
+"Farmer: %(farmer_username)s\n"
+"Quantity: %(quantity)s\n"
+"Amount: Rs. %(amount)s\n"
+"Date: %(date)s\n"
+"\n"
+"Please review and take necessary action."
+msgstr ""
+"ग्राहक %(customer_username)s ले उत्पादन '%(product_name)s' (PID: %(pid)s) "
+"प्राप्त नभएको रूपमा चिन्ह लगाएका छन्।\n"
+"\n"
+"किसान: %(farmer_username)s\n"
+"परिमाण: %(quantity)s\n"
+"रकम: Rs. %(amount)s\n"
+"मिति: %(date)s\n"
+"\n"
+"कृपया समीक्षा गर्नुहोस् र आवश्यक कदम चाल्नुहोस्।"
+
+#: .\payments\views.py:561
+msgid "Cannot mark as dispute."
+msgstr "विवादको रूपमा चिन्ह लगाउन सकिएन।"
+
+#: .\payments\views.py:576
+msgid "Error loading purchase history."
+msgstr "खरिद इतिहास लोड गर्न त्रुटि।"
+
+#: .\payments\views.py:628
+#, fuzzy
+#| msgid "Payment Failed"
+msgid "COD Payment Failed."
+msgstr "भुक्तानी असफल भयो"
+
+#: .\payments\views.py:646
+msgid "Cannot process COD payment."
+msgstr "COD भुक्तानी प्रक्रिया गर्न सकिएन।"
 
 #: .\products\views.py:157
 msgid "You are not allowed to edit this product."
@@ -182,7 +348,8 @@ msgstr "ग्राहक-ड्याशबोर्ड"
 
 #: .\templates\accounts\customer_dashboard.html:26
 msgid "Hello, dear customer! Here you can browse products posted by farmers."
-msgstr "नमस्ते, प्रिय ग्राहक! यहाँ तपाईं किसानहरूले पोस्ट गरेका उत्पादनहरू ब्राउज गर्न सक्नुहुन्छ।"
+msgstr ""
+"नमस्ते, प्रिय ग्राहक! यहाँ तपाईं किसानहरूले पोस्ट गरेका उत्पादनहरू ब्राउज गर्न सक्नुहुन्छ।"
 
 #: .\templates\accounts\customer_dashboard.html:39
 msgid "Search items like (e.g., Potato, Ginger, etc.)"
@@ -209,6 +376,7 @@ msgstr "मूल्य "
 #| msgid "Date out of range"
 msgid "Date Range"
 msgstr "मिति मिलेन ।"
+
 #: .\templates\accounts\customer_dashboard.html:66
 msgid "Quantity Range"
 msgstr "परिमाण दायराः"
@@ -248,7 +416,6 @@ msgstr "नजिकको"
 #: .\templates\accounts\customer_dashboard.html:109
 msgid "Farthest"
 msgstr "टाढाको"
-
 
 #: .\templates\accounts\customer_dashboard.html:110
 #, fuzzy
@@ -292,11 +459,10 @@ msgstr "पोष्ट गरिएको मिति"
 msgid "Default Product"
 msgstr "पूर्वनिर्धारित उत्पादन"
 
-
 #: .\templates\accounts\customer_dashboard.html:228
-#: .\templates\payments\choose_quantity.html:47
-#: .\templates\payments\payment_choice.html:16
-#: .\templates\payments\purchases.html:41
+#: .\templates\payments\choose_quantity.html:41
+#: .\templates\payments\payment_choice.html:13
+#: .\templates\payments\purchases.html:37
 #: .\templates\payments\transaction_list.html:39
 #: .\templates\products\add_product.html:48
 #: .\templates\products\edit_product.html:55
@@ -304,7 +470,7 @@ msgid "Quantity"
 msgstr "परिमाण"
 
 #: .\templates\accounts\customer_dashboard.html:231
-#: .\templates\payments\choose_quantity.html:25
+#: .\templates\payments\choose_quantity.html:19
 #: .\templates\products\add_product.html:69
 #: .\templates\products\edit_product.html:79
 msgid "Price per unit"
@@ -312,31 +478,24 @@ msgstr "प्रति एकाइ मूल्य "
 
 #: .\templates\accounts\customer_dashboard.html:234
 #: .\templates\payments\income_summary.html:225
-#: .\templates\payments\payment_choice.html:17
+#: .\templates\payments\payment_choice.html:14
 msgid "Total"
 msgstr "जम्मा "
 
 #: .\templates\accounts\customer_dashboard.html:238
 #: .\templates\products\add_product.html:75
 #: .\templates\products\edit_product.html:86
-#, fuzzy
-#| msgid "Duration"
 msgid "Description"
-msgstr "अवधि"
+msgstr "विवरण"
 
 #: .\templates\accounts\customer_dashboard.html:243
-#, fuzzy
-#| msgid "Action"
 msgid "Location"
-msgstr "कार्य"
+msgstr "स्थान"
 
 #: .\templates\accounts\customer_dashboard.html:244
 #, python-format
-msgid ""
-"\n"
-"                    Ward No. %(ward)s\n"
-"                  "
-msgstr ""
+msgid "\n                    Ward No. %(ward)s\n                  "
+msgstr "\n                    वार्ड नं. %(ward)s\n                  "
 
 #: .\templates\accounts\customer_dashboard.html:254
 msgid "Distance"
@@ -348,23 +507,17 @@ msgid "Distance not available"
 msgstr "दुरी उपलब्ध छैन "
 
 #: .\templates\accounts\customer_dashboard.html:263
-#, fuzzy
-#| msgid "Farmer Login"
 msgid "View farmer's location"
-msgstr "किसान लगइन"
+msgstr "किसानको स्थान हेर्नुहोस्"
 
 #: .\templates\accounts\customer_dashboard.html:269
 #: .\templates\accounts\farmer_detail.html:257
-#, fuzzy
-#| msgid "Pay Now"
 msgid "Buy Now"
-msgstr "अब भुक्तानी गर्नुहोस्"
+msgstr "अहिले किन्नुहोस्"
 
 #: .\templates\accounts\customer_dashboard.html:274
-#, fuzzy
-#| msgid "We are with farmer"
 msgid "Chat with farmer"
-msgstr "हामि किसानका साथमा छौ "
+msgstr "किसानसँग कुराकानी गर्नुहोस्"
 
 #: .\templates\accounts\customer_dashboard.html:281
 msgid "No products are currently available."
@@ -374,6 +527,7 @@ msgstr "तत्काल कुनै उत्पादन छैन "
 #: .\templates\accounts\farmer_detail.html:291
 msgid "Previous"
 msgstr "अघिल्लो"
+
 #: .\templates\accounts\customer_dashboard.html:294
 #: .\templates\accounts\farmer_detail.html:296
 msgid "Page"
@@ -389,15 +543,12 @@ msgid "Next"
 msgstr "अर्को"
 
 #: .\templates\accounts\customer_footer.html:13
-#, fuzzy
-#| msgid "Farmer"
 msgid "Farmer Market"
 msgstr "किसान बजार"
 
 #: .\templates\accounts\customer_footer.html:14
 msgid "Your choice, our market"
 msgstr "तपाईंको रोजाइ, हाम्रो बजार"
-
 
 #: .\templates\accounts\customer_footer.html:19
 #: .\templates\accounts\customer_sidebar.html:71
@@ -425,16 +576,13 @@ msgid "Support"
 msgstr "सहयोग"
 
 #: .\templates\accounts\customer_footer.html:27
-#, fuzzy
-#| msgid "Kisaan. All rights reserved."
 msgid "Farmer Market. All rights reserved."
-msgstr "किसान। सबै अधिकारहरू सुरक्षित छन्।"
+msgstr "किसान बजार। सबै अधिकार सुरक्षित छन्।"
 
 #: .\templates\accounts\customer_footer.html:28
-#, fuzzy
-#| msgid "We are with farmer"
 msgid "Made with love for farmers"
-msgstr "हामि किसानका साथमा छौ "
+msgstr "किसानहरूको लागि माया सहित बनेको"
+
 #: .\templates\accounts\customer_header.html:22
 msgid "Your Choice, Our Market"
 msgstr "तपाईंको रोजाइ, हाम्रो बजार"
@@ -444,37 +592,28 @@ msgstr "तपाईंको रोजाइ, हाम्रो बजार"
 msgid "Hello,"
 msgstr "नमस्ते,"
 
-
 #: .\templates\accounts\customer_login.html:8
-#, fuzzy
-#| msgid "Farmer Login"
 msgid "Customer Login"
-msgstr "किसान लगइन"
+msgstr "ग्राहक लगइन"
 
 #: .\templates\accounts\customer_login.html:238
 #: .\templates\accounts\farmer_login.html:238
 msgid "Farmer login form"
-msgstr "किसान लगइन फर्म "
+msgstr "किसान लगइन फारम"
 
 #: .\templates\accounts\customer_login.html:243
 #: .\templates\accounts\farmer_login.html:243
 msgid "किसान लोगो"
-msgstr ""
+msgstr "किसान लोगो"
 
 #: .\templates\accounts\customer_login.html:245
-#: .\templates\accounts\signup.html:299
-#: .\templates\payments\income_summary.html:222
-#, fuzzy
-#| msgid "Login as Customer"
-msgid "Customer"
-msgstr "ग्राहकका रुपमा लगइन गर्नुहोस् "
+msgid "Customer Login "
+msgstr "ग्राहक लगइन"
 
 #: .\templates\accounts\customer_login.html:255
 #: .\templates\accounts\farmer_login.html:255
-#, fuzzy
-#| msgid "Username or password do not match"
 msgid "Email or password do not match"
-msgstr "प्रयोगकर्ता नाम र पासवर्ड मिलेन "
+msgstr "इमेल वा पासवर्ड मिलेन"
 
 #: .\templates\accounts\customer_login.html:264
 #: .\templates\accounts\farmer_login.html:264
@@ -508,16 +647,12 @@ msgid "Register"
 msgstr "दर्ता गर्नुहोस्।"
 
 #: .\templates\accounts\customer_login.html:292
-#, fuzzy
-#| msgid "Are you customer?"
 msgid "Are you farmer?"
-msgstr "ग्राहक हुनहुन्छ? "
+msgstr "के तपाईं किसान हुनुहुन्छ?"
 
 #: .\templates\accounts\customer_login.html:292
-#, fuzzy
-#| msgid "Login as Customer"
 msgid "Login as Farmer"
-msgstr "ग्राहकका रुपमा लगइन गर्नुहोस् "
+msgstr "किसानका रूपमा लगइन गर्नुहोस्"
 
 #: .\templates\accounts\customer_login.html:293
 #: .\templates\accounts\farmer_login.html:293
@@ -539,23 +674,24 @@ msgid ""
 "        %(address)s, %(ward)s\n"
 "      "
 msgstr ""
+
 #: .\templates\accounts\customer_sidebar.html:51
 msgid "Add more information"
 msgstr "थप जानकारी थप्नुहोस्"
 
 #: .\templates\accounts\customer_sidebar.html:59
-msgid "Dear customer, your participation keeps the agricultural market running!"
+msgid ""
+"Dear customer, your participation keeps the agricultural market running!"
 msgstr "प्रिय ग्राहक, तपाईंको सहभागिताले कृषि बजारलाई चलायमान राख्छ!"
-
 
 #: .\templates\accounts\customer_sidebar.html:67
 #: .\templates\accounts\farmer_sidebar.html:50
 #: .\templates\accounts\farmer_sidebar.html:114
 msgid "Edit Profile"
-msgstr "प्रोफाइल सम्पादन गर्नुहोस्"
+msgstr "प्रोफाइल सम्पादन"
 
 #: .\templates\accounts\customer_sidebar.html:75
-#: .\templates\payments\purchases.html:8 .\templates\payments\purchases.html:15
+#: .\templates\payments\purchases.html:5 .\templates\payments\purchases.html:11
 msgid "My Purchases"
 msgstr "मेरो खरिदहरू"
 
@@ -575,76 +711,75 @@ msgstr "सेटिंग"
 #: .\templates\accounts\customer_sidebar.html:92
 #: .\templates\accounts\farmer_sidebar.html:123
 #: .\templates\accounts\farmer_sidebar.html:128
-#, fuzzy
-#| msgid "Delete"
 msgid "Delete Account"
 msgstr "खाता हटाउनुहोस् "
 
 #: .\templates\accounts\customer_sidebar.html:96
 #: .\templates\accounts\farmer_sidebar.html:59
 #: .\templates\accounts\farmer_sidebar.html:124
-#, fuzzy
-#| msgid "Support"
 msgid "Report"
-msgstr "सहयोग"
+msgstr "रिपोर्ट"
 
 #: .\templates\accounts\customer_sidebar.html:107
 #: .\templates\accounts\farmer_sidebar.html:66
 #: .\templates\accounts\farmer_sidebar.html:134
 msgid "Logout"
 msgstr "लगआउट"
-#: .\templates\accounts\delete_customer_account_confirm.html:3
-#: .\templates\accounts\delete_farmer_account_confirm.html:3
+
+#: .\templates\accounts\delete_customer_account_confirm.html:7
+#: .\templates\accounts\delete_farmer_account_confirm.html:6
 msgid "Delete Your Account"
 msgstr "तपाईंको खाता मेटाउनुहोस्"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:5
-#: .\templates\accounts\delete_farmer_account_confirm.html:5
-msgid "This action is permanent and irreversible. All your data will be erased:"
-msgstr "यो क्रिया स्थायी र अपरिवर्तनीय छ। तपाईंका सबै डेटा मेटिनेछन्:"
-
-#: .\templates\accounts\delete_customer_account_confirm.html:8
+#: .\templates\accounts\delete_customer_account_confirm.html:9
 #: .\templates\accounts\delete_farmer_account_confirm.html:8
+msgid ""
+"This action is permanent and irreversible. All your data will be erased:"
+msgstr "यो प्रक्रिया स्थायी छ र फर्काउन सकिँदैन। तपाईंका सबै डेटा मेटिनेछन्।"
+
+#: .\templates\accounts\delete_customer_account_confirm.html:12
+#: .\templates\accounts\delete_farmer_account_confirm.html:11
 msgid "Your profile (farmer or customer)"
 msgstr "तपाईंको प्रोफाइल (किसान वा ग्राहक)"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:9
-#: .\templates\accounts\delete_farmer_account_confirm.html:9
+#: .\templates\accounts\delete_customer_account_confirm.html:13
+#: .\templates\accounts\delete_farmer_account_confirm.html:12
 msgid "All products you listed (if farmer)"
 msgstr "तपाईंले सूचीबद्ध गरेका सबै उत्पादनहरू (यदि किसान हुनुहुन्छ भने)"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:10
-#: .\templates\accounts\delete_farmer_account_confirm.html:10
+#: .\templates\accounts\delete_customer_account_confirm.html:14
+#: .\templates\accounts\delete_farmer_account_confirm.html:13
 msgid "All reviews you wrote or received"
 msgstr "तपाईंले लेखेका वा प्राप्त गरेका सबै समीक्षा"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:11
-#: .\templates\accounts\delete_farmer_account_confirm.html:11
+#: .\templates\accounts\delete_customer_account_confirm.html:15
+#: .\templates\accounts\delete_farmer_account_confirm.html:14
 msgid "All chat messages and conversations"
 msgstr "सबै च्याट सन्देशहरू र कुराकानीहरू"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:12
-#: .\templates\accounts\delete_farmer_account_confirm.html:12
-msgid "All transaction history"
-msgstr "सबै लेनदेन इतिहास"
-
-#: .\templates\accounts\delete_customer_account_confirm.html:15
+#: .\templates\accounts\delete_customer_account_confirm.html:16
 #: .\templates\accounts\delete_farmer_account_confirm.html:15
+msgid "All transaction history"
+msgstr "सबै लेनदेन सुचो "
+
+#: .\templates\accounts\delete_customer_account_confirm.html:19
+#: .\templates\accounts\delete_farmer_account_confirm.html:18
 msgid "To confirm, please type your email address exactly as it appears below:"
 msgstr "पुष्टि गर्न, कृपया तल देखाइएको इमेल ठेगाना ठीक त्यस्तै टाइप गर्नुहोस्:"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:27
-#: .\templates\accounts\delete_farmer_account_confirm.html:27
+#: .\templates\accounts\delete_customer_account_confirm.html:31
+#: .\templates\accounts\delete_farmer_account_confirm.html:30
 msgid "Type your email to confirm:"
 msgstr "पुष्टि गर्न आफ्नो इमेल टाइप गर्नुहोस्:"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:44
-#: .\templates\accounts\delete_farmer_account_confirm.html:44
+#: .\templates\accounts\delete_customer_account_confirm.html:48
+#: .\templates\accounts\delete_farmer_account_confirm.html:47
 msgid "Yes, Delete My Account Forever"
 msgstr "हो, मेरो खाता स्थायी रूपमा मेटाउनुहोस्"
 
-#: .\templates\accounts\delete_customer_account_confirm.html:48
-#: .\templates\accounts\delete_farmer_account_confirm.html:48
+#: .\templates\accounts\delete_customer_account_confirm.html:52
+#: .\templates\accounts\delete_farmer_account_confirm.html:51
+#: .\templates\products\confirm_delete.html:20
 msgid "Cancel"
 msgstr "रद्द गर्नुहोस्"
 
@@ -666,34 +801,25 @@ msgstr "परिमाण:"
 msgid "Price per unit:"
 msgstr "प्रति एकाइ मूल्य:"
 
-
 #: .\templates\accounts\farmer_dashboard.html:51
-#, fuzzy
-#| msgid "Total income"
 msgid "Total price:"
-msgstr "कुल आय"
+msgstr "जम्मा मूल्य :"
 
 #: .\templates\accounts\farmer_dashboard.html:52
-#, fuzzy
-#| msgid "Action"
 msgid "Location:"
-msgstr "कार्य"
+msgstr "स्थान:"
 
 #: .\templates\accounts\farmer_dashboard.html:52
-#, fuzzy
-#| msgid "Ward"
 msgid "Ward No."
-msgstr "वार्ड "
+msgstr "वार्ड नं.:"
 
 #: .\templates\accounts\farmer_dashboard.html:53
 msgid "Posted on:"
-msgstr ""
+msgstr "पोष्ट गरिएको मिति:"
 
 #: .\templates\accounts\farmer_dashboard.html:54
-#, fuzzy
-#| msgid "Duration"
 msgid "Description:"
-msgstr "अवधि"
+msgstr "विवरण:"
 
 #: .\templates\accounts\farmer_dashboard.html:58
 msgid "Edit"
@@ -704,35 +830,26 @@ msgid "Delete"
 msgstr "हटाउनुहोस् "
 
 #: .\templates\accounts\farmer_dashboard.html:65
-#, fuzzy
-#| msgid "You have not purchased anything yet."
 msgid "You haven't added any products yet."
-msgstr "तपाईंले अहिलेसम्म केही पनि खरिद गर्नु भएको छैन।"
+msgstr "तपाईंले अहिलेसम्म कुनै पनि उत्पादन थप्नुभएको छैन।"
 
 #: .\templates\accounts\farmer_detail.html:77
 #: .\templates\accounts\view_farmer_reviews.html:14
-#, fuzzy
-#| msgid "Farmer Login"
 msgid "Farmer Profile"
-msgstr "किसान लगइन"
+msgstr "किसान प्रोफाइल"
 
 #: .\templates\accounts\farmer_detail.html:127
-#, fuzzy
-#| msgid "Rice Production"
 msgid "View Location"
-msgstr "धान उत्पादन"
+msgstr "स्थान हेर्नुहोस्"
 
 #: .\templates\accounts\farmer_detail.html:134
-#, fuzzy
-#| msgid "Reviews"
 msgid "Leave Review"
-msgstr "समीक्षा"
+msgstr "समीक्षा दिनुहोस्"
 
 #: .\templates\accounts\farmer_detail.html:145
-#, fuzzy
-#| msgid "Products"
 msgid "Available Products"
 msgstr "उपलब्ध उत्पादनहरू"
+
 #: .\templates\accounts\farmer_detail.html:276
 msgid "No products available"
 msgstr "उत्पादनहरू उपलब्ध  छैनन्"
@@ -770,15 +887,9 @@ msgid "Production, Progress & Market"
 msgstr "उत्पादन, प्रगति र बजार"
 
 #: .\templates\accounts\farmer_login.html:8
+#: .\templates\accounts\farmer_login.html:245
 msgid "Farmer Login"
 msgstr "किसान लगइन"
-
-#: .\templates\accounts\farmer_login.html:245
-#: .\templates\accounts\signup.html:298 .\templates\landingpage\header.html:8
-#: .\templates\landingpage\header.html:46 .\templates\landingpage\index.html:9
-#: .\templates\payments\purchases.html:44
-msgid "Farmer"
-msgstr "किसान"
 
 #: .\templates\accounts\farmer_login.html:292
 msgid "Are you customer?"
@@ -788,44 +899,74 @@ msgstr "ग्राहक हुनहुन्छ? "
 msgid "Login as Customer"
 msgstr "ग्राहकका रुपमा लगइन गर्नुहोस् "
 
+#: .\templates\accounts\farmer_reviews.html:5
+#: .\templates\accounts\farmer_reviews.html:13
 #: .\templates\accounts\farmer_reviews_customer.html:7
 #: .\templates\accounts\view_farmer_reviews.html:5
 #: .\templates\accounts\view_farmer_reviews.html:21
-#, fuzzy
-#| msgid "Reviews"
 msgid "Farmer Reviews"
+msgstr "किसान समीक्षा"
+
+#: .\templates\accounts\farmer_reviews.html:17
+#: .\templates\accounts\view_farmer_reviews.html:53
+msgid "Reviews"
 msgstr "समीक्षा"
 
-#: .\templates\accounts\farmer_reviews_customer.html:13
+#: .\templates\accounts\farmer_reviews.html:28
+#: .\templates\accounts\view_farmer_reviews.html:62
 #, fuzzy
-#| msgid "Reviews"
-msgid "Reviews for"
-msgstr "समीक्षा"
+#| msgid "Farmer Login"
+msgid "Customer Profile"
+msgstr "किसान लगइन"
+
+#: .\templates\accounts\farmer_reviews.html:32
+#: .\templates\accounts\view_farmer_reviews.html:64
+#, fuzzy
+#| msgid "Login as Customer"
+msgid "Default Customer"
+msgstr "ग्राहकका रुपमा लगइन गर्नुहोस् "
+
+#: .\templates\accounts\farmer_reviews.html:71
+#, fuzzy
+#| msgid "No comment."
+msgid "No comment provided."
+msgstr "कुनै टिप्पणी छैन।"
+
+#: .\templates\accounts\farmer_reviews.html:86
+#: .\templates\accounts\view_farmer_reviews.html:102
+msgid "No reviews yet."
+msgstr "अहिलेसम्म कुनै समीक्षा छैन।"
+
+#: .\templates\accounts\farmer_reviews.html:87
+#: .\templates\accounts\view_farmer_reviews.html:103
+msgid "Make your first purchase and leave your first review!"
+msgstr "तपाईंको पहिलो खरीद गर्नुहोस् र पहिलो समीक्षा छोड्नुहोस्!"
+
+#: .\templates\accounts\farmer_reviews.html:95
+#, fuzzy
+#| msgid "No, Go Back"
+msgid "Go Back"
+msgstr "होइन, फिर्ता जानुहोस्"
 
 #: .\templates\accounts\farmer_reviews_customer.html:43
 msgid "No reviews yet for this farmer."
 msgstr "यस किसानको लागि अहिलेसम्म कुनै समीक्षा छैन।"
 
-
 #: .\templates\accounts\farmer_reviews_customer.html:50
-#, fuzzy
-#| msgid "Reviews"
 msgid "Back to Reviews"
-msgstr "समीक्षा"
+msgstr "समीक्षामा फर्कनुहोस्"
 
 #: .\templates\accounts\farmer_sidebar.html:10
 msgid "किसान 🌱"
-msgstr ""
+msgstr "किसान 🌱"
 
 #: .\templates\accounts\farmer_sidebar.html:46
 msgid "📋 ड्याशबोर्ड"
-msgstr ""
+msgstr "📋 ड्याशबोर्ड"
 
 #: .\templates\accounts\farmer_sidebar.html:47
-#, fuzzy
-#| msgid "All Transactions"
-msgid "transaction-list"
-msgstr "सबै लेनदेन"
+msgid "Transaction-list"
+msgstr "लेनदेन सूची"
 
 #: .\templates\accounts\farmer_sidebar.html:48
 #: .\templates\accounts\farmer_sidebar.html:112
@@ -836,95 +977,81 @@ msgstr "आम्दानि सारांश "
 
 #: .\templates\accounts\farmer_sidebar.html:49
 #: .\templates\accounts\farmer_sidebar.html:113
-#, fuzzy
-#| msgid "Products"
 msgid "Add New Product"
-msgstr "उत्पादनहरू"
+msgstr "नयाँ उत्पादन थप्नुहोस्"
 
 #: .\templates\accounts\farmer_sidebar.html:58
 msgid "Block My Account"
-msgstr ""
+msgstr "खाता ब्लक गर्नुहोस् "
 
 #: .\templates\accounts\farmer_sidebar.html:111
-#, fuzzy
-#| msgid "Transaction ID"
 msgid "Transaction List"
-msgstr "लेनदेन आईडी"
+msgstr "लेनदेन सूची"
 
 #: .\templates\accounts\password_reset_complete.html:7
 msgid "Password Reset Complete"
-msgstr ""
+msgstr "पासवर्ड सफलतापुर्वक परिवर्तन भयो "
 
 #: .\templates\accounts\password_reset_complete.html:44
-#, fuzzy
-#| msgid "Your message has been sent successfully!"
 msgid "Your password has been successfully changed."
-msgstr "तपाईँको सन्देश सफलतापूर्वक पठाइयो!"
+msgstr "तपाईंको पासवर्ड सफलतापूर्वक परिवर्तन भयो।"
 
 #: .\templates\accounts\password_reset_complete.html:46
-#, fuzzy
-#| msgid "Your message has been sent successfully!"
 msgid "Your password has been successfully changed. You can now"
-msgstr "तपाईँको सन्देश सफलतापूर्वक पठाइयो!"
+msgstr "तपाईंको पासवर्ड सफलतापूर्वक परिवर्तन भयो। अब तपाईं"
 
 #: .\templates\accounts\password_reset_complete.html:46
-#, fuzzy
-#| msgid "Log in"
 msgid "log in"
-msgstr " लगइन "
+msgstr "लगइन गर्नुहोस्"
 
 #: .\templates\accounts\password_reset_confirm.html:8
 #: .\templates\accounts\password_reset_confirm.html:97
-#, fuzzy
-#| msgid "Forget Password?"
 msgid "Set New Password"
-msgstr "पासवर्ड बिर्सिनुभयो?"
+msgstr "नयाँ पासवर्ड सेट गर्नुहोस्"
 
 #: .\templates\accounts\password_reset_confirm.html:91
 #: .\templates\accounts\view_farmer_location.html:52
 msgid "Close"
-msgstr ""
+msgstr "बन्द गर्नुहोस् "
 
 #: .\templates\accounts\password_reset_confirm.html:153
 #: .\templates\accounts\password_reset_form.html:8
-#, fuzzy
-#| msgid "Forget Password?"
 msgid "Reset Password"
 msgstr "पासवर्ड बिर्सिनुभयो?"
 
 #: .\templates\accounts\password_reset_done.html:8
 msgid "Password Reset Email Send"
-msgstr ""
+msgstr "पासवर्ड परिवर्तन ईमेल पठाइयो "
 
 #: .\templates\accounts\password_reset_done.html:48
 msgid "Password Reset Email sent"
-msgstr ""
+msgstr "पासवर्ड परिवर्तन ईमेल पठाइयो "
 
 #: .\templates\accounts\password_reset_done.html:53
 msgid ""
 "If an account exists with the email address you provided, you will soon "
 "receive an email with instructions to reset your password."
 msgstr ""
+"यदि तपाईंले दिएको इमेल ठेगानासँग खाता अवस्थित छ भने, तपाईंले चाँडै पासवर्ड रिसेट गर्ने "
+"निर्देशनहरू सहितको इमेल प्राप्त गर्नुहुनेछ।"
 
 #: .\templates\accounts\password_reset_done.html:58
-#, fuzzy
-#| msgid " Return homepage"
 msgid "Return to login page"
 msgstr "होमपेजमा फर्कनुहोस "
 
-#: .\templates\accounts\password_reset_form.html:107
+#: .\templates\accounts\password_reset_form.html:113
 #, fuzzy
 #| msgid "Forget Password?"
-msgid "Forget Password"
+msgid "Forgot Password?"
 msgstr "पासवर्ड बिर्सिनुभयो?"
 
-#: .\templates\accounts\password_reset_form.html:112
+#: .\templates\accounts\password_reset_form.html:123
 msgid "Send password reset email"
-msgstr ""
+msgstr "पासवर्ड रिसेट इमेल पठाउनुहोस्"
 
 #: .\templates\accounts\signup.html:247
 msgid "Welcome to"
-msgstr ""
+msgstr "स्वागत छ"
 
 #: .\templates\accounts\signup.html:247 .\templates\landingpage\footer.html:12
 msgid "Kisaan"
@@ -932,7 +1059,7 @@ msgstr "किसान"
 
 #: .\templates\accounts\signup.html:247
 msgid "Portal"
-msgstr ""
+msgstr "पोर्टल "
 
 #: .\templates\accounts\signup.html:248
 #, fuzzy
@@ -942,7 +1069,7 @@ msgstr "दर्ता गर्नुहोस्।"
 
 #: .\templates\accounts\signup.html:253
 msgid "Note: Please write your username in English"
-msgstr ""
+msgstr "नोट :कृपया आफ्नो युजरनेम अंग्रजीमा लेख्नुहोस् "
 
 #: .\templates\accounts\signup.html:268
 msgid "Username"
@@ -962,11 +1089,24 @@ msgstr "भूमिका "
 msgid "-- Choose Your Role --"
 msgstr "भूमिका छान्नुहोस् "
 
+#: .\templates\accounts\signup.html:298 .\templates\landingpage\header.html:8
+#: .\templates\landingpage\header.html:46 .\templates\landingpage\index.html:9
+#: .\templates\payments\purchases.html:40
+msgid "Farmer"
+msgstr "किसान"
+
+#: .\templates\accounts\signup.html:299
+#: .\templates\payments\income_summary.html:222
+#, fuzzy
+#| msgid "Login as Customer"
+msgid "Customer"
+msgstr "ग्राहकका रुपमा लगइन गर्नुहोस् "
+
 #: .\templates\accounts\signup.html:310
 #, fuzzy
 #| msgid "IPv4 address"
 msgid "Address"
-msgstr "आइ.पी.भी४ ठेगाना"
+msgstr " ठेगाना"
 
 #: .\templates\accounts\signup.html:312
 msgid "-- Choose Your Address --"
@@ -991,10 +1131,8 @@ msgid "Tole"
 msgstr "टोल "
 
 #: .\templates\accounts\signup.html:339
-#, fuzzy
-#| msgid "please enter your last name."
 msgid "Enter your Tole Name"
-msgstr "कृपया आफ्नो थर लेख्नुहोस्।"
+msgstr "आफ्नो टोलको नाम लेख्नुहोस्"
 
 #: .\templates\accounts\signup.html:351
 msgid "Select location on map"
@@ -1016,31 +1154,84 @@ msgstr "पहिले नै खाता छ "
 msgid "Log in"
 msgstr " लगइन "
 
-#: .\templates\accounts\view_farmer_location.html:6
+#: .\templates\accounts\submit_farmer_review.html:5
 #, fuzzy
-#| msgid "Farmer Login"
+#| msgid "Farmer"
+msgid "Rate Farmer"
+msgstr "किसान"
+
+#: .\templates\accounts\submit_farmer_review.html:13
+#, fuzzy
+#| msgid "Farmer"
+msgid "Rate Farmer:"
+msgstr "किसान"
+
+#: .\templates\accounts\submit_farmer_review.html:27
+#, fuzzy
+#| msgid "Briefly describe your product (max 150 characters)"
+msgid "Write your review (optional, max 200 characters)"
+msgstr "आफ्नो उत्पादन छोटकरीमा वर्णन गर्नुहोस् (अधिकतम १५० अक्षर)"
+
+#: .\templates\accounts\submit_farmer_review.html:33
+#, fuzzy
+#| msgid "Serbian Latin"
+msgid "Submit Rating"
+msgstr "सर्वियाली ल्याटिन"
+
+#: .\templates\accounts\submit_farmer_review.html:38
+#, fuzzy
+#| msgid "Leave Review"
+msgid "See All Reviews"
+msgstr "समीक्षा दिनुहोस्"
+
+#: .\templates\accounts\update_customer_profile.html:8
+msgid "Update Customer Profile"
+msgstr "ग्राहक प्रोफाइल अद्यावधिक गर्नुहोस्"
+
+#: .\templates\accounts\update_customer_profile.html:23
+#: .\templates\accounts\update_farmer_profile.html:23
+msgid "Profile Photo"
+msgstr "प्रोफाइल फोटो"
+
+#: .\templates\accounts\update_customer_profile.html:33
+#: .\templates\accounts\update_farmer_profile.html:33
+msgid "Profile Preview"
+msgstr "प्रोफाइल पूर्वावलोकन"
+
+#: .\templates\accounts\update_customer_profile.html:38
+#: .\templates\accounts\update_farmer_profile.html:38
+msgid "Save Profile"
+msgstr "प्रोफाइल सुरक्षित गर्नुहोस्"
+
+#: .\templates\accounts\update_customer_profile.html:45
+#: .\templates\accounts\update_farmer_profile.html:45
+msgid "← Back to Dashboard"
+msgstr "← ड्यासबोर्डमा फर्कनुहोस्"
+
+#: .\templates\accounts\update_farmer_profile.html:8
+msgid "Update Farmer Profile"
+msgstr "किसान प्रोफाइल अद्यावधिक गर्नुहोस्"
+
+#: .\templates\accounts\view_farmer_location.html:6
 msgid "Farmer Location"
-msgstr "किसान लगइन"
+msgstr "किसान स्थान"
 
 #: .\templates\accounts\view_farmer_location.html:49
-#, fuzzy
-#| msgid "Farmer Login"
 msgid "Farm Location"
-msgstr "किसान लगइन"
+msgstr "फर्म स्थान"
 
 #: .\templates\accounts\view_farmer_location.html:51
 msgid "Locating your position..."
-msgstr ""
+msgstr "तपाईंको स्थान खोज्दै..."
 
 #: .\templates\accounts\view_farmer_location.html:72
 msgid "farm is here"
-msgstr "फर्म यहा छ "
+msgstr "फर्म यहाँ छ"
 
 #: .\templates\accounts\view_farmer_location.html:83
-#, fuzzy
-#| msgid "Duration"
 msgid "Your Location"
-msgstr "अवधि"
+msgstr "तपाईंको स्थान"
+
 #: .\templates\accounts\view_farmer_location.html:84
 msgid "You are here"
 msgstr "तपाईं यहाँ हुनुहुन्छ"
@@ -1058,8 +1249,6 @@ msgid "This browser does not support geolocation."
 msgstr "यो ब्राउजरले भौगोलिक स्थान समर्थन गर्दैन।"
 
 #: .\templates\accounts\view_farmer_reviews.html:16
-#, fuzzy
-#| msgid "Edit Profile"
 msgid "Default Profile"
 msgstr "पूर्वनिर्धारित प्रोफाइल"
 
@@ -1076,32 +1265,9 @@ msgid ""
 "        "
 msgstr ""
 
-#: .\templates\accounts\view_farmer_reviews.html:53
-msgid "Reviews"
-msgstr "समीक्षा"
-
-#: .\templates\accounts\view_farmer_reviews.html:62
-#, fuzzy
-#| msgid "Farmer Login"
-msgid "Customer Profile"
-msgstr "किसान लगइन"
-
-#: .\templates\accounts\view_farmer_reviews.html:64
-#, fuzzy
-#| msgid "Login as Customer"
-msgid "Default Customer"
-msgstr "ग्राहकका रुपमा लगइन गर्नुहोस् "
 #: .\templates\accounts\view_farmer_reviews.html:90
 msgid "No comment."
 msgstr "कुनै टिप्पणी छैन।"
-
-#: .\templates\accounts\view_farmer_reviews.html:102
-msgid "No reviews yet."
-msgstr "अहिलेसम्म कुनै समीक्षा छैन।"
-
-#: .\templates\accounts\view_farmer_reviews.html:103
-msgid "Make your first purchase and leave your first review!"
-msgstr "तपाईंको पहिलो खरीद गर्नुहोस् र पहिलो समीक्षा छोड्नुहोस्!"
 
 #: .\templates\accounts\view_farmer_reviews.html:110
 msgid "Back"
@@ -1111,38 +1277,29 @@ msgstr "फिर्ता"
 msgid "Admin Login - AgriPortal"
 msgstr "एडमिन  लगइन - एग्रीपोर्टल"
 
-
 #: .\templates\admin\login.html:211
-#, fuzzy
-#| msgid "An unexpected error has occurred. Please try again later."
 msgid "Invalid email or password. Please try again."
-msgstr "इमेल वा पासवर्ड मिलेन। कृपया पछि फेरि प्रयास गर्नुहोस्।"
+msgstr "इमेल वा पासवर्ड मिलेन। कृपया फेरि प्रयास गर्नुहोस्।"
 
 #: .\templates\admin\login.html:218
-#, fuzzy
-#| msgid "Email address"
 msgid "Email Address"
 msgstr "ई-मेल ठेगाना"
 
 #: .\templates\admin\login.html:241 .\templates\landingpage\header.html:114
 msgid "Login"
-msgstr "लगइन "
+msgstr "लगइन"
 
 #: .\templates\admin\login.html:246
 msgid "You're already logged in as"
-msgstr "तपाइँ पहिले नै लगइन हुनुहुन्छ "
+msgstr "तपाईं पहिले नै लगइन हुनुहुन्छ"
 
 #: .\templates\chat\chat_confirm.html:8
-#, fuzzy
-#| msgid "Confirm COD"
 msgid "Confirm Chat"
-msgstr "COD पुष्टि गर्नुहोस्"
+msgstr "च्याट पुष्टि गर्नुहोस्"
 
 #: .\templates\chat\chat_confirm.html:58
-#, fuzzy
-#| msgid "We are with farmer"
 msgid "Confirm Chat with Farmer"
-msgstr "हामि किसानका साथमा छौ "
+msgstr "किसानसँगको च्याट पुष्टि गर्नुहोस्"
 
 #: .\templates\chat\chat_confirm.html:62
 #, python-format
@@ -1152,6 +1309,11 @@ msgid ""
 "strong> regarding the product: <strong>%(product_name)s</strong>.\n"
 "        "
 msgstr ""
+"\n"
+"          तपाईं <strong>%(farmer_name)s</strong> सँग उत्पादन "
+"<strong>%(product_name)s</strong> सम्बन्धमा च्याट सुरु गर्न लाग्नुभएको छ।\n"
+"        "
+
 #: .\templates\chat\chat_confirm.html:66
 msgid "This will create a new chat thread. Are you sure?"
 msgstr "यसले नयाँ च्याट थ्रेड सिर्जना गर्नेछ। के तपाईं पक्का हुनुहुन्छ?"
@@ -1164,64 +1326,65 @@ msgstr "हो, च्याट सुरु गर्नुहोस्"
 msgid "No, Go Back"
 msgstr "होइन, फिर्ता जानुहोस्"
 
-#: .\templates\chat\customer_chats.html:9
+#: .\templates\chat\customer_chats.html:6
 msgid "My Chats"
 msgstr "मेरो च्याटहरू"
 
-#: .\templates\chat\customer_chats.html:23
+#: .\templates\chat\customer_chats.html:18
 msgid "My Chats with Farmers"
 msgstr "किसानहरूसँग मेरा च्याटहरू"
 
-#: .\templates\chat\customer_chats.html:25
-msgid "Stay connected with farmers you’ve interacted with."
+#: .\templates\chat\customer_chats.html:20
+msgid "Stay connected with farmers you've interacted with."
 msgstr "जस किसानहरूसँग तपाईंले अन्तरक्रिया गर्नुभयो, उनीहरूसँग जडित रहनुहोस्।"
 
-#: .\templates\chat\customer_chats.html:50
+#: .\templates\chat\customer_chats.html:45
 #: .\templates\chat\farmer_chats.html:83
 msgid "conversations"
 msgstr "कुराकानीहरू"
 
-#: .\templates\chat\customer_chats.html:65
+#: .\templates\chat\customer_chats.html:60
 msgid "You haven't chatted with any farmers yet."
 msgstr "तपाईंले अहिलेसम्म कुनै किसानसँग च्याट गर्नुभएको छैन।"
 
-#: .\templates\chat\customer_chats.html:66
+#: .\templates\chat\customer_chats.html:61
 msgid "Browse products and start a chat!"
 msgstr "उत्पादनहरू ब्राउज गर्नुहोस् र च्याट सुरु गर्नुहोस्!"
 
-
-#: .\templates\chat\customer_chats.html:73
-#: .\templates\payments\purchases.html:22
+#: .\templates\chat\customer_chats.html:68
+#: .\templates\payments\purchases.html:18
 #: .\templates\products\add_product.html:102
 #: .\templates\products\edit_product.html:115
 msgid "Back to Dashboard"
 msgstr "ड्यासबोर्डमा फर्कनुहोस्"
+
+#: .\templates\chat\farmer_chats.html:6
+#, fuzzy
+#| msgid "Chat"
+msgid "Chats"
+msgstr "च्याट"
+
 #: .\templates\chat\farmer_chats.html:17
 msgid "Pending Chat Requests"
 msgstr "प्रतीक्षारत च्याट अनुरोधहरू"
 
 #: .\templates\chat\farmer_chats.html:28
-#, fuzzy
-#| msgid "थप विवरण हेर्नुहोस्"
-msgid "ले च्याट अनुरोध गर्नुभएको छ"
-msgstr "थप विवरण हेर्नुहोस्"
+msgid "has sent you a chat request."
+msgstr "ले तपाईंलाई च्याट अनुरोध पठाएको छ।"
 
-#: .\templates\chat\farmer_chats.html:34 .\templates\payments\purchases.html:70
+#: .\templates\chat\farmer_chats.html:34 .\templates\payments\purchases.html:66
 #: .\templates\payments\transaction_list.html:94
 msgid "Pending"
 msgstr "प्रतीक्षामा"
 
 #: .\templates\chat\farmer_chats.html:40
-#, fuzzy
-#| msgid "थप विवरण हेर्नुहोस्"
-msgid "स्वीकार गर्नुहोस्"
-msgstr "थप विवरण हेर्नुहोस्"
+msgid "Accept"
+msgstr "स्वीकार गर्नुहोस्"
 
 #: .\templates\chat\farmer_chats.html:46
-#, fuzzy
-#| msgid "थप विवरण हेर्नुहोस्"
-msgid "अस्वीकार गर्नुहोस्"
-msgstr "थप विवरण हेर्नुहोस्"
+msgid "Reject"
+msgstr "अस्वीकार गर्नुहोस्"
+
 #: .\templates\chat\farmer_chats.html:55
 msgid "No pending chat requests."
 msgstr "कुनै प्रतीक्षारत च्याट अनुरोधहरू छैनन्।"
@@ -1317,6 +1480,7 @@ msgstr "गिटहब"
 #: .\templates\landingpage\about.html:98 .\templates\landingpage\about.html:109
 msgid "Instagram"
 msgstr "इन्स्टाग्राम"
+
 #: .\templates\landingpage\careers.html:7
 msgid "Farmer – Careers"
 msgstr "किसान – करियरहरू"
@@ -1326,45 +1490,47 @@ msgid "Build the Future with Us"
 msgstr "हामीसँग भविष्य निर्माण गर्नुहोस्"
 
 #: .\templates\landingpage\careers.html:16
-msgid "At Farmer, we are not just building technology — we are creating dreams that connect farmers, customers, and communities. Our team is small, but our hearts are big. We believe people like you are our future."
-msgstr "किसानमा, हामी केवल प्रविधि निर्माण गर्दै छैनौं — हामी सपना सिर्जना गर्दैछौं जुन किसान, ग्राहक, र समुदायहरूलाई जोड्छ। हाम्रो टोली सानो छ, तर हाम्रो मन ठूलो छ। हामी विश्वास गर्छौं तपाईं जस्ता मानिसहरू हाम्रो भविष्य हुनुहुन्छ।"
+msgid ""
+"At Farmer, we are not just building technology — we are creating dreams that "
+"connect farmers, customers, and communities. Our team is small, but our "
+"hearts are big. We believe people like you are our future."
+msgstr ""
+"किसानमा, हामी केवल प्रविधि निर्माण गर्दै छैनौं — हामी सपना सिर्जना गर्दैछौं जुन किसान, "
+"ग्राहक, र समुदायहरूलाई जोड्छ। हाम्रो टोली सानो छ, तर हाम्रो मन ठूलो छ। हामी विश्वास "
+"गर्छौं तपाईं जस्ता मानिसहरू हाम्रो भविष्य हुनुहुन्छ।"
 
 #: .\templates\landingpage\careers.html:21
 msgid "No openings currently, but..."
 msgstr "हाल कुनै पद खाली छैन, तर…"
 
 #: .\templates\landingpage\careers.html:22
-msgid "There are no open positions at the moment. However, we have many dreams and plans. We will bring new opportunities soon and want you to join us on our journey."
-msgstr "अहिलेसम्म कुनै खुला पदहरू छैनन्। तर, हाम्रा धेरै सपना र योजना छन्। हामी चाँडै नयाँ अवसरहरू ल्याउनेछौं र तपाईंलाई हाम्रो यात्रामा सामेल हुन चाहन्छौं।"
+msgid ""
+"There are no open positions at the moment. However, we have many dreams and "
+"plans. We will bring new opportunities soon and want you to join us on our "
+"journey."
+msgstr ""
+"अहिलेसम्म कुनै खुला पदहरू छैनन्। तर, हाम्रा धेरै सपना र योजना छन्। हामी चाँडै नयाँ अवसरहरू "
+"ल्याउनेछौं र तपाईंलाई हाम्रो यात्रामा सामेल हुन चाहन्छौं।"
 
 #: .\templates\landingpage\careers.html:23
 msgid "Stay in Touch"
 msgstr "सम्पर्कमा रहनुहोस्"
 
-
 #: .\templates\landingpage\careers.html:31
-#, fuzzy
-#| msgid "Farmer Login"
 msgid "Farmers Connected"
-msgstr "किसान लगइन"
+msgstr "जोडिनुभएका भएका किसानहरू"
 
 #: .\templates\landingpage\careers.html:35
-#, fuzzy
-#| msgid "Products"
 msgid "Products Listed"
-msgstr "उत्पादनहरू"
+msgstr "सूचीकृत उत्पादनहरू"
 
 #: .\templates\landingpage\careers.html:38
-#, fuzzy
-#| msgid "Ward"
 msgid "10 Wards"
-msgstr "वार्ड "
+msgstr "१० वटा वार्डहरू"
 
 #: .\templates\landingpage\careers.html:39
-#, fuzzy
-#| msgid "Beni Municipality Map"
 msgid "Served within Beni Municipality"
-msgstr "बेनी नगरपालिका नक्सा"
+msgstr "बेनी नगरपालिकाभित्र सेवा गरिएको"
 
 #: .\templates\landingpage\contact.html:9
 msgid "Contact Us - Kisaan"
@@ -1376,10 +1542,8 @@ msgid "Contact Us"
 msgstr "सम्पर्क गर्नुहोस्"
 
 #: .\templates\landingpage\contact.html:47
-#, fuzzy
-#| msgid "IPv4 address"
 msgid "Address:"
-msgstr "आइ.पी.भी४ ठेगाना"
+msgstr "ठेगाना:"
 
 #: .\templates\landingpage\contact.html:50
 msgid "Working Hours:"
@@ -1389,39 +1553,35 @@ msgstr "कार्य समय:"
 msgid "Monday to Friday, 10:00 AM – 5:00 PM"
 msgstr "सोमबारदेखि शुक्रबार, बिहान १०:०० – बेलुका ५:००"
 
-#: .\templates\landingpage\contact.html:78
+#: .\templates\landingpage\contact.html:62
 msgid "Beni Municipality Map"
 msgstr "बेनी नगरपालिका नक्सा"
 
-#: .\templates\landingpage\contact.html:96
-#, fuzzy
-#| msgid "First Name"
+#: .\templates\landingpage\contact.html:80
 msgid "Your Name"
-msgstr "पहिलो नाम"
+msgstr "तपाईंको नाम"
 
-#: .\templates\landingpage\contact.html:104
+#: .\templates\landingpage\contact.html:88
 msgid "Your Email"
 msgstr "तपाईंको इमेल"
 
-#: .\templates\landingpage\contact.html:112
+#: .\templates\landingpage\contact.html:96
 msgid "Subject"
 msgstr "विषय"
 
-#: .\templates\landingpage\contact.html:119
+#: .\templates\landingpage\contact.html:103
 msgid "Write your message..."
 msgstr "आफ्नो सन्देश लेख्नुहोस्..."
 
-#: .\templates\landingpage\contact.html:125
+#: .\templates\landingpage\contact.html:109
 msgid "Send"
 msgstr "पठाउनुहोस्"
 
 #: .\templates\landingpage\farming_tips.html:8
 #: .\templates\landingpage\farming_tips.html:25
 #: .\templates\landingpage\header.html:94
-#, fuzzy
-#| msgid "Farming is our life."
 msgid "Farming Tips"
-msgstr "कृषिमा हाम्रो आत्मा बस्छ"
+msgstr "कृषि सुझावहरू"
 
 #: .\templates\landingpage\farming_tips.html:28
 msgid ""
@@ -1570,6 +1730,7 @@ msgid "Our Projects"
 msgstr "हाम्रा परियोजनाहरू"
 
 #: .\templates\landingpage\footer.html:26
+#: .\templates\landingpage\service.html:44
 msgid "Our Services"
 msgstr "हाम्रा सेवाहरू"
 
@@ -1635,33 +1796,27 @@ msgstr "किसान। सबै अधिकारहरू सुरक्
 
 #: .\templates\landingpage\fruits.html:87
 msgid "-- All Subcategories --"
-msgstr ""
+msgstr "-- सबै उपश्रेणीहरू --"
 
 #: .\templates\landingpage\fruits.html:113
-#, fuzzy
-#| msgid "Price Range"
 msgid "Price Range:"
-msgstr "मूल्य "
+msgstr "मूल्य दायरा:"
 
 #: .\templates\landingpage\fruits.html:115
-#, fuzzy
-#| msgid "Quantity"
 msgid "Total Quantity:"
-msgstr "परिमाण"
+msgstr "कुल परिमाण:"
 
 #: .\templates\landingpage\fruits.html:116
-#, fuzzy
-#| msgid "Products"
 msgid "Products:"
-msgstr "उत्पादनहरू"
+msgstr "उत्पादनहरू:"
 
 #: .\templates\landingpage\fruits.html:118
 msgid "Add to Cart"
-msgstr ""
+msgstr "कार्टमा थप्नुहोस्"
 
 #: .\templates\landingpage\header.html:44
 msgid "Farmer logo - Green farmer logo with smiling face and fields"
-msgstr ""
+msgstr "किसान लोगो - हरियो किसान लोगो मुस्कान सहित र खेतहरूसँग"
 
 #: .\templates\landingpage\header.html:47
 msgid "From Soil To Sale"
@@ -1804,17 +1959,201 @@ msgstr ""
 msgid "Agriculture Campaign"
 msgstr "कृषि अभियान"
 
+#: .\templates\landingpage\project.html:7
+msgid "Kisaan – Connecting Farmers & Customers"
+msgstr ""
+
+#: .\templates\landingpage\project.html:26
+msgid "Directly Connect Farmers and Customers"
+msgstr ""
+
+#: .\templates\landingpage\project.html:29
+msgid "Ensure fair prices for farmers and fresh produce for customers."
+msgstr ""
+
+#: .\templates\landingpage\project.html:33
+#, fuzzy
+#| msgid "Products"
+msgid "View Products"
+msgstr "उत्पादनहरू"
+#: .\templates\landingpage\project.html:36
+msgid "Join Now"
+msgstr "अहिल्यै सामेल हुनुहोस्"
+
+#: .\templates\landingpage\project.html:82
+msgid "Why Choose Kisaan?"
+msgstr "किन किसान रोज्ने?"
+
+#: .\templates\landingpage\project.html:87
+msgid "Direct Sales"
+msgstr "प्रत्यक्ष बिक्री"
+
+#: .\templates\landingpage\project.html:88
+msgid "No middlemen – farmers earn more, customers pay less."
+msgstr "मध्यमानी बिना – किसान बढी कमाउँछन्, ग्राहक कम तिर्छन्।"
+
+#: .\templates\landingpage\project.html:93
+msgid "Fair Prices"
+msgstr "न्यायसंगत मूल्य"
+
+#: .\templates\landingpage\project.html:94
+msgid "Fair compensation for farmers and fresh produce at reasonable prices for customers."
+msgstr "किसानका लागि न्यायसंगत पारिश्रमिक र ग्राहकका लागि ताजा उत्पादनहरू उचित मूल्यमा।"
+
+#: .\templates\landingpage\project.html:99
+msgid "Quality Verified"
+msgstr "गुणस्तर सुनिश्चित"
+
+#: .\templates\landingpage\project.html:100
+msgid "Products are fresh and meet quality standards."
+msgstr "उत्पादनहरू ताजा छन् र गुणस्तर मापदण्ड पूरा गर्छन्।"
+
+#: .\templates\landingpage\project.html:105
+msgid "Easy Communication"
+msgstr "सहज संचार"
+
+#: .\templates\landingpage\project.html:106
+msgid "Negotiate directly with farmers through easy chat."
+msgstr "सहज च्याट मार्फत किसानहरूसँग सिधै सम्झौता गर्नुहोस्।"
+
+#: .\templates\landingpage\project.html:116
+msgid "How It Works"
+msgstr "यो कसरी काम गर्छ"
+
+#: .\templates\landingpage\project.html:123
+#, fuzzy
+#| msgid "Sign Up"
+msgid "1. Sign Up"
+msgstr " साइन अप "
+
+#: .\templates\landingpage\project.html:124
+#, fuzzy
+#| msgid "Your profile (farmer or customer)"
+msgid "Register as a farmer or customer."
+msgstr "तपाईंको प्रोफाइल (किसान वा ग्राहक)"
+
+#: .\templates\landingpage\project.html:130
+#, fuzzy
+#| msgid "Our Products"
+msgid "2. Browse Products"
+msgstr "हाम्रा उत्पादनहरू"
+
+#: .\templates\landingpage\project.html:131
+msgid "Browse fresh and quality products online."
+msgstr ""
+
+#: .\templates\landingpage\project.html:137
+#, fuzzy
+#| msgid "Chat with farmer"
+msgid "3. Chat with Farmer"
+msgstr "किसानसँग कुराकानी गर्नुहोस्"
+
+#: .\templates\landingpage\project.html:138
+msgid "Agree on price and delivery via chat."
+msgstr ""
+
+#: .\templates\landingpage\project.html:144
+msgid "4. Make Payment"
+msgstr ""
+
+#: .\templates\landingpage\project.html:145
+#, fuzzy
+#| msgid "Cash on Delivery"
+msgid "Pay via eSewa or Cash on Delivery."
+msgstr "सामान प्राप्त गर्दा नगद भुक्तानी"
+
+#: .\templates\landingpage\project.html:151
+#, fuzzy
+#| msgid "Cash on Delivery"
+msgid "5. Cash on Delivery"
+msgstr "सामान प्राप्त गर्दा नगद भुक्तानी"
+#: .\templates\landingpage\project.html:152
+msgid "Pay in cash at the time of delivery."
+msgstr "डेलिभरीको समयमा नगद भुक्तानी गर्नुहोस्।"
+
+#: .\templates\landingpage\service.html:7
+msgid "Kisaan – Our Services"
+msgstr "हाम्रा सेवाहरू"
+
+#: .\templates\landingpage\service.html:29
+msgid "Our Service – Directly Connecting Farmers and Customers"
+msgstr "हाम्रो सेवा – किसान र ग्राहकलाई प्रत्यक्ष जडान गर्दै"
+
+#: .\templates\landingpage\service.html:32
+msgid "We enhance your farming experience through smart agriculture, direct marketplace, bidding system, and expert consultation."
+msgstr "स्मार्ट कृषि, प्रत्यक्ष बजार, बोलपत्र प्रणाली, र विशेषज्ञ सल्लाह मार्फत तपाईंको कृषि अनुभवलाई सुधार गर्छौं।"
+
+#: .\templates\landingpage\service.html:35
+msgid "View Our Services"
+msgstr "हाम्रा सेवाहरू हेर्नुहोस्"
+
+#: .\templates\landingpage\service.html:53
+msgid "Smart Farming Solutions"
+msgstr "स्मार्ट सिँचाइ प्रणाली"
+
+#: .\templates\landingpage\service.html:55
+msgid "Monitor crop health, soil conditions, and yield potential using IoT and AI technologies."
+msgstr "IoT र AI प्रविधिहरू प्रयोग गरी बालीको स्वास्थ्य, माटोको अवस्था, र उत्पादन क्षमता अनुगमन गर्नुहोस्।"
+
+#: .\templates\landingpage\service.html:64
+msgid "Direct Marketplace"
+msgstr "प्रत्यक्ष बजार"
+
+#: .\templates\landingpage\service.html:66
+msgid "Connect farmers and customers directly for sales without middlemen."
+msgstr "मध्यमानी बिना बिक्रीका लागि किसान र ग्राहकलाई प्रत्यक्ष जडान गर्नुहोस्।"
+
+#: .\templates\landingpage\service.html:75
+msgid "Chat System"
+msgstr "च्याट"
+
+#: .\templates\landingpage\service.html:77
+msgid "Real-time, direct communication between farmers and customers."
+msgstr "किसान र ग्राहक बीच प्रत्यक्ष, वास्तविक-समय सञ्चार।"
+
+#: .\templates\landingpage\service.html:86
+msgid "Krishi News"
+msgstr "कृषि समाचार"
+
+#: .\templates\landingpage\service.html:88
+msgid "Latest agricultural news, market prices, and weather updates delivered to farmers."
+msgstr "किसानहरूलाई नवीनतम कृषि समाचार, बजार मूल्य, र मौसम अपडेटहरू प्रदान गरिन्छ।"
+
+#: .\templates\landingpage\service.html:97
+msgid "24/7 Support"
+msgstr "२४/७ सहयोग"
+
+#: .\templates\landingpage\service.html:99
+msgid "Round-the-clock assistance for weather, market prices, and technical support."
+msgstr "मौसम, बजार मूल्य, र प्राविधिक सहयोगका लागि चौबीसै घण्टा सहयोग।"
+
+#: .\templates\landingpage\service.html:108
+msgid "Agri Consultancy"
+msgstr "कृषि परामर्श"
+
+#: .\templates\landingpage\service.html:110
+msgid "Expert advice on crop selection, disease control, and sustainable farming practices."
+msgstr "बाली चयन, रोग नियन्त्रण, र दिगो कृषि अभ्यासमा विशेषज्ञ सल्लाह।"
+
+#: .\templates\landingpage\service.html:120
+msgid "Start Your Farming Journey Today"
+msgstr "आजै तपाईंको कृषि यात्रा सुरु गर्नुहोस्"
+
+#: .\templates\landingpage\service.html:123
+msgid "Experience a secure, transparent, and beneficial connection between farmers and customers."
+msgstr "किसान र ग्राहक बीच सुरक्षित, पारदर्शी, र लाभदायक जडान अनुभव गर्नुहोस्।"
+
+#: .\templates\landingpage\service.html:126
+msgid "Get Started"
+msgstr "अहिल्यै सुरु गर्नुहोस्"
+
 #: .\templates\landingpage\tech_updates.html:24
 msgid "Updated Information on Agricultural Technology"
 msgstr "कृषि प्रविधिको अद्यावधिक जानकारी"
 
 #: .\templates\landingpage\tech_updates.html:27
-msgid ""
-"This page provides information on the latest technologies, tools, and trends "
-"being used in Nepal's agricultural sector."
-msgstr ""
-"यो पृष्ठ नेपालका कृषि क्षेत्रमा प्रयोग भइरहेका नयाँ प्रविधि, उपकरण र प्रवृत्तिहरूको जानकारी "
-"प्रदान गर्दछ।"
+msgid "This page provides information on the latest technologies, tools, and trends being used in Nepal's agricultural sector."
+msgstr "यो पृष्ठ नेपालका कृषि क्षेत्रमा प्रयोग भइरहेका नयाँ प्रविधि, उपकरण र प्रवृत्तिहरूको जानकारी प्रदान गर्दछ।"
 
 #: .\templates\landingpage\tech_updates.html:39
 #: .\templates\landingpage\tech_updates.html:48
@@ -1822,10 +2161,9 @@ msgid "Smart Irrigation System"
 msgstr "स्मार्ट सिँचाइ प्रणाली"
 
 #: .\templates\landingpage\tech_updates.html:51
-msgid ""
-"Smart irrigation systems automatically water crops based on soil moisture. "
-"This saves water and improves crop growth."
-msgstr ""
+msgid "Smart irrigation systems automatically water crops based on soil moisture. This saves water and improves crop growth."
+msgstr "स्मार्ट सिँचाइ प्रणालीहरूले माटोको नमी अनुसार बालीलाई स्वचालित रूपमा पानी दिन्छन्। यसले पानी बचत गर्छ र बालीको वृद्धि सुधार्छ।"
+
 "स्मार्ट सिँचाइ प्रणालीहरूले जमिनको नमी अनुसार स्वचालित रूपमा बालीमा पानी दिन्छ। यसले "
 "पानी बचत गर्छ र बालीको वृद्धि सुधार्छ।"
 
@@ -1947,46 +2285,35 @@ msgstr "महसुस गरिने तापक्रम:"
 msgid "मौसम जानकारी प्राप्त गर्न सकिएन। कृपया पछि प्रयास गर्नुहोस्।"
 msgstr "मौसम जानकारी प्राप्त गर्न सकिएन। कृपया पछि प्रयास गर्नुहोस्।"
 
-#: .\templates\payments\choose_quantity.html:8
-#: .\templates\payments\choose_quantity.html:16
-#, fuzzy
-#| msgid "Buyer"
+#: .\templates\payments\choose_quantity.html:4
+#: .\templates\payments\choose_quantity.html:10
 msgid "Buy"
-msgstr "किन्ने व्यक्ति"
+msgstr "किन्नुहोस्"
 
-#: .\templates\payments\choose_quantity.html:21
-#, fuzzy
-#| msgid "Products"
+#: .\templates\payments\choose_quantity.html:15
 msgid "Available Quantity"
-msgstr "उपलब्ध उत्पादनहरू"
+msgstr "उपलब्ध परिमाण"
 
-#: .\templates\payments\choose_quantity.html:35
-#, fuzzy
-#| msgid "Quantity"
+#: .\templates\payments\choose_quantity.html:29
 msgid "Select Quantity"
-msgstr "परिमाण"
+msgstr "परिमाण छान्नुहोस्"
 
-#: .\templates\payments\choose_quantity.html:46
-#, fuzzy
-#| msgid "Enter a number."
+#: .\templates\payments\choose_quantity.html:40
 msgid "Enter quantity"
-msgstr "संख्या राख्नुहोस ।"
+msgstr "परिमाण प्रविष्ट गर्नुहोस्"
 
-#: .\templates\payments\choose_quantity.html:51
-#, fuzzy
-#| msgid "Total income"
+#: .\templates\payments\choose_quantity.html:45
 msgid "Total Price"
-msgstr "कुल आय"
+msgstr "जम्मा मूल्य"
 
-#: .\templates\payments\choose_quantity.html:59
-#: .\templates\payments\choose_quantity.html:61
-#, fuzzy
-#| msgid "Proceed to Pay"
+#: .\templates\payments\choose_quantity.html:53
+#: .\templates\payments\choose_quantity.html:55
 msgid "Proceed to Payment"
-msgstr "भुक्तानी गर्न अघि बढ्नुहोस्"
+msgstr "भुक्तानीमा अघि बढ्नुहोस्"
 
 #: .\templates\payments\enter_amount.html:2
-#: .\templates\payments\payment_choice.html:26
+#: .\templates\payments\esewa_redirect.html:29
+#: .\templates\payments\payment_choice.html:23
 msgid "Pay with eSewa"
 msgstr "eSewa मार्फत भुक्तानी गर्नुहोस्"
 
@@ -2010,56 +2337,70 @@ msgstr "एक अप्रत्याशित त्रुटि भयो।
 msgid "Go to Landing Page"
 msgstr "ल्याण्डिङ पृष्ठमा जानुहोस्"
 
-#: .\templates\payments\failure.html:5 .\templates\payments\failure.html:31
-#: .\templates\payments\failure.html:35
+#: .\templates\payments\esewa_redirect.html:4
+msgid "Redirecting to eSewa"
+msgstr ""
+
+#: .\templates\payments\esewa_redirect.html:20
+msgid "Redirecting to"
+msgstr ""
+
+#: .\templates\payments\esewa_redirect.html:22
+#, fuzzy
+#| msgid "or"
+msgid "for"
+msgstr "अथवा"
+
+#: .\templates\payments\esewa_redirect.html:31
+#, fuzzy
+#| msgid "Pay with eSewa"
+msgid "Pay with eSewa Now"
+msgstr "eSewa मार्फत भुक्तानी गर्नुहोस्"
+
+#: .\templates\payments\failure.html:4 .\templates\payments\failure.html:9
+#: .\templates\payments\failure.html:13
 msgid "Payment Failed"
 msgstr "भुक्तानी असफल भयो"
 
-#: .\templates\payments\failure.html:32
+#: .\templates\payments\failure.html:10
 msgid "Something went wrong or the transaction was canceled."
 msgstr "केही गलत भयो वा लेनदेन रद्द भयो।"
 
-#: .\templates\payments\failure.html:33
+#: .\templates\payments\failure.html:11
 msgid "Please try again or contact support."
 msgstr "कृपया फेरि प्रयास गर्नुहोस् वा समर्थनमा सम्पर्क गर्नुहोस्।"
 
-#: .\templates\payments\failure.html:36
+#: .\templates\payments\failure.html:14
 msgid "Unfortunately, your payment could not be verified or was cancelled."
 msgstr "दुर्भाग्यवश, तपाईंको भुक्तानी प्रमाणित गर्न सकेन वा रद्द भयो।"
 
-#: .\templates\payments\failure.html:39 .\templates\payments\success.html:46
+#: .\templates\payments\failure.html:17 .\templates\payments\success.html:51
 msgid "Transaction ID"
 msgstr "लेनदेन आईडी"
 
-#: .\templates\payments\failure.html:42 .\templates\payments\success.html:48
+#: .\templates\payments\failure.html:21 .\templates\payments\success.html:52
 msgid "Go back to Dashboard"
 msgstr "ड्यासबोर्डमा फर्कनुहोस्"
 
 #: .\templates\payments\income_summary.html:188
 msgid "From:"
-msgstr ""
+msgstr "देखि "
 
 #: .\templates\payments\income_summary.html:192
 msgid "To:"
-msgstr ""
+msgstr "सम्म "
 
 #: .\templates\payments\income_summary.html:195
-#, fuzzy
-#| msgid "Filter"
 msgid "Apply Filter"
-msgstr "फिल्टर"
+msgstr "फिल्टर लागू गर्नुहोस्"
 
 #: .\templates\payments\income_summary.html:197
-#, fuzzy
-#| msgid "Select Filter"
 msgid "Clear Filter"
-msgstr "फिल्टर छान्नुहोस्"
+msgstr "फिल्टर मेटाउनुहोस्"
 
 #: .\templates\payments\income_summary.html:203
-#, fuzzy
-#| msgid "Total income"
 msgid "Total Income"
-msgstr "कुल आय"
+msgstr "कुल आम्दानी"
 
 #: .\templates\payments\income_summary.html:204
 msgid "Today"
@@ -2085,15 +2426,14 @@ msgstr "फिल्टर गरिएको समय "
 msgid "Sales Details"
 msgstr "बिक्री विवरण"
 
-
 #: .\templates\payments\income_summary.html:220
-#: .\templates\payments\purchases.html:43
+#: .\templates\payments\purchases.html:39
 #: .\templates\payments\transaction_list.html:44
 msgid "Date"
 msgstr "मिति"
 
 #: .\templates\payments\income_summary.html:221
-#: .\templates\payments\purchases.html:37
+#: .\templates\payments\purchases.html:33
 #: .\templates\payments\transaction_list.html:37
 msgid "Product"
 msgstr "उत्पादन"
@@ -2103,95 +2443,89 @@ msgid "Qty"
 msgstr "परिमाण "
 
 #: .\templates\payments\income_summary.html:224
-#, fuzzy
-#| msgid "Price"
 msgid "Unit Price"
-msgstr "मूल्य"
+msgstr "इकाई मूल्य"
+
 #: .\templates\payments\income_summary.html:243
 msgid "No sales found for the selected period."
-msgstr "चयन गरिएको अवधिको लागि कुनै बिक्री फेला परेन।"
+msgstr "छानिएको अवधिको लागि कुनै बिक्री फेला परेन।"
 
-
-#: .\templates\payments\payment_choice.html:7
-#, fuzzy
-#| msgid "Payment Method"
+#: .\templates\payments\payment_choice.html:5
 msgid "Choose Payment Method"
-msgstr "भुक्तानी विधि"
+msgstr "भुक्तानी विधि छान्नुहोस्"
 
-#: .\templates\payments\payment_choice.html:13
-#, fuzzy
-#| msgid "Payment Method"
+#: .\templates\payments\payment_choice.html:10
 msgid "Choose Payment Method for"
-msgstr "भुक्तानी विधि"
+msgstr "भुक्तानी विधि छान्नुहोस्"
 
-#: .\templates\payments\payment_choice.html:37
+#: .\templates\payments\payment_choice.html:34
 msgid "Cash on Delivery"
 msgstr "सामान प्राप्त गर्दा नगद भुक्तानी"
 
-#: .\templates\payments\purchases.html:16
+#: .\templates\payments\purchases.html:12
 msgid "Below are the details of the products you have purchased."
 msgstr "तपाईंले खरिद गरेका उत्पादनहरूको विवरण तल दिइएको छ।"
 
-#: .\templates\payments\purchases.html:27
+#: .\templates\payments\purchases.html:23
 msgid "Print"
 msgstr "प्रिन्ट"
 
-#: .\templates\payments\purchases.html:36
+#: .\templates\payments\purchases.html:32
 #: .\templates\payments\transaction_list.html:36
 msgid "PID"
 msgstr "PID"
 
-#: .\templates\payments\purchases.html:38
+#: .\templates\payments\purchases.html:34
 msgid "Payment Method"
 msgstr "भुक्तानी विधि"
 
-#: .\templates\payments\purchases.html:39
+#: .\templates\payments\purchases.html:35
 #: .\templates\payments\transaction_list.html:42
 msgid "Payment Status"
 msgstr "भुक्तानी स्थिति"
 
-#: .\templates\payments\purchases.html:40
+#: .\templates\payments\purchases.html:36
 msgid "Price"
 msgstr "मूल्य"
 
-#: .\templates\payments\purchases.html:42
+#: .\templates\payments\purchases.html:38
 msgid "Total Amount"
 msgstr "कुल रकम"
 
-#: .\templates\payments\purchases.html:45
+#: .\templates\payments\purchases.html:41
 #: .\templates\payments\transaction_list.html:41
 msgid "Delivery Status"
 msgstr "डेलिभरी स्थिति"
 
-#: .\templates\payments\purchases.html:46
+#: .\templates\payments\purchases.html:42
 msgid "Action"
 msgstr "कार्य"
 
-#: .\templates\payments\purchases.html:68
+#: .\templates\payments\purchases.html:64
 msgid "Paid"
 msgstr "भुक्तानी भएको"
 
-#: .\templates\payments\purchases.html:76
+#: .\templates\payments\purchases.html:71
 msgid "Pay Now"
 msgstr "अब भुक्तानी गर्नुहोस्"
 
-#: .\templates\payments\purchases.html:80
+#: .\templates\payments\purchases.html:75
 msgid "Waiting for Farmer"
 msgstr "किसानको प्रतीक्षा गर्दै"
 
-#: .\templates\payments\purchases.html:82
+#: .\templates\payments\purchases.html:77
 msgid "Failed"
 msgstr "असफल"
 
-#: .\templates\payments\purchases.html:114
+#: .\templates\payments\purchases.html:108
 msgid "Confirm"
 msgstr "पुष्टि गर्नुहोस्"
 
-#: .\templates\payments\purchases.html:120
+#: .\templates\payments\purchases.html:114
 msgid "Not Received"
 msgstr "प्राप्त भएको छैन"
 
-#: .\templates\payments\purchases.html:135
+#: .\templates\payments\purchases.html:129
 msgid "You have not purchased anything yet."
 msgstr "तपाईंले अहिलेसम्म केही पनि खरिद गर्नु भएको छैन।"
 
@@ -2199,11 +2533,11 @@ msgstr "तपाईंले अहिलेसम्म केही पनि
 msgid "Payment Success"
 msgstr "भुक्तानी सफल"
 
-#: .\templates\payments\success.html:44
+#: .\templates\payments\success.html:45
 msgid "Payment Successful!"
 msgstr "भुक्तानी सफल भयो!"
 
-#: .\templates\payments\success.html:45
+#: .\templates\payments\success.html:47
 #, python-format
 msgid "Thank you. Your payment of Rs. %(amount)s was successful."
 msgstr "धन्यवाद। तपाईंको Rs. %(amount)s को भुक्तानी सफल भयो।"
@@ -2313,6 +2647,7 @@ msgstr "एकाइ "
 #: .\templates\products\edit_product.html:64
 msgid "Kg"
 msgstr "के.जी."
+
 #: .\templates\products\add_product.html:57
 #: .\templates\products\edit_product.html:65
 msgid "Quintal"
@@ -2351,6 +2686,7 @@ msgstr "अक्षरहरू"
 #| msgid "Product"
 msgid "Product Photo"
 msgstr "उत्पादन"
+
 #: .\templates\products\add_product.html:90
 #: .\templates\products\edit_product.html:103
 msgid "Image Preview"
@@ -2361,13 +2697,31 @@ msgstr "इमेज पूर्वावलोकन"
 msgid "Save"
 msgstr "सेभ गर्नुहोस्"
 
-
 #: .\templates\products\add_product.html:146
 #: .\templates\products\edit_product.html:157
 #, fuzzy
 #| msgid "Total income"
 msgid "Total Price:"
 msgstr "कुल आय"
+
+#: .\templates\products\confirm_delete.html:6
+#: .\templates\products\confirm_delete.html:11
+#, fuzzy
+#| msgid "Confirm COD"
+msgid "Confirm Delete"
+msgstr "COD पुष्टि गर्नुहोस्"
+
+#: .\templates\products\confirm_delete.html:13
+#, fuzzy
+#| msgid "You are not allowed to delete this product."
+msgid "Are you sure you want to delete the product"
+msgstr "तपाईँलाई यो उत्पादन मेटाउने अनुमति छैन।"
+
+#: .\templates\products\confirm_delete.html:19
+#, fuzzy
+#| msgid "Delete"
+msgid "Yes, Delete"
+msgstr "हटाउनुहोस् "
 
 #: .\templates\products\edit_product.html:4
 #: .\templates\products\edit_product.html:11
@@ -2380,16 +2734,47 @@ msgstr "उत्पादन"
 msgid "Dear farmer, you can easily edit your product here."
 msgstr ""
 
+#, fuzzy
+#~| msgid "थप विवरण हेर्नुहोस्"
+#~ msgid "किसानको समीक्षाहरू"
+#~ msgstr "थप विवरण हेर्नुहोस्"
+
+#~ msgid "पहिलो क्रय गर्नुहोस् र तपाईंको पहिलो समीक्षा दिनुहोस्!"
+#~ msgstr "पहिलो क्रय गर्नुहोस् र तपाईंको पहिलो समीक्षा दिनुहोस्!"
+
+#~ msgid "फर्कनुहोस्"
+#~ msgstr "फर्कनुहोस्"
+
+#, fuzzy
+#~| msgid "थप विवरण हेर्नुहोस्"
+#~ msgid "ले च्याट अनुरोध गर्नुभएको छ"
+#~ msgstr "थप विवरण हेर्नुहोस्"
+
+#, fuzzy
+#~| msgid "थप विवरण हेर्नुहोस्"
+#~ msgid "स्वीकार गर्नुहोस्"
+#~ msgstr "थप विवरण हेर्नुहोस्"
+
+#, fuzzy
+#~| msgid "थप विवरण हेर्नुहोस्"
+#~ msgid "अस्वीकार गर्नुहोस्"
+#~ msgstr "थप विवरण हेर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Reviews"
+#~ msgid "Reviews for"
+#~ msgstr "समीक्षा"
+
+#, fuzzy
+#~| msgid "Forget Password?"
+#~ msgid "Forget Password"
+#~ msgstr "पासवर्ड बिर्सिनुभयो?"
+
 #~ msgid "नमस्ते ग्राहक साथी! यहाँ तपाईंले किसानहरूले पोस्ट गरेका उत्पादनहरू हेर्न सक्नुहुन्छ।"
 #~ msgstr "नमस्ते ग्राहक साथी! यहाँ तपाईंले किसानहरूले पोस्ट गरेका उत्पादनहरू हेर्न सक्नुहुन्छ।"
 
 #~ msgid "Search items like (जस्तै: आलु, अदुवा, आ...)"
 #~ msgstr "वस्तु खोज्नुहोस् (जस्तै: आलु, अदुवा, आ...)"
-
-#, fuzzy
-#~| msgid "थप विवरण हेर्नुहोस्"
-#~ msgid "किसानको स्थान हेर्नुहोस्"
-#~ msgstr "थप विवरण हेर्नुहोस्"
 
 #~ msgid "ग्राहक ड्याशबोर्ड"
 #~ msgstr "ग्राहक ड्याशबोर्ड"
@@ -2679,9 +3064,6 @@ msgstr ""
 #~ msgid "Serbian"
 #~ msgstr "सर्वियाली"
 
-#~ msgid "Serbian Latin"
-#~ msgstr "सर्वियाली ल्याटिन"
-
 #~ msgid "Swedish"
 #~ msgstr "स्विडिस"
 
@@ -2732,9 +3114,6 @@ msgstr ""
 
 #~ msgid "Static Files"
 #~ msgstr "स्टेेटिक फाइलहरु"
-
-#~ msgid "Syndication"
-#~ msgstr "सिन्डिकेसन"
 
 #~ msgid "That page number is not an integer"
 #~ msgstr "पृष्ठ नं अंक होइन ।"
@@ -3332,9 +3711,6 @@ msgstr ""
 #~ msgctxt "String to return when truncating text"
 #~ msgid "%(truncated_text)s…"
 #~ msgstr "%(truncated_text)s…"
-
-#~ msgid "or"
-#~ msgstr "अथवा"
 
 #~ msgid ", "
 #~ msgstr ","

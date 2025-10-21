@@ -3,11 +3,11 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}च्याट{% endblock %}
+{% block title %}{% trans "Chats" %}{% endblock %}
 
 {% block content %}
   <!-- Scrollable main content that respects fixed header (4rem = 64px) and sidebar -->
-  <main class="lg:ml-80 mt-10 pt-6  pb-12 px-4 md:px-6 overflow-y-auto" style="height: calc(100vh - 4rem);">
+  <main class="lg:ml-80 mt-10 pt-6 pb-12 px-4 md:px-6 overflow-y-auto" style="height: calc(100vh - 4rem);">
     <!-- Pending Requests Section -->
     <section class="mb-12">
       <h2 class="text-2xl font-bold text-green-900 mb-4 flex items-center">
@@ -25,7 +25,7 @@
                 <div>
                   <p class="font-medium text-green-800">
                     <strong>{{ chat.customer.user.username }}</strong> 
-                    {% trans "ले च्याट अनुरोध गर्नुभएको छ" %}
+                    {% trans "has sent you a chat request." %}
                   </p>
                   {% if chat.product %}
                     <p class="text-sm text-green-700 mt-1">📦 {{ chat.product.sub_category }}</p>
@@ -37,13 +37,13 @@
                 <form method="post" action="{% url 'chat:accept_chat' chat.id %}">{% csrf_token %}
                   <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold text-sm tracking-wide shadow-sm flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    {% trans "स्वीकार गर्नुहोस्" %}
+                    {% trans "Accept" %}
                   </button>
                 </form>
                 <form method="post" action="{% url 'chat:reject_chat' chat.id %}">{% csrf_token %}
                   <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold text-sm tracking-wide shadow-sm flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    {% trans "अस्वीकार गर्नुहोस्" %}
+                    {% trans "Reject" %}
                   </button>
                 </form>
               </div>

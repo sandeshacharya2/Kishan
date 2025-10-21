@@ -1,10 +1,10 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="ne" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>किसान – हाम्रो सेवाहरू (Our Services)</title>
+  <title>{% trans "Kisaan – Our Services" %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
@@ -26,13 +26,13 @@
   <section class="py-20 bg-gradient-to-r from-green-100 to-green-200">
     <div class="container mx-auto px-4 text-center">
       <h1 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--kisaan-green);">
-        हाम्रो सेवा – किसान र ग्राहकलाई प्रत्यक्ष जोड्ने
+        {% trans "Our Service – Directly Connecting Farmers and Customers" %}
       </h1>
       <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-        स्मार्ट कृषि, प्रत्यक्ष बजार, बोली प्रणाली, र विशेषज्ञ परामर्शमार्फत तपाईंको कृषि अनुभव अझ प्रभावकारी बनाउँछौं।
+        {% trans "We enhance your farming experience through smart agriculture, direct marketplace, bidding system, and expert consultation." %}
       </p>
       <a href="#services" class="inline-block px-8 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 transition transform hover:scale-105">
-        हाम्रो सेवाहरू हेर्नुहोस्
+        {% trans "View Our Services" %}
       </a>
     </div>
   </section>
@@ -41,7 +41,7 @@
   <section id="services" class="py-20 bg-gray-50">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-center mb-12" style="color: var(--kisaan-green);">
-        हाम्रो सेवाहरू (Our Services)
+        {% trans "Our Services" %}
       </h2>
 
       <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,8 +50,10 @@
           <div class="w-20 h-20 flex items-center justify-center bg-green-100 text-green-700 rounded-full mb-5 text-4xl shadow-md">
             🌱
           </div>
-          <h3 class="text-xl font-semibold mb-3">स्मार्ट खेती समाधान</h3>
-          <p class="text-gray-600">IoT र AI प्रविधिबाट बाली स्वास्थ्य, माटो अवस्था र उत्पादन क्षमता अनुगमन।</p>
+          <h3 class="text-xl font-semibold mb-3">{% trans "Smart Farming Solutions" %}</h3>
+          <p class="text-gray-600">
+            {% trans "Monitor crop health, soil conditions, and yield potential using IoT and AI technologies." %}
+          </p>
         </div>
 
         <!-- Card 2 -->
@@ -59,28 +61,32 @@
           <div class="w-20 h-20 flex items-center justify-center bg-yellow-100 text-yellow-700 rounded-full mb-5 text-4xl shadow-md">
             🛒
           </div>
-          <h3 class="text-xl font-semibold mb-3">प्रत्यक्ष बजार (Marketplace)</h3>
-          <p class="text-gray-600">किसान र ग्राहकलाई बीचौलिया बिना प्रत्यक्ष जोडेर बिक्री।</p>
+          <h3 class="text-xl font-semibold mb-3">{% trans "Direct Marketplace" %}</h3>
+          <p class="text-gray-600">
+            {% trans "Connect farmers and customers directly for sales without middlemen." %}
+          </p>
         </div>
 
-        <!-- Card 3  Chat System -->
-      <div class="bg-white rounded-2xl shadow-lg p-8 transform hover:scale-105 transition duration-300">
-        <div class="w-20 h-20 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full mb-5 text-4xl shadow-md">
-          💬
+        <!-- Card 3: Chat System -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 transform hover:scale-105 transition duration-300">
+          <div class="w-20 h-20 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full mb-5 text-4xl shadow-md">
+            💬
+          </div>
+          <h3 class="text-xl font-semibold mb-3">{% trans "Chat System" %}</h3>
+          <p class="text-gray-600">
+            {% trans "Real-time, direct communication between farmers and customers." %}
+          </p>
         </div>
-        <h3 class="text-xl font-semibold mb-3">च्याट प्रणाली (Chat System)</h3>
-        <p class="text-gray-600">किसान र ग्राहकबीच सीधा, वास्तविक समयमा कुराकानी गर्ने सुविधा।</p>
-      </div>
 
         <!-- Card 4 -->
-        <div  class="bg-white rounded-2xl shadow-lg p-8 transform hover:scale-105 transition duration-300"> 
-          <div 
-            class="w-20 h-20 flex items-center justify-center bg-red-100 text-red-700 rounded-full mb-5 text-4xl shadow-md">
+        <div class="bg-white rounded-2xl shadow-lg p-8 transform hover:scale-105 transition duration-300">
+          <div class="w-20 h-20 flex items-center justify-center bg-red-100 text-red-700 rounded-full mb-5 text-4xl shadow-md">
             🚜
-          
           </div>
-          <h3 class="text-xl font-semibold mb-3">कृषि समाचार (Krishi News)</h3>
-          <p class="text-gray-600">कृषि क्षेत्रको नवीनतम समाचार, बजार मूल्य र मौसम अपडेटहरू किसानको पहुँचमा।</p>
+          <h3 class="text-xl font-semibold mb-3">{% trans "Krishi News" %}</h3>
+          <p class="text-gray-600">
+            {% trans "Latest agricultural news, market prices, and weather updates delivered to farmers." %}
+          </p>
         </div>
 
         <!-- Card 5 -->
@@ -88,8 +94,10 @@
           <div class="w-20 h-20 flex items-center justify-center bg-purple-100 text-purple-700 rounded-full mb-5 text-4xl shadow-md">
             📞
           </div>
-          <h3 class="text-xl font-semibold mb-3">२४/७ सहयोग (24/7 Support)</h3>
-          <p class="text-gray-600">मौसम, बजार मूल्य र प्राविधिक सहयोगका लागि चौबीसै घण्टा सेवा।</p>
+          <h3 class="text-xl font-semibold mb-3">{% trans "24/7 Support" %}</h3>
+          <p class="text-gray-600">
+            {% trans "Round-the-clock assistance for weather, market prices, and technical support." %}
+          </p>
         </div>
 
         <!-- Card 6 -->
@@ -97,8 +105,10 @@
           <div class="w-20 h-20 flex items-center justify-center bg-pink-100 text-pink-700 rounded-full mb-5 text-4xl shadow-md">
             💡
           </div>
-          <h3 class="text-xl font-semibold mb-3">कृषि परामर्श (Agri Consultancy)</h3>
-          <p class="text-gray-600">बाली छनोट, रोग नियन्त्रण र दिगो खेतीका लागि विशेषज्ञ सल्लाह।</p>
+          <h3 class="text-xl font-semibold mb-3">{% trans "Agri Consultancy" %}</h3>
+          <p class="text-gray-600">
+            {% trans "Expert advice on crop selection, disease control, and sustainable farming practices." %}
+          </p>
         </div>
       </div>
     </div>
@@ -106,10 +116,14 @@
 
   <!-- CTA Section -->
   <section class="py-20 bg-gradient-to-r from-green-200 to-green-300 text-center">
-    <h2 class="text-3xl md:text-4xl font-bold mb-6" style="color: var(--kisaan-green);">तपाईंको कृषि यात्रा आजै सुरु गर्नुहोस्</h2>
-    <p class="text-gray-700 mb-8 max-w-xl mx-auto">किसान र ग्राहकलाई प्रत्यक्ष जोडेर सुरक्षित, पारदर्शी र फाइदाजनक अनुभव प्राप्त गर्नुहोस्।</p>
+    <h2 class="text-3xl md:text-4xl font-bold mb-6" style="color: var(--kisaan-green);">
+      {% trans "Start Your Farming Journey Today" %}
+    </h2>
+    <p class="text-gray-700 mb-8 max-w-xl mx-auto">
+      {% trans "Experience a secure, transparent, and beneficial connection between farmers and customers." %}
+    </p>
     <a href="{% url 'signup' %}" class="inline-block px-8 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-green-600 to-green-400 hover:from-green-500 hover:to-green-300 transition transform hover:scale-105">
-      सुरु गर्नुहोस्
+      {% trans "Get Started" %}
     </a>
   </section>
 

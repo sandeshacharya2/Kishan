@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans "किसानको समीक्षाहरू" %}{% endblock %}
+{% block title %}{% trans "Farmer Reviews" %}{% endblock %}
 
 {% block content %}
 <main class="p-6 pt-0 overflow-y-auto bg-green-50 flex-grow">
@@ -10,11 +10,11 @@
 
     <!-- Page Title -->
     <h2 class="text-2xl font-bold text-green-900 mb-6">
-      {% trans "किसानको समीक्षाहरू" %}
+      {% trans "Farmer Reviews" %}
     </h2>
 
     <!-- Reviews List -->
-    <h2 class="text-xl font-semibold text-green-800 mb-4">{% trans "समीक्षाहरू" %}</h2>
+    <h2 class="text-xl font-semibold text-green-800 mb-4">{% trans "Reviews" %}</h2>
 
     {% if reviews %}
       <div class="space-y-6">
@@ -68,7 +68,7 @@
                 {% if review.comment %}
                   <p class="text-green-800 leading-relaxed">{{ review.comment }}</p>
                 {% else %}
-                  <p class="text-green-600 italic">{% trans "कुनै टिप्पणी छैन।" %}</p>
+                  <p class="text-green-600 italic">{% trans "No comment provided." %}</p>
                 {% endif %}
               </div>
             </div>
@@ -83,8 +83,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a9 9 0 11-12.728 0 9 9 0 0112.728 0z" />
         </svg>
-        <h3 class="text-xl text-gray-600 font-medium">{% trans "अहिले समीक्षा छैन।" %}</h3>
-        <p class="text-gray-500 mt-2">{% trans "पहिलो क्रय गर्नुहोस् र तपाईंको पहिलो समीक्षा दिनुहोस्!" %}</p>
+        <h3 class="text-xl text-gray-600 font-medium">{% trans "No reviews yet." %}</h3>
+        <p class="text-gray-500 mt-2">{% trans "Make your first purchase and leave your first review!" %}</p>
       </div>
     {% endif %}
 
@@ -92,7 +92,7 @@
     <div class="mt-8 text-center">
       <a href="{% url 'farmer-dashboard' %}" 
          class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-        ← {% trans "फर्कनुहोस्" %}
+        ← {% trans "Go Back" %}
       </a>
     </div>
 

@@ -9,6 +9,7 @@ from django.utils.safestring import mark_safe
 import json
 import requests
 import xml.etree.ElementTree as ET
+from django.utils.translation import gettext_lazy as _
 
 # Local models
 from accounts.models import FarmerReview
@@ -48,7 +49,7 @@ def choose_quantity(request, product_id):
             return render(request, 'payments/choose_quantity.html', {'product': product})
     except Exception as e:
         print("❌ Error in choose_quantity:", e)
-        return render(request, 'payments/error.html', {'message': 'Unable to load product.'})
+        return render(request, 'payments/error.html', {'message': _('Unable to load product.')})
 
 
 @csrf_exempt
@@ -110,7 +111,7 @@ def payment_request(request, product_id):
 
     except Exception as e:
         print("❌ Error in payment_request:", e)
-        return render(request, 'payments/error.html', {'message': 'Error processing payment request.'})
+        return render(request, 'payments/error.html', {'message': _('Error processing payment request.')})
 
 
 @csrf_exempt
@@ -124,7 +125,7 @@ def payment_success(request):
         qty = request.GET.get('qty')
         product_id = request.GET.get('product_id')
 
-        verify_url = "https://rc.esewa.com.np/epay/transrec"
+        verify_url = "https://rc.esewa.com.np/epay/transrec  "
         data = {
             'amt': amt,
             'scd': 'EPAYTEST',
@@ -187,20 +188,28 @@ def payment_success(request):
                 except:
                     phone = 'N/A'
 
-                subject = f"✅ Your Product '{product.sub_category}' Has Been Sold!"
-                message = (
-                    f"Dear {farmer.username},\n\n"
-                    f"Your product '{product.sub_category}' has just been purchased.\n\n"
-                    f"📦 Quantity: {qty_num}\n"
-                    f"💰 Amount: Rs. {amt}\n\n"
-                    f"👤 Customer Info:\n"
-                    f"Username: {customer.username}\n"
-                    f"Email: {customer.email}\n"
-                    f"Phone: {phone}\n\n"
-                    f"Please prepare for delivery and coordinate accordingly.\n\n"
-                    f"Thank you,\n"
-                    f"Your Platform Team"
-                )
+                subject = _("✅ Your Product '%(product_name)s' Has Been Sold!") % {'product_name': product.sub_category}
+                message = _(
+                    "Dear %(farmer_username)s,\n\n"
+                    "Your product '%(product_name)s' has just been purchased.\n\n"
+                    "📦 Quantity: %(quantity)s\n"
+                    "💰 Amount: Rs. %(amount)s\n\n"
+                    "👤 Customer Info:\n"
+                    "Username: %(customer_username)s\n"
+                    "Email: %(customer_email)s\n"
+                    "Phone: %(phone)s\n\n"
+                    "Please prepare for delivery and coordinate accordingly.\n\n"
+                    "Thank you,\n"
+                    "Your Platform Team"
+                ) % {
+                    'farmer_username': farmer.username,
+                    'product_name': product.sub_category,
+                    'quantity': qty_num,
+                    'amount': amt,
+                    'customer_username': customer.username,
+                    'customer_email': customer.email,
+                    'phone': phone,
+                }
 
                 send_mail(
                     subject,
@@ -232,9 +241,7 @@ def payment_failure(request):
         return render(request, 'payments/failure.html')
     except Exception as e:
         print("❌ Error in payment_failure:", e)
-        return render(request, 'payments/error.html', {'message': 'Error displaying failure page.'})
-
-
+        return render(request, 'payments/error.html', {'message': _('Error displaying failure page.')})
 
 
 def transaction_list(request):
@@ -284,7 +291,102 @@ from django.shortcuts import render
 from .models import Transaction
 from accounts.models import FarmerReview  # Adjust if needed
 
+from datetime import date, timedelta
+from decimal import Decimal
+from django.db.models import Sum, Avg, F, FloatField
+from django.db.models.functions import Cast
+from django.utils import timezone
+from django.shortcuts import render
+from payments.models import Transaction
+
+
 def income_summary(request):
+    farmer = request.user.farmerprofile
+
+    # ✅ Only successful payments
+    transactions = Transaction.objects.filter(
+        product__farmer=farmer,
+        payment_status='Success'
+    )
+
+    # Date filters
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    start_date = end_date = None
+    if start_date_str:
+        try:
+            start_date = date.fromisoformat(start_date_str)
+        except ValueError:
+            pass
+    if end_date_str:
+        try:
+            end_date = date.fromisoformat(end_date_str)
+        except ValueError:
+            pass
+
+    filtered_transactions = transactions
+    if start_date:
+        filtered_transactions = filtered_transactions.filter(created_at__date__gte=start_date)
+    if end_date:
+        filtered_transactions = filtered_transactions.filter(created_at__date__lte=end_date)
+
+    # Exclude zero quantity (avoid division errors)
+    filtered_transactions = filtered_transactions.filter(quantity__gt=0)
+
+    # Helper to safely sum
+    def safe_sum(queryset):
+        total = queryset.aggregate(total=Sum('amount'))['total']
+        return total if total is not None else Decimal('0.00')
+
+    now = timezone.now()
+    today = now.date()
+    start_of_week = today - timedelta(days=today.weekday())
+    start_of_month = today.replace(day=1)
+    start_of_year = today.replace(month=1, day=1)
+
+    # ✅ Income calculations only from successful transactions
+    total_income = safe_sum(transactions)
+    daily_income = safe_sum(transactions.filter(created_at__date=today))
+    weekly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_week))
+    monthly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_month))
+    yearly_income = safe_sum(transactions.filter(created_at__date__gte=start_of_year))
+    filtered_income = safe_sum(filtered_transactions)
+
+    avg_rating = FarmerReview.objects.filter(farmer=farmer).aggregate(avg=Avg('rating'))['avg'] or 0
+
+    # ✅ Include payment_status for UI
+    transaction_details = filtered_transactions.select_related(
+        'product', 'user'
+    ).annotate(
+        price_per_unit=Cast(F('amount') / F('quantity'), FloatField())
+    ).values(
+        'id',
+        'product__sub_category',
+        'quantity',
+        'amount',
+        'price_per_unit',
+        'user__first_name',
+        'user__last_name',
+        'payment_status',  # ✅ Include this field
+        'created_at'
+    ).order_by('-created_at')
+
+    context = {
+        'total_income': total_income,
+        'daily_income': daily_income,
+        'weekly_income': weekly_income,
+        'monthly_income': monthly_income,
+        'yearly_income': yearly_income,
+        'filtered_income': filtered_income,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        'avg_rating': round(avg_rating, 1),
+        'transactions': transaction_details,
+    }
+
+    return render(request, 'payments/income_summary.html', context)
+
     farmer = request.user.farmerprofile
     transactions = Transaction.objects.filter(product__farmer=farmer)
 
@@ -377,7 +479,7 @@ def update_delivery_status(request, transaction_id):
         return redirect('payments:income_summary')
     except Exception as e:
         print("❌ Error updating delivery status:", e)
-        return render(request, 'payments/error.html', {'message': 'Cannot update delivery status.'})
+        return render(request, 'payments/error.html', {'message': _('Cannot update delivery status.')})
 
 
 @login_required
@@ -424,16 +526,24 @@ def dispute_delivery(request, transaction_id):
             # ✅ Notify admin
             try:
                 admin_email = settings.DEFAULT_FROM_EMAIL
-                subject = f" Dispute Alert: Transaction {transaction.pid}"
-                message = (
-                    f"Customer {request.user.username} has marked the product "
-                    f"'{transaction.product.sub_category}' (PID: {transaction.pid}) as Not Received.\n\n"
-                    f"Farmer: {transaction.product.farmer.user.username}\n"  # ✅ farmer is FarmerProfile → access .user
-                    f"Quantity: {transaction.quantity}\n"
-                    f"Amount: Rs. {transaction.amount}\n"
-                    f"Date: {transaction.created_at.strftime('%Y-%m-%d')}\n\n"
-                    f"Please review and take necessary action."
-                )
+                subject = _(" Dispute Alert: Transaction %(pid)s") % {'pid': transaction.pid}
+                message = _(
+                    "Customer %(customer_username)s has marked the product "
+                    "'%(product_name)s' (PID: %(pid)s) as Not Received.\n\n"
+                    "Farmer: %(farmer_username)s\n"  # ✅ farmer is FarmerProfile → access .user
+                    "Quantity: %(quantity)s\n"
+                    "Amount: Rs. %(amount)s\n"
+                    "Date: %(date)s\n\n"
+                    "Please review and take necessary action."
+                ) % {
+                    'customer_username': request.user.username,
+                    'product_name': transaction.product.sub_category,
+                    'pid': transaction.pid,
+                    'farmer_username': transaction.product.farmer.user.username,
+                    'quantity': transaction.quantity,
+                    'amount': transaction.amount,
+                    'date': transaction.created_at.strftime('%Y-%m-%d'),
+                }
 
                 send_mail(
                     subject,
@@ -448,7 +558,7 @@ def dispute_delivery(request, transaction_id):
         return redirect('payments:customer_purchases')
     except Exception as e:
         print("❌ Error in dispute_delivery:", e)
-        return render(request, 'payments/error.html', {'message': 'Cannot mark as dispute.'})
+        return render(request, 'payments/error.html', {'message': _('Cannot mark as dispute.')})
 
 
 @customer_required
@@ -463,7 +573,7 @@ def customer_purchases(request):
         })
     except Exception as e:
         print("❌ Error in customer_purchases:", e)
-        return render(request, 'payments/error.html', {'message': 'Error loading purchase history.'})
+        return render(request, 'payments/error.html', {'message': _('Error loading purchase history.')})
 
 
 @customer_required
@@ -515,7 +625,7 @@ def cod_payment(request, product_id):
 
     except Exception as e:
         print("❌ Error in COD payment:", e)
-        return render(request, 'payments/error.html', {'message': 'COD Payment Failed.'})
+        return render(request, 'payments/error.html', {'message': _('COD Payment Failed.')})
 
 
 @login_required
@@ -533,5 +643,5 @@ def cod_pay(request, transaction_id):
 
     except Exception as e:
         print("❌ Error in cod_pay:", e)
-        messages.error(request, "Cannot process COD payment.")
+        messages.error(request, _("Cannot process COD payment."))
         return redirect('payments:customer_purchases')

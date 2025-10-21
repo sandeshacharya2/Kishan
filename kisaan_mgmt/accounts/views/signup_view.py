@@ -374,7 +374,7 @@ def customer_farmer_reviews_view(request, farmer_id):
 
     return render(request, 'accounts/farmer_reviews_customer.html', {
         'reviews': reviews,
-        'farmer': farmer_profile.user,  # Still pass User for display in template
+        'farmer': farmer_profile,  # Still pass User for display in template
     })
 
 
@@ -434,7 +434,7 @@ def submit_farmer_review(request, farmer_id):
 
     return render(request, 'accounts/submit_farmer_review.html', {
         'form': form,
-        'farmer': farmer_profile.user,
+        'farmer': farmer_profile,
     })
 
 # @login_required
@@ -460,7 +460,7 @@ def customer_farmer_reviews_view(request, farmer_id):
                                   .order_by('-created_at')
     return render(request, 'accounts/farmer_reviews_customer.html', {
         'reviews': reviews,
-        'farmer': farmer_profile.user,  # Pass User for display
+        'farmer': farmer_profile,  # Pass User for display
     })
 
 

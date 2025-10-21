@@ -7,6 +7,7 @@ from accounts.models import FarmerReview
 from django.db.models import Avg
 # Import custom decorator
 from accounts.views.role_based_redirect import farmer_required, customer_required
+from django.utils.translation import gettext_lazy as _
 
 # Models
 from .models import Product
@@ -50,6 +51,8 @@ def confirm_chat(request, product_id):
         'farmer': farmer_profile,
     }
     return render(request, 'chat/chat_confirm.html', context)
+
+
 @login_required
 @customer_required
 def customer_chats_view(request):
@@ -73,7 +76,7 @@ def customer_chats_view(request):
             farmer_chats[farmer_id] = {
                 'farmer': chat.farmer,
                 'latest_chat': chat,
-                'latest_message': latest_msg.text if latest_msg else "No messages yet",
+                'latest_message': latest_msg.text if latest_msg else _("No messages yet"),
                 'total_chats': 0,
             }
         farmer_chats[farmer_id]['total_chats'] += 1
@@ -94,6 +97,8 @@ def customer_chats_view(request):
     }
 
     return render(request, 'chat/customer_chats.html', context)
+
+
 # ✅ MAIN CHAT MANAGEMENT VIEW — for farmers
 @login_required
 @farmer_required
@@ -125,7 +130,7 @@ def farmer_chats_view(request):
             customer_chats[cust_id] = {
                 'customer': chat.customer,
                 'latest_chat': chat,
-                'latest_message': latest_msg.text if latest_msg else "No messages yet",
+                'latest_message': latest_msg.text if latest_msg else _("No messages yet"),
                 'total_chats': 0,
             }
         customer_chats[cust_id]['total_chats'] += 1
@@ -159,7 +164,7 @@ def start_chat(request, product_id):
     try:
         customer_profile = request.user.customerprofile
     except CustomerProfile.DoesNotExist:
-        return HttpResponseForbidden("You must be a registered customer to start a chat.")
+        return HttpResponseForbidden(_("You must be a registered customer to start a chat."))
 
     # ✅ Get or create chatroom — UNIQUE per farmer-customer pair
     chatroom, created = ChatRoom.objects.get_or_create(
@@ -173,14 +178,19 @@ def start_chat(request, product_id):
         Message.objects.create(
             chatroom=chatroom,
             sender=request.user,
-            text=f"Hi {farmer_profile.user.username}, I'm interested in your product '{product.sub_category}'. Please accept this chat to continue."
+            text=_("Hi %(farmer_username)s, I'm interested in your product '%(product_name)s'. Please accept this chat to continue.") % {
+                'farmer_username': farmer_profile.user.username,
+                'product_name': product.sub_category
+            }
         )
     else:
         # Optional: Notify farmer that customer returned via different product
         Message.objects.create(
             chatroom=chatroom,
             sender=request.user,
-            text=f"[System Note] Customer returned to chat via product: '{product.sub_category}'"
+            text=_("[System Note] Customer returned to chat via product: '%(product_name)s'") % {
+                'product_name': product.sub_category
+            }
         )
 
     return redirect('chat:chatroom_detail', chatroom_id=chatroom.id)
@@ -193,7 +203,7 @@ def chatroom_detail(request, chatroom_id):
 
     # Permission check
     if request.user != chatroom.farmer.user and request.user != chatroom.customer.user:
-        return HttpResponseForbidden("You don't have permission to view this chat.")
+        return HttpResponseForbidden(_("You don't have permission to view this chat."))
 
     # If farmer rejected, show rejection page to customer
     if chatroom.farmer_rejected:
@@ -236,7 +246,7 @@ def accept_chat(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
 
     if request.user != chatroom.farmer.user:
-        return HttpResponseForbidden("Only the farmer can accept this chat.")
+        return HttpResponseForbidden(_("Only the farmer can accept this chat."))
 
     chatroom.farmer_accepted = True
     chatroom.farmer_rejected = False
@@ -246,7 +256,7 @@ def accept_chat(request, chatroom_id):
     Message.objects.create(
         chatroom=chatroom,
         sender=chatroom.farmer.user,
-        text="I've accepted your chat request. How can I help you?"
+        text=_("I've accepted your chat request. How can I help you?")
     )
 
     return redirect('chat:chatroom_detail', chatroom_id=chatroom.id)
@@ -259,7 +269,7 @@ def reject_chat(request, chatroom_id):
     chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
 
     if request.user != chatroom.farmer.user:
-        return HttpResponseForbidden("Only the farmer can reject this chat.")
+        return HttpResponseForbidden(_("Only the farmer can reject this chat."))
 
     chatroom.farmer_accepted = False
     chatroom.farmer_rejected = True
@@ -269,10 +279,12 @@ def reject_chat(request, chatroom_id):
     Message.objects.create(
         chatroom=chatroom,
         sender=chatroom.farmer.user,  # Farmer is sender
-        text="[System Notification] Unfortunately, the farmer has rejected your chat request."
+        text=_("[System Notification] Unfortunately, the farmer has rejected your chat request.")
     )
 
     # Optional: Add Django success message for farmer
-    messages.success(request, f"Chat request from {chatroom.customer.user.username} has been rejected.")
+    messages.success(request, _("Chat request from %(customer_username)s has been rejected.") % {
+        'customer_username': chatroom.customer.user.username
+    })
 
     return redirect('farmer-dashboard')

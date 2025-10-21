@@ -91,13 +91,13 @@
                 <form method="POST" action="{% url 'payments:update_delivery_status' t.id %}">
                   {% csrf_token %}
                   <select name="delivery_status" class="border px-2 py-1 rounded text-xs">
-                    <option value="Pending" {% if t.delivery_status == 'Pending' %}selected{% endif %}>{% trans "Pending" %}</option>
+                    <!-- <option value="Pending" {% if t.delivery_status == 'Pending' %}selected{% endif %}>{% trans "Pending" %}</option> -->
                     <option value="Dispatched" {% if t.delivery_status == 'Dispatched' %}selected{% endif %}>{% trans "Dispatched" %}</option>
                     <option value="Delivered" {% if t.delivery_status == 'Delivered' %}selected{% endif %}>{% trans "Delivered" %}</option>
-                    <option value="Completed" {% if t.delivery_status == 'Completed' %}selected{% endif %}>{% trans "Completed" %}</option>
+                    <!-- <option value="Completed" {% if t.delivery_status == 'Completed' %}selected{% endif %}>{% trans "Completed" %}</option> -->
                   </select>
                   <button type="submit" class="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">
-                    {% trans "Update" %}
+<a href="{% url 'payments:transaction-list' %}">{% trans "Update" %}</a>
                   </button>
                 </form>
               </td>

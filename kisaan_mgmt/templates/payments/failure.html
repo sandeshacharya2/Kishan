@@ -1,45 +1,25 @@
+{% extends "accounts/customer_base.html" %}
 {% load static i18n %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{% trans "Payment Failed" %}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ffe6e6;
-            text-align: center;
-            padding: 50px;
-        }
-        .box {
-            background-color: #fff;
-            border: 2px solid #f44336;
-            border-radius: 10px;
-            display: inline-block;
-            padding: 30px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #f44336;
-        }
-        p {
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <h1>❌ {% trans "Payment Failed" %}</h1>
-        <p>{% trans "Something went wrong or the transaction was canceled." %}</p>
-        <p>{% trans "Please try again or contact support." %}</p>
 
-        <h2>{% trans "Payment Failed" %}</h2>
-        <p>{% trans "Unfortunately, your payment could not be verified or was cancelled." %}</p>
+{% block title %}{% trans "Payment Failed" %}{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-red-100 p-6">
+    <div class="bg-white border-2 border-red-600 rounded-xl p-8 shadow-lg text-center max-w-md">
+        <h1 class="text-3xl font-bold text-red-600 mb-4">❌ {% trans "Payment Failed" %}</h1>
+        <p class="text-lg mb-2">{% trans "Something went wrong or the transaction was canceled." %}</p>
+        <p class="text-lg mb-4">{% trans "Please try again or contact support." %}</p>
+
+        <h2 class="text-xl font-semibold text-red-500 mb-2">{% trans "Payment Failed" %}</h2>
+        <p class="mb-4">{% trans "Unfortunately, your payment could not be verified or was cancelled." %}</p>
 
         {% if pid %}
-        <p>{% trans "Transaction ID" %}: {{ pid }}</p>
+        <p class="font-medium">{% trans "Transaction ID" %}: {{ pid }}</p>
         {% endif %}
 
-        <a href="{% url 'customer-dashboard' %}">{% trans "Go back to Dashboard" %}</a>
+        <a href="{% url 'customer-dashboard' %}" class="inline-block mt-6 px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+            {% trans "Go back to Dashboard" %}
+        </a>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

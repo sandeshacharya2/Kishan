@@ -1,10 +1,10 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="ne" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>किसान – किसान र ग्राहकलाई जोड्ने (Connecting Farmers & Customers)</title>
+  <title>{% trans "Kisaan – Connecting Farmers & Customers" %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
@@ -15,21 +15,26 @@
 </head>
 <body class="font-sans text-gray-800">
 
-  <!-- हेडर समावेश (Header Include) -->
+  <!-- Header Include -->
   {% include "landingpage/header.html" %}
-<!-- स्वागत/हिरो सेक्शन (Hero Section) with Carousel -->
+
+<!-- Hero Section with Carousel -->
 <section id="home" class="bg-green-50">
   <div class="container mx-auto px-4 py-16 grid md:grid-cols-2 items-center gap-8">
     <div class="text-center md:text-left">
       <h2 class="text-4xl font-bold mb-4" style="color: var(--kisaan-green);">
-        किसान र ग्राहकलाई प्रत्यक्ष (Direct) जोड्ने
+        {% trans "Directly Connect Farmers and Customers" %}
       </h2>
       <p class="text-lg text-gray-600 mb-6">
-        किसानलाई उचित मूल्य (Fair Price) र ग्राहकलाई ताजा (Fresh) वस्तु उपलब्ध गराउने।
+        {% trans "Ensure fair prices for farmers and fresh produce for customers." %}
       </p>
       <div class="space-x-4">
-        <a href="{% url 'products' %}" class="px-6 py-3 rounded-lg text-white hover:opacity-90" style="background-color: var(--kisaan-green);">उत्पादनहरू हेर्नुहोस् (View Products)</a>
-        <a href="{% url 'signup' %}" class="bg-white px-6 py-3 rounded-lg border hover:bg-green-100" style="color: var(--kisaan-green); border-color: var(--kisaan-green);">अहिले नै सामेल हुनुहोस् (Join Now)</a>
+        <a href="{% url 'products' %}" class="px-6 py-3 rounded-lg text-white hover:opacity-90" style="background-color: var(--kisaan-green);">
+          {% trans "View Products" %}
+        </a>
+        <a href="{% url 'signup' %}" class="bg-white px-6 py-3 rounded-lg border hover:bg-green-100" style="color: var(--kisaan-green); border-color: var(--kisaan-green);">
+          {% trans "Join Now" %}
+        </a>
       </div>
     </div>
 
@@ -70,92 +75,89 @@
   setInterval(nextSlide, 3000); // Change every 3 seconds
 </script>
 
-
-  <!-- विशेषता सेक्शन (Features Section) -->
-  <section id="features" class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-      <h3 class="text-3xl font-bold text-center mb-10" style="color: var(--kisaan-green);">
-        किन किसान रोज्ने? (Why Choose Kisaan?)
-      </h3>
-      <div class="grid md:grid-cols-4 gap-8 text-center">
-        <div class="p-6 border rounded-lg hover:shadow-lg">
-          <img src="{% static 'accounts/images/directSale.png' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Direct Sales">
-          <h4 class="text-xl font-semibold mb-2">प्रत्यक्ष बिक्री (Direct Sales)</h4>
-          <p>बीचौलिया (Middlemen) बिना – किसानले बढी कमाउने, ग्राहकले कम तिर्ने।</p>
-        </div>
-
-        <div class="p-6 border rounded-lg hover:shadow-lg">
-        <img src="{% static 'accounts/images/fairprice.jpg' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Fair Prices">
-        <h4 class="text-xl font-semibold mb-2">उचित मूल्य (Fair Prices)</h4>
-        <p>किसानलाई उचित मूल्य र ग्राहकलाई न्यायोचित दाममा ताजा उत्पादन।</p>
+<!-- Features Section -->
+<section id="features" class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <h3 class="text-3xl font-bold text-center mb-10" style="color: var(--kisaan-green);">
+      {% trans "Why Choose Kisaan?" %}
+    </h3>
+    <div class="grid md:grid-cols-4 gap-8 text-center">
+      <div class="p-6 border rounded-lg hover:shadow-lg">
+        <img src="{% static 'accounts/images/directSale.png' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Direct Sales">
+        <h4 class="text-xl font-semibold mb-2">{% trans "Direct Sales" %}</h4>
+        <p>{% trans "No middlemen – farmers earn more, customers pay less." %}</p>
       </div>
 
-        <div class="p-6 border rounded-lg hover:shadow-lg">
-          <img src="{% static 'accounts/images/qv.jpg' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Quality Verified">
-          <h4 class="text-xl font-semibold mb-2">गुणस्तर प्रमाणित (Quality Verified)</h4>
-          <p>वस्तुहरू निश्चित मापदण्ड (Standards) अनुसार ताजा र गुणस्तरीय।</p>
-        </div>
-        <div class="p-6 border rounded-lg hover:shadow-lg">
-          <img src="{% static 'accounts/images/communication.jpg' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Easy Communication">
-          <h4 class="text-xl font-semibold mb-2">सजिलो सम्पर्क (Easy Communication)</h4>
-          <p>किसानसँग प्रत्यक्ष कुरा गरेर सजिलै सम्झौता (Deal) गर्नुहोस्।</p>
-        </div>
+      <div class="p-6 border rounded-lg hover:shadow-lg">
+        <img src="{% static 'accounts/images/fairprice.jpg' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Fair Prices">
+        <h4 class="text-xl font-semibold mb-2">{% trans "Fair Prices" %}</h4>
+        <p>{% trans "Fair compensation for farmers and fresh produce at reasonable prices for customers." %}</p>
+      </div>
+
+      <div class="p-6 border rounded-lg hover:shadow-lg">
+        <img src="{% static 'accounts/images/qv.jpg' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Quality Verified">
+        <h4 class="text-xl font-semibold mb-2">{% trans "Quality Verified" %}</h4>
+        <p>{% trans "Products are fresh and meet quality standards." %}</p>
+      </div>
+
+      <div class="p-6 border rounded-lg hover:shadow-lg">
+        <img src="{% static 'accounts/images/communication.jpg' %}" class="h-32 w-full object-cover rounded-lg mb-4" alt="Easy Communication">
+        <h4 class="text-xl font-semibold mb-2">{% trans "Easy Communication" %}</h4>
+        <p>{% trans "Negotiate directly with farmers through easy chat." %}</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-<!-- कसरी काम गर्छ (How It Works) -->
+<!-- How It Works -->
 <section id="how" class="py-16" style="background-color: #F1F8F1;">
   <div class="container mx-auto px-4">
     <h3 class="text-3xl font-bold text-center mb-10" style="color: var(--kisaan-green);">
-      कसरी काम गर्छ? (How It Works)
+      {% trans "How It Works" %}
     </h3>
     <div class="grid md:grid-cols-5 gap-6">
       
       <!-- Step 1 -->
       <div class="text-center p-4 bg-white rounded-lg shadow hover:shadow-lg">
         <img src="{% static 'accounts/images/signup.jpg' %}" class="h-28 w-full object-cover rounded-lg mb-3" alt="Sign Up">
-        <h4 class="text-lg font-semibold mb-1">१. साइन अप गर्नुहोस्</h4>
-        <p class="text-sm">किसान वा ग्राहकको रूपमा दर्ता गर्नुहोस्।</p>
+        <h4 class="text-lg font-semibold mb-1">{% trans "1. Sign Up" %}</h4>
+        <p class="text-sm">{% trans "Register as a farmer or customer." %}</p>
       </div>
 
       <!-- Step 2 -->
       <div class="text-center p-4 bg-white rounded-lg shadow hover:shadow-lg">
         <img src="{% static 'accounts/images/products.jpg' %}" class="h-28 w-full object-cover rounded-lg mb-3" alt="View Products">
-        <h4 class="text-lg font-semibold mb-1">२. उत्पादन हेर्नुहोस्</h4>
-        <p class="text-sm">ताजा र गुणस्तरीय उत्पादनहरू अनलाइन ब्राउज गर्नुहोस्।</p>
+        <h4 class="text-lg font-semibold mb-1">{% trans "2. Browse Products" %}</h4>
+        <p class="text-sm">{% trans "Browse fresh and quality products online." %}</p>
       </div>
 
       <!-- Step 3 -->
       <div class="text-center p-4 bg-white rounded-lg shadow hover:shadow-lg">
         <img src="{% static 'accounts/images/chat-icon.jpg' %}" class="h-28 w-full object-cover rounded-lg mb-3" alt="Chat with Farmer">
-        <h4 class="text-lg font-semibold mb-1">३. किसानसँग कुरा गर्नुहोस्</h4>
-        <p class="text-sm">च्याट मार्फत मूल्य र डेलिभरी बारे सहमति गर्नुहोस्।</p>
+        <h4 class="text-lg font-semibold mb-1">{% trans "3. Chat with Farmer" %}</h4>
+        <p class="text-sm">{% trans "Agree on price and delivery via chat." %}</p>
       </div>
 
       <!-- Step 4 -->
       <div class="text-center p-4 bg-white rounded-lg shadow hover:shadow-lg">
         <img src="{% static 'accounts/images/esewa-payment.png' %}" class="h-28 w-full object-cover rounded-lg mb-3" alt="eSewa Payment">
-        <h4 class="text-lg font-semibold mb-1">४. भुक्तानी गर्नुहोस्</h4>
-        <p class="text-sm">eSewa मार्फत वा डेलिभरीमा नगद (Cash on Delivery)।</p>
+        <h4 class="text-lg font-semibold mb-1">{% trans "4. Make Payment" %}</h4>
+        <p class="text-sm">{% trans "Pay via eSewa or Cash on Delivery." %}</p>
       </div>
 
-      <!-- Step 5: NEW -->
+      <!-- Step 5 -->
       <div class="text-center p-4 bg-white rounded-lg shadow hover:shadow-lg">
         <img src="{% static 'accounts/images/delivery2.jpg' %}" class="h-28 w-full object-cover rounded-lg mb-3" alt="Cash on Delivery">
-        <h4 class="text-lg font-semibold mb-1">५. नगदमा भुक्तानी (Cash on Delivery)</h4>
-        <p class="text-sm">डेलिभरी समयमा नै नगदमा भुक्तानी गर्नुहोस्।</p>
+        <h4 class="text-lg font-semibold mb-1">{% trans "5. Cash on Delivery" %}</h4>
+        <p class="text-sm">{% trans "Pay in cash at the time of delivery." %}</p>
       </div>
 
     </div>
   </div>
 </section>
 
-
-
-
-  <!-- फुटर समावेश (Footer Include) -->
-  {% include "landingpage/footer.html" %}
+<!-- Footer Include -->
+{% include "landingpage/footer.html" %}
 
 </body>
 </html>
