@@ -125,7 +125,7 @@ def payment_success(request):
         qty = request.GET.get('qty')
         product_id = request.GET.get('product_id')
 
-        verify_url = "https://rc.esewa.com.np/epay/transrec  "
+        verify_url = "https://rc.esewa.com.np/epay/transrec"
         data = {
             'amt': amt,
             'scd': 'EPAYTEST',
