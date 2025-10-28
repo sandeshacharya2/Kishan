@@ -16,6 +16,9 @@ from accounts.views import signup_view, landing_page, about, contact  # Import y
 # from views import landing_view
 
 urlpatterns = [
+
+    path("__reload__/", include("django_browser_reload.urls")),
+
     path('', landing_page, name='landing'),   # Main landing page at "/"
     path('about/', about, name='about'),
     path('contact/', contact, name='contact'),

@@ -86,7 +86,7 @@ class FarmerLoginView(LoginView):
         else:
             # Not a farmer log out and show error
             logout(self.request)
-            messages.error(self.request, _("You are not a farmer. Please use the correct login page."))
+            messages.error(self.request, _("Email or password do not match."))
             return redirect('farmer-login')
 
 
@@ -122,7 +122,7 @@ class CustomerLoginView(LoginView):
         else:
             # Not a customer – log out and show error
             logout(self.request)
-            messages.error(self.request, _("You are not a customer. Please use the correct login page."))
+            messages.error(self.request, _("Email or password do not match"))
             return redirect('customer-login')
 
 

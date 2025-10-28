@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'payments',
     'django_extensions',
     'channels',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
     
 ]
 
@@ -57,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 CHANNEL_LAYERS = {
@@ -77,6 +81,8 @@ LANGUAGES = [
     ('ne', 'Nepali'),
     ('en', 'English'),
 ]
+TAILWIND_APP_NAME = 'theme'
+NPM_BIN_PATH = 'npm.cmd'
 
 # Default language (Nepali)
 LANGUAGE_CODE = 'ne'  # ✅ Make Nepali the default language

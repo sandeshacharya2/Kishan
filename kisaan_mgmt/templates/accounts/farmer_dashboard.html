@@ -6,19 +6,18 @@
 
 {% block content %}
 
-
- 
-   
 <main class="lg:ml-60">
  
   <!-- Greeting -->
- <div class=" text-center mb-5 mt-12 tracking-wide font-medium  text-green-900 text-lg italic">{% trans "Hello, fellow farmer! From here, you can easily manage your products." %}</div>
-
+  <div class="text-center mb-5 mt-12 tracking-wide font-medium text-green-900 text-lg italic">
+    {% trans "Hello, fellow farmer! From here, you can easily manage your products." %}
+  </div>
 
   <!-- Product cards -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     {% if products %}
       {% for product in products %}
+        <!-- Real product card (unchanged) -->
         <div class="bg-gradient-to-br from-green-50 via-green-150 to-green-200 rounded-xl border border-green-700 shadow-md hover:shadow-2xl hover:-translate-y-1 duration-300 transition p-0 flex flex-col overflow-hidden">
 
           <!-- Farmer Info -->
@@ -29,8 +28,6 @@
               <img src="{% static 'default_profile.jpg' %}" alt="Farmer" class="w-12 h-12 rounded-full border-2 border-teal-400 object-cover" />
             {% endif %}
             <div>
-
-              
               <p class="text-green-900 font-semibold tracking-wide">👨‍🌾 {{ user.first_name }} {{ user.last_name }}</p>
               <small class="text-green-700 font-medium tracking-wide">@{{ user.username }}</small>
             </div>
@@ -49,41 +46,48 @@
             <p class="font-medium text-green-800">{% trans "Quantity:" %} <span class="font-semibold">{{ product.quantity }} {{ product.unit }}</span></p>
             <p class="font-medium text-green-800">{% trans "Price per unit:" %} <span class="font-semibold">Rs. {{ product.price }}</span></p>
             <p class="font-medium text-green-800">{% trans "Total price:" %} <span class="font-semibold">Rs. {{ product.total_price }}</span></p>
-            <p class="font-medium text-green-800">{% trans "Location:" %} <span class="font-semibold">{{ user.farmerprofile.address }}, {{ user.farmerprofile.tole }}, {% trans "Ward No." %} {{ user.profile.ward }}</span></p>
+            <p class="font-medium text-green-800">{% trans "Location:" %} <span class="font-semibold">{{ user.farmerprofile.address }}, {{ user.farmerprofile.tole }}, {% trans "Ward No." %} {{ user.farmerprofile.ward }}</span></p>
             <p class="text-green-700 text-sm mt-2 font-medium">{% trans "Posted on:" %} {{ product.date_posted|date:"Y-m-d" }}</p>
             <p class="mt-2 text-green-700 font-medium">{% trans "Description:" %} {{ product.description }}</p>
 
             <!-- Actions -->
             <div class="flex justify-end gap-3 mt-4">
               <a href="{% url 'edit-product' product.id %}" class="bg-teal-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">✏️ {% trans "Edit" %}</a>
-              <a href="{% url 'delete-product' product.id %}" onclick="return confirm('Are you sure ?')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">🗑️ {% trans "Delete" %}</a>
+              <a href="{% url 'delete-product' product.id %}" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition font-semibold tracking-wide shadow-sm">🗑️ {% trans "Delete" %}</a>
             </div>
           </div>
         </div>
       {% endfor %}
+
+      <!-- Standalone + button (no card) — centered in its grid cell -->
+      <div class="flex justify-center">
+        <a href="{% url 'add-product' %}" class="group relative">
+          <div class="w-[75px] h-[75px] bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 border-4 border-white">
+            <span class="text-white text-4xl font-bold leading-none">+</span>
+          </div>
+          <div class="absolute top-[85px] left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs font-semibold px-2.5 py-1.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            {% trans "Add New Product" %}
+          </div>
+        </a>
+      </div>
+
     {% else %}
+      <!-- No products -->
       <p class="text-center text-green-700 col-span-full font-medium tracking-wide">{% trans "You haven't added any products yet." %}</p>
+
+      <!-- Standalone + button (no card) -->
+      <div class="flex justify-center">
+        <a href="{% url 'add-product' %}" class="group relative">
+          <div class="w-[75px] h-[75px] bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 border-4 border-white">
+            <span class="text-white text-4xl font-bold leading-none">+</span>
+          </div>
+          <div class="absolute top-[85px] left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs font-semibold px-2.5 py-1.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            {% trans "Add New Product" %}
+          </div>
+        </a>
+      </div>
     {% endif %}
   </div>
-
-  <!-- Pending chats -->
-  <!-- <h3 class="mt-12 mb-4 text-green-900 font-bold text-2xl tracking-wide">📩 Pending Chat Requests</h3>
-  {% if pending_chats %}
-    <ul class="space-y-4">
-      {% for chat in pending_chats %}
-        <li class="border border-green-400 rounded-lg p-4 shadow bg-green-100 hover:bg-green-200 transition">
-          <p class="font-medium text-green-800">Chat request from <strong>{{ chat.customer.username }}</strong> for product <strong>{{ chat.product.name }}</strong></p>
-          <div class="flex gap-4 mt-2">
-            <form method="post" action="{% url 'chat:accept_chat' chat.id %}">{% csrf_token %}<button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-lg font-semibold tracking-wide shadow-sm">✅ Accept</button></form>
-            <form method="post" action="{% url 'chat:reject_chat' chat.id %}">{% csrf_token %}<button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-lg font-semibold tracking-wide shadow-sm">❌ Reject</button></form>
-          </div>
-          <p class="mt-2 text-green-700 font-medium">Waiting for your response...</p>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-green-700 font-medium tracking-wide">No pending chat requests.</p>
-  {% endif %} -->
 
 </main>
 
@@ -94,10 +98,6 @@
   const sidebar = document.getElementById('sidebar-mobile');
   const openBtn = document.getElementById('mobile-sidebar-toggle');
   const closeBtn = document.getElementById('mobile-sidebar-close');
-  openBtn.addEventListener('click', () => {sidebar.classList.remove('-translate-x-full');});
-  closeBtn.addEventListener('click', () => {sidebar.classList.add('-translate-x-full');});
+  openBtn?.addEventListener('click', () => sidebar?.classList.remove('-translate-x-full'));
+  closeBtn?.addEventListener('click', () => sidebar?.classList.add('-translate-x-full'));
 </script>
-
-{% comment %} {% include "accounts/farmer_footer.html" %} {% endcomment %}
-</body>
-</html>

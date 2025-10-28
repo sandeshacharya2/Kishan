@@ -130,7 +130,7 @@ class FarmerReview(models.Model):
         unique_together = ('farmer', 'customer')  # One review per customer per farmer
 
     def __str__(self):
-        return f"{self.customer.username} → {self.farmer.username}: {self.rating}⭐"
+        return f"{self.customer.user.username} → {self.farmer.user.username}: {self.rating}⭐"
     
 
 class DeletedUser(models.Model):

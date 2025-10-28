@@ -407,8 +407,7 @@ def customer_detail_view(request, customer_id):
 
 
 
-@login_required
-@customer_required
+
 @login_required
 @customer_required
 def submit_farmer_review(request, farmer_id):
@@ -476,4 +475,4 @@ def customer_farmer_reviews_view(request, farmer_id):
 #     return render(request, 'accounts/customer_detail.html', {
 #         'customer': customer,
 #         'reviews': reviews,
-#     })
+#     }

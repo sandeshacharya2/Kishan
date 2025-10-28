@@ -38,8 +38,9 @@ def customer_dashboard_view(request):
     distance_filter = request.GET.get('distance_filter')
 
 #   Fetching all products by recently posted date
-    products = Product.objects.all().order_by('-date_posted')
-
+    products = Product.objects.filter(quantity__gt=0).order_by('-date_posted')
+    # if product.quantity == 0:
+    #     products = products.none()
 
 # searching through name or synonyms of the product
     if query:

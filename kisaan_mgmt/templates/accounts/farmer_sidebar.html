@@ -12,12 +12,16 @@
   </div>
   
   <div class="p-4 text-center border-b border-green-500">
-    {% if user.farmerprofile.profile_picture %}
-      <img src="{{ user.farmerprofile.profile_picture.url }}" alt="{% trans 'Profile' %}" class="mx-auto rounded-full border-4 border-teal-400 shadow-lg w-20 h-20 object-cover mb-2" />
-    {% else %}
-      <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" class="mx-auto rounded-full border-4 border-teal-400 shadow-lg w-20 h-20 object-cover mb-2" />
-    {% endif %}
-    <h2 class="text-green-800 font-bold text-lg tracking-wide">@{{ user.first_name }} {{ user.last_name }}</h2>
+    <a href="{% url 'edit_farmer_profile' %}" class="block">
+      {% if user.farmerprofile.profile_picture %}
+        <img src="{{ user.farmerprofile.profile_picture.url }}" alt="{% trans 'Profile' %}" class="mx-auto rounded-full border-4 border-teal-400 shadow-lg w-20 h-20 object-cover mb-2" />
+      {% else %}
+        <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" class="mx-auto rounded-full border-4 border-teal-400 shadow-lg w-20 h-20 object-cover mb-2" />
+      {% endif %}
+      <h2 class="text-green-800 font-bold text-lg tracking-wide">@{{ user.first_name }} {{ user.last_name }}</h2>
+      <h2 class="text-green-800 font-bold text-base mt-1">@{{ user.username }}</h2>
+    </a>
+
     <div class="mt-2 flex justify-center items-center gap-1">
       {% for i in "12345" %}
         {% if i|add:"0" <= avg_rating %}
@@ -72,12 +76,15 @@
 <aside class="w-56 hidden lg:flex fixed top-0 left-0 h-full flex-col bg-gradient-to-b from-green-500 via-emerald-500 to-teal-500 border-r border-green-700 shadow-2xl p-6 z-40 rounded-r-2xl">
 
   <div class="text-center border-b border-green-200 pb-4 mb-4">
-    {% if user.farmerprofile.profile_picture %}
-      <img src="{{ user.farmerprofile.profile_picture.url }}" alt="{% trans 'Profile' %}" class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
-    {% else %}
-      <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
-    {% endif %}
-    <h2 class="text-white font-bold text-lg tracking-wide">👨‍🌾{{ user.first_name }} {{ user.last_name }}</h2>
+    <a href="{% url 'edit_farmer_profile' %}" class="block">
+      {% if user.farmerprofile.profile_picture %}
+        <img src="{{ user.farmerprofile.profile_picture.url }}" alt="{% trans 'Profile' %}" class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
+      {% else %}
+        <img src="{% static 'default_profile.jpg' %}" alt="{% trans 'No Profile' %}" class="mx-auto rounded-full border-4 border-white shadow-lg w-20 h-20 object-cover mb-2" />
+      {% endif %}
+      <h2 class="text-white font-bold text-lg tracking-wide">👨‍🌾{{ user.first_name }} {{ user.last_name }}</h2>
+      <h2 class="text-white mt-2 font-bold text-base">@{{ user.username }}</h2>
+    </a>
     
     <div class="mt-2 flex justify-center items-center gap-1">
       {% for i in "12345" %}
@@ -98,7 +105,6 @@
       </a>
     </div>
     
-    <h2 class="text-white mt-2 font-bold text-base">@{{ user.username }}</h2>
     <p class="text-green-50 text-sm mt-1">
       {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
         {{ address }}, {{ ward }}
@@ -111,21 +117,17 @@
     <a href="{% url 'payments:transaction-list' %}" class="hover:text-yellow-200 transition">💰 {% trans "Transaction List" %}</a>
     <a href="{% url 'payments:income_summary' %}" class="hover:text-yellow-200 transition">📋 {% trans "Income Summary" %}</a>
     <a href="{% url 'add-product' %}" class="hover:text-yellow-200 transition">➕ {% trans "Add New Product" %}</a>
-    <a href="{% url 'update-farmer-profile' %}" class="hover:text-yellow-200 transition">✏️ {% trans "Edit Profile" %}</a>
+    <a href="{% url 'edit_farmer_profile' %}" class="hover:text-yellow-200 transition">✏️ {% trans "Edit Profile" %}</a>
     <a href="{% url 'chat:farmer-chats' %}" class="hover:text-yellow-200 transition">💬 {% trans "Chat" %}</a>
     
     <!-- Settings Toggle -->
-<!-- Settings Toggle -->
-<a href="#" id="settings-toggle-desktop" class="hover:text-yellow-200 transition py-1">⚙️ {% trans "Settings" %}</a>
+    <a href="#" id="settings-toggle-desktop" class="hover:text-yellow-200 transition py-1">⚙️ {% trans "Settings" %}</a>
 
-<!-- Hidden Settings Items -->
-<div id="settings-menu-desktop" class="hidden">
-  <a href="{% url 'delete_farmer_account' %}" class="block text-red-200 hover:text-red-300 transition py-1 pl-6">🔒 {% trans "Delete Account" %}</a>
-  <a href="{% url 'report_user' %}" class="block text-orange-200 hover:text-orange-300 transition py-1 pl-6">📢 {% trans "Report" %}</a>
-</div>
-    
-    <!-- Optional: Keep Delete Account outside if preferred -->
-    <!-- <a href="{% url 'delete_farmer_account' %}" class="hover:text-yellow-200 transition mt-auto">🗑️ {% trans "Delete Account" %}</a> -->
+    <!-- Hidden Settings Items -->
+    <div id="settings-menu-desktop" class="hidden">
+      <a href="{% url 'delete_farmer_account' %}" class="block text-red-200 hover:text-red-300 transition py-1 pl-6">🔒 {% trans "Delete Account" %}</a>
+      <a href="{% url 'report_user' %}" class="block text-orange-200 hover:text-orange-300 transition py-1 pl-6">📢 {% trans "Report" %}</a>
+    </div>
   </nav>
 
   <form method="post" action="{% url 'logout' %}" class="mt-auto pt-4 border-t border-green-500">

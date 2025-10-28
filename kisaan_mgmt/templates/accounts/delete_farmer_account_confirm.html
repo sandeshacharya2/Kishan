@@ -22,33 +22,48 @@
         {{ user.email }}
     </div>
 
-    <form method="post" style="margin-top: 1.5rem;">
-        {% csrf_token %}
-        
-        <div style="margin-bottom: 1rem;">
-            <label for="confirmation_email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
-                {% trans "Type your email to confirm:" %}
-            </label>
-            <input 
-                type="email" 
-                name="confirmation_email" 
-                id="confirmation_email"
-                required
-                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;"
-                placeholder="your.email@example.com"
-            >
-            {% if error %}
-                <p style="color: #d32f2f; font-size: 0.9rem; margin-top: 0.3rem;">{{ error }}</p>
-            {% endif %}
-        </div>
+<form method="post" style="margin-top: 1.5rem;">
+    {% csrf_token %}
+    
+    <div style="margin-bottom: 1rem;">
+        <label for="confirmation_email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+            {% trans "Type your email to confirm:" %}
+        </label>
+        <input 
+            type="email" 
+            name="confirmation_email" 
+            id="confirmation_email"
+            required
+            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;"
+            placeholder="your.email@example.com"
+        >
+    </div>
 
-        <button type="submit" 
-                style="background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-            {% trans "Yes, Delete My Account Forever" %}
-        </button>
-        <a href="{% url 'farmer-dashboard' %}" 
-           style="margin-left: 1rem; text-decoration: none; color: #1976d2;">
-            {% trans "Cancel" %}
-        </a>
-    </form>
+    <div style="margin-bottom: 1rem;">
+        <label for="confirmation_password" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+            {% trans "Enter your password to confirm:" %}
+        </label>
+        <input 
+            type="password" 
+            name="confirmation_password" 
+            id="confirmation_password"
+            required
+            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;"
+            placeholder="{% trans 'Enter your password' %}"
+        >
+    </div>
+
+    {% if error %}
+        <p style="color: #d32f2f; font-size: 0.9rem; margin-top: 0.3rem;">{{ error }}</p>
+    {% endif %}
+
+    <button type="submit" 
+            style="background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+        {% trans "Yes, Delete My Account Forever" %}
+    </button>
+    <a href="{% url 'farmer-dashboard' %}" 
+       style="margin-left: 1rem; text-decoration: none; color: #1976d2;">
+        {% trans "Cancel" %}
+    </a>
+</form>
 </div>

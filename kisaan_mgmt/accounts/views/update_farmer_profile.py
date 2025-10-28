@@ -15,6 +15,7 @@ from accounts.models import DeletedUser
 from django.contrib.auth.models import User
 from payments.models import Transaction
 from django.db import transaction
+from django.contrib.auth.hashers import check_password
 
 
 
@@ -140,7 +141,85 @@ def farmer_detail(request, farmer_id):
     }
     return render(request, "accounts/farmer_detail.html", context)
 
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 
+@login_required
+def edit_farmer_profile(request):
+    # Ensure the user is a farmer
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'farmer':
+        raise PermissionDenied("Only farmers can access this page.")
+    
+    try:
+        farmer_profile = request.user.farmerprofile
+    except FarmerProfile.DoesNotExist:
+        messages.error(request, "Farmer profile not found.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        # Update User model
+        request.user.first_name = request.POST.get('first_name', '').strip()
+        request.user.last_name = request.POST.get('last_name', '').strip()
+        request.user.save()
+
+        # Update profile picture if provided
+        if 'profile_picture' in request.FILES:
+            farmer_profile.profile_picture = request.FILES['profile_picture']
+            farmer_profile.save()
+
+        # messages.success(request, "Farmer profile updated successfully!")
+        return redirect('farmer-dashboard')  # or dashboard
+    avg_rating = FarmerReview.objects.filter(farmer=farmer_profile).aggregate(Avg('rating'))['rating__avg'] or 0
+    avg_rating = round(avg_rating, 1)
+
+    # ✅ UPDATED: Fetch reviews using FarmerProfile
+    reviews = FarmerReview.objects.filter(farmer=farmer_profile).select_related('customer').order_by('-created_at')
+
+    context = {
+        
+        'avg_rating': avg_rating,
+        'reviews': reviews,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'profile_picture_url': farmer_profile.profile_picture.url if farmer_profile.profile_picture else None,
+    }
+    return render(request, 'accounts/edit_farmer_profile.html', context)
+
+
+@login_required
+def edit_customer_profile(request):
+    # Ensure the user is a customer
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'customer':
+        raise PermissionDenied("Only customers can access this page.")
+
+    try:
+        customer_profile = request.user.customerprofile
+    except CustomerProfile.DoesNotExist:
+        messages.error(request, "Customer profile not found.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        # Update User model
+        request.user.first_name = request.POST.get('first_name', '').strip()
+        request.user.last_name = request.POST.get('last_name', '').strip()
+        request.user.save()
+
+        # Update profile picture if provided
+        if 'profile_picture' in request.FILES:
+            customer_profile.profile_picture = request.FILES['profile_picture']
+            customer_profile.save()
+
+        return redirect('customer-dashboard')  # or some other page
+
+    context = {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'profile_picture_url': customer_profile.profile_picture.url if customer_profile.profile_picture else None,
+    }
+    return render(request, 'accounts/edit_customer_profile.html', context)
 
 
 
@@ -163,13 +242,17 @@ from products.models import Product, ProductSynonym
 def delete_farmer_account(request):
     if request.method == "POST":
         user = request.user
-        confirmation_email = request.POST.get('confirmation_email', '').strip()
-        expected_email = user.email
 
-        # 🔒 Validate email match
-        if confirmation_email != expected_email:
-            return render(request, 'accounts/delete_farmer_account_confirm.html', {
-                'error': 'The email you entered does not match your account email.'
+        confirmation_email = request.POST.get('confirmation_email', '').strip()
+        confirmation_password = request.POST.get('confirmation_password', '').strip()
+      
+             # ✅ Validate BOTH email AND password
+        email_matches = (confirmation_email == user.email)
+        password_valid = check_password(confirmation_password, user.password)
+
+        if not (email_matches and password_valid):
+            return render(request, 'accounts/delete_customer_account_confirm.html', {
+                'error': 'The email and password you entered do not match your account.'
             })
 
         # ✅ Email matches — proceed with deletion
@@ -267,15 +350,18 @@ from products.models import Product, ProductSynonym
 def delete_customer_account(request):
     if request.method == "POST":
         user = request.user
+
         confirmation_email = request.POST.get('confirmation_email', '').strip()
-        expected_email = user.email
+        confirmation_password = request.POST.get('confirmation_password', '').strip()
+      
+             # ✅ Validate BOTH email AND password
+        email_matches = (confirmation_email == user.email)
+        password_valid = check_password(confirmation_password, user.password)
 
-        # 🔒 Validate email match
-        if confirmation_email != expected_email:
+        if not (email_matches and password_valid):
             return render(request, 'accounts/delete_customer_account_confirm.html', {
-                'error': 'The email you entered does not match your account email.'
+                'error': 'The email and password you entered do not match your account.'
             })
-
         # ✅ Email matches — proceed with deletion
         email = user.email
         username = user.username

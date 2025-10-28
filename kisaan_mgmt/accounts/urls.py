@@ -18,6 +18,8 @@ from .views import (
     farmer_reviews_view, 
     customer_farmer_reviews_view,
     customer_detail_view,      # views
+    edit_customer_profile,
+    edit_farmer_profile,
 )
 
 urlpatterns = [
@@ -57,5 +59,6 @@ urlpatterns = [
     path('report/user', views.report_user, name='report_user'),
 
 
-
+    path('farmer/edit/', edit_farmer_profile, name='edit_farmer_profile'),
+    path('customer/edit/', edit_customer_profile, name='edit_customer_profile'),
 ]
