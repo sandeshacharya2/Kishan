@@ -35,10 +35,17 @@
       <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
     </div>
     <div class="mt-3">
-      <a href="{% url 'farmer-reviews' %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition">
-        See All Reviews
-      </a>
-    </div>
+  <a href="{% url 'farmer-reviews' %}" 
+     class="inline-flex items-center justify-center gap-1.5 
+            bg-gradient-to-r from-amber-400 via-green-500 to-lime-400 
+            text-green-900 font-semibold tracking-wide
+            px-3.5 py-1.5 rounded-lg shadow-md text-sm
+            hover:from-teal-800 hover:via-green-300 hover:to-lime-500
+            hover:scale-105 transform transition-all duration-300 ease-in-out">
+    ⭐ See All Reviews
+  </a>
+</div>
+
     <p class="text-green-900 text-sm mt-4">
       {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}
         {{ address }}, {{ ward }}
@@ -63,6 +70,13 @@
       <a href="{% url 'report_user' %}" class="block text-orange-600 hover:text-orange-800 transition">📢 {% trans "Report" %}</a>
     </div>
   </nav>
+<form method="post" action="{% url 'logout' %}" class="px-4 pb-4 border-t border-green-500">
+  {% csrf_token %}
+  <button type="submit" 
+    class="bg-teal-700 hover:bg-green-600 text-white w-full py-2 rounded-lg font-semibold tracking-wide transition">
+    🚪 {% trans "Logout" %}
+  </button>
+</form>
 
   <form method="post" action="{% url 'logout' %}" class="px-4 pb-4 border-t border-green-500">
     {% csrf_token %}
@@ -98,12 +112,18 @@
       {% endfor %}
       <span class="ml-2 text-green-800 font-semibold">{{ avg_rating }}/5</span>
     </div>
-    
     <div class="mt-3">
-      <a href="{% url 'farmer-reviews' %}" class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-teal-800 transition">
-        See All Reviews
-      </a>
-    </div>
+  <a href="{% url 'farmer-reviews' %}" 
+     class="inline-flex items-center justify-center gap-1.5 
+            bg-gradient-to-r from-amber-400 via-green-500 to-lime-400 
+            text-green-900 font-semibold tracking-wide
+            px-3.5 py-1.5 rounded-lg shadow-md text-sm
+            hover:from-teal-800 hover:via-green-300 hover:to-lime-500
+            hover:scale-105 transform transition-all duration-300 ease-in-out">
+    ⭐ See All Reviews
+  </a>
+</div>
+
     
     <p class="text-green-50 text-sm mt-1">
       {% blocktrans with address=user.farmerprofile.address tole=user.farmerprofile.tole ward=user.farmerprofile.ward %}

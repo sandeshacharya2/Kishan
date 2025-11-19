@@ -7,6 +7,7 @@
 
 {% block content %}
 
+   <script src="https://cdn.tailwindcss.com"></script> 
 
   <!-- Main Content -->
 <main class="lg:ml-8">
@@ -55,17 +56,17 @@
       <!-- Dropdown -->
       <div id="filter-dropdown" 
            class="hidden absolute right-0 mt-2 w-72 bg-white border border-green-300 rounded-lg shadow-xl 
-                  z-50 p-5 animate-fadeIn">
-        <label class="block mb-3 font-semibold text-green-800 text-sm">{% trans "Filter by:" %}</label>
+                  z-50 p-4 animate-fadeIn">
+        <label class="block mb-2 font-semibold text-green-800 text-sm">{% trans "Filter by:" %}</label>
 
         <select id="filter-type" name="filter_type" 
-                class="w-full mb-4 border border-green-300 rounded px-3 py-2 text-sm 
-                       focus:outline-none focus:ring-2 focus:ring-green-400">
+                class="w-full mb-4 border border-green-300 rounded-lg px-3 py-2 text-sm 
+                       focus:outline-none focus:ring-2 focus:ring-green-400 bg-white">
           <option value="">{% trans "Select Filter" %}</option>
-          <option value="price" {% if filter_type == 'price' %}selected{% endif %}>{% trans "Price Range" %}</option>
-          <option value="date" {% if filter_type == 'date' %}selected{% endif %}>{% trans "Date Range" %}</option>
-          <option value="quantity" {% if filter_type == 'quantity' %}selected{% endif %}>{% trans "Quantity Range" %}</option>
-          <option value="distance" {% if filter_type == 'distance' %}selected{% endif %}>{% trans "Distance Range" %}</option>
+          <option value="price">{% trans "Price Range" %}</option>
+          <option value="date">{% trans "Date Range" %}</option>
+          <option value="quantity">{% trans "Quantity Range" %}</option>
+          <option value="distance">{% trans "Distance Range" %}</option>
         </select>
 
       {% comment %} Price Range Inputs --> {% endcomment %}
@@ -73,63 +74,65 @@
           <input type="number" name="min_price" placeholder="{% trans 'Minimum Price' %}" value="{{ request.GET.min_price }}" 
                  class="w-full border border-green-300 rounded px-3 py-2 text-sm 
                         focus:outline-none focus:ring-2 focus:ring-green-400" />
-          <input type="number" name="max_price" placeholder="{% trans 'Maximum Price' %}" value="{{ request.GET.max_price }}" 
-                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+          <input type="number" name="max_price" placeholder="{% trans 'Max Price' %}" 
+                 class="w-full border border-green-300 rounded-lg px-3 py-2 text-sm 
                         focus:outline-none focus:ring-2 focus:ring-green-400" />
         </div>
 
         <!-- Date Range Inputs -->
-        <div id="date-filter" class="filter-inputs hidden space-y-3">
-          <label class="block text-green-700 font-medium text-sm">{% trans "From" %}</label>
-          <input type="date" name="start_date" value="{{ request.GET.start_date }}" 
-                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+        <div id="date-filter" class="filter-inputs hidden space-y-2 mb-3">
+          <input type="date" name="start_date" 
+                 class="w-full border border-green-300 rounded-lg px-3 py-2 text-sm 
                         focus:outline-none focus:ring-2 focus:ring-green-400" />
-          <label class="block text-green-700 font-medium text-sm">{% trans "To" %}</label>
-          <input type="date" name="end_date" value="{{ request.GET.end_date }}" 
-                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+          <input type="date" name="end_date" 
+                 class="w-full border border-green-300 rounded-lg px-3 py-2 text-sm 
                         focus:outline-none focus:ring-2 focus:ring-green-400" />
         </div>
 
         <!-- Quantity Range Inputs -->
-        <div id="quantity-filter" class="filter-inputs hidden space-y-3">
-          <input type="number" name="min_quantity" placeholder="{% trans 'Minimum Quantity' %}" value="{{ request.GET.min_quantity }}" 
-                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+        <div id="quantity-filter" class="filter-inputs hidden space-y-2 mb-3">
+          <input type="number" name="min_quantity" placeholder="{% trans 'Min Quantity' %}" 
+                 class="w-full border border-green-300 rounded-lg px-3 py-2 text-sm 
                         focus:outline-none focus:ring-2 focus:ring-green-400" />
-          <input type="number" name="max_quantity" placeholder="{% trans 'Maximum Quantity' %}" value="{{ request.GET.max_quantity }}" 
-                 class="w-full border border-green-300 rounded px-3 py-2 text-sm 
+          <input type="number" name="max_quantity" placeholder="{% trans 'Max Quantity' %}" 
+                 class="w-full border border-green-300 rounded-lg px-3 py-2 text-sm 
                         focus:outline-none focus:ring-2 focus:ring-green-400" />
         </div>
 
         <!-- Distance Range Inputs -->
-        <div id="distance-filter" class="filter-inputs hidden space-y-3">
+        <div id="distance-filter" class="filter-inputs hidden space-y-3 mb-3">
           <select id="distance-option" name="distance_filter" 
-                  class="w-full border border-green-300 rounded px-3 py-2 mb-3 text-sm 
-                         focus:outline-none focus:ring-2 focus:ring-green-400">
-            <option value="nearest" {% if request.GET.distance_filter == 'nearest' %}selected{% endif %}>{% trans "Nearest" %}</option>
-            <option value="farthest" {% if request.GET.distance_filter == 'farthest' %}selected{% endif %}>{% trans "Farthest" %}</option>
-            <option value="enter_range" {% if request.GET.distance_filter == 'enter_range' %}selected{% endif %}>{% trans "Enter Range" %}</option>
+                  class="w-full border border-green-300 rounded-lg px-3 py-2 text-sm 
+                         focus:outline-none focus:ring-2 focus:ring-green-400 bg-white">
+            <option value="nearest">{% trans "Nearest" %}</option>
+            <option value="farthest">{% trans "Farthest" %}</option>
+            <option value="enter_range">{% trans "Enter Range" %}</option>
           </select>
 
-          <!-- Show only if Enter Range is selected -->
-          <div id="enter-range-inputs" class="hidden space-y-3">
+          <div id="enter-range-inputs" class="hidden space-y-2 mt-2">
             <div class="flex gap-2 items-center">
-              <input type="number" step="any" name="min_distance" placeholder="{% trans 'Min Distance' %}" value="{{ request.GET.min_distance }}" 
-                     class="flex-grow border border-green-300 rounded px-3 py-2 text-sm 
+              <input type="number" step="any" name="min_distance" placeholder="{% trans 'Min Distance' %}" 
+                     class="flex-grow border border-green-300 rounded-lg px-3 py-2 text-sm 
                             focus:outline-none focus:ring-2 focus:ring-green-400" />
               <select name="distance_unit" 
-                      class="w-24 border border-green-300 rounded px-3 py-2 text-sm 
-                             focus:outline-none focus:ring-2 focus:ring-green-400">
-                <option value="km" {% if request.GET.distance_unit == 'km' %}selected{% endif %}>km</option>
-                <option value="meter" {% if request.GET.distance_unit == 'meter' %}selected{% endif %}>meter</option>
+                      class="w-20 border border-green-300 rounded-lg px-2 py-2 text-sm 
+                             focus:outline-none focus:ring-2 focus:ring-green-400 bg-white">
+                <option value="km">km</option>
+                <option value="meter">m</option>
               </select>
             </div>
-            <div>
-              <input type="number" step="any" name="max_distance" placeholder="{% trans 'Max Distance' %}" value="{{ request.GET.max_distance }}" 
-                     class="w-full border border-green-300 rounded px-3 py-2 text-sm 
-                            focus:outline-none focus:ring-2 focus:ring-green-400" />
-            </div>
+            <input type="number" step="any" name="max_distance" placeholder="{% trans 'Max Distance' %}" 
+                   class="w-full border border-green-300 rounded-lg px-3 py-2 text-sm 
+                          focus:outline-none focus:ring-2 focus:ring-green-400" />
           </div>
         </div>
+
+        <!-- Clear Filters Button -->
+        <button type="button" id="clear-filters"
+                class="mt-2 w-full bg-gray-500 text-white rounded-lg py-2 text-sm font-medium
+                       hover:bg-gray-600 transition shadow-sm">
+          {% trans "Clear Filters" %}
+        </button>
 
         <!-- Apply Filters Button -->
         <button type="submit" 
@@ -325,90 +328,93 @@
         debounceTimeout = setTimeout(() => {
           const url = new URL(window.location);
           url.searchParams.set('q', query);
-          // Preserve other filters
           fetch(url.toString(), {
             headers: { 'x-requested-with': 'XMLHttpRequest' }
           })
           .then(res => res.text())
           .then(html => {
-            
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const newProducts = doc.getElementById('products-container');
-  if (newProducts && productsContainer) {
-    productsContainer.innerHTML = newProducts.innerHTML;
-  }
-});
-          
-          
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newProducts = doc.getElementById('products-container');
+            if (newProducts && productsContainer) {
+              productsContainer.innerHTML = newProducts.innerHTML;
+            }
+          });
         }, 300);
       });
     });
+// ✅ SAFE FILTER SCRIPT — only runs if elements exist
+document.addEventListener("DOMContentLoaded", function() {
+  const filterToggleBtn = document.getElementById("filter-toggle");
+  const filterDropdown = document.getElementById("filter-dropdown");
+  
+  // If filter elements don't exist on this page, skip everything
+  if (!filterToggleBtn || !filterDropdown) return;
 
-    document.addEventListener("DOMContentLoaded", function() {
-      const filterToggleBtn = document.getElementById("filter-toggle");
-      const filterDropdown = document.getElementById("filter-dropdown");
-      const filterTypeSelect = document.getElementById("filter-type");
-      const filterInputs = document.querySelectorAll(".filter-inputs");
-      const distanceOption = document.getElementById("distance-option");
-      const enterRangeInputs = document.getElementById("enter-range-inputs");
+  const filterTypeSelect = document.getElementById("filter-type");
+  const filterInputs = document.querySelectorAll(".filter-inputs");
+  const distanceOption = document.getElementById("distance-option");
+  const enterRangeInputs = document.getElementById("enter-range-inputs");
 
-      function updateFilterInputs() {
-        filterInputs.forEach(input => input.classList.add("hidden"));
-        const selected = filterTypeSelect.value;
+  // Helper: reset UI
+  function resetFilterUI() {
+    if (filterTypeSelect) filterTypeSelect.value = "";
+    if (distanceOption) distanceOption.value = "nearest";
+    if (enterRangeInputs) enterRangeInputs.classList.add("hidden");
+    filterInputs.forEach(el => el.classList.add("hidden"));
+    document.querySelectorAll("#filter-dropdown input").forEach(el => el.value = "");
+  }
 
-        if (selected === "price") {
-          document.getElementById("price-filter").classList.remove("hidden");
-        } else if (selected === "date") {
-          document.getElementById("date-filter").classList.remove("hidden");
-        } else if (selected === "quantity") {
-          document.getElementById("quantity-filter").classList.remove("hidden");
-        } else if (selected === "distance") {
-          document.getElementById("distance-filter").classList.remove("hidden");
-          updateDistanceInputs();
-        }
-      }
+  // Show relevant filter inputs
+  function updateFilterInputs() {
+    filterInputs.forEach(el => el.classList.add("hidden"));
+    const selected = filterTypeSelect?.value;
+    if (selected === "price") document.getElementById("price-filter")?.classList.remove("hidden");
+    else if (selected === "date") document.getElementById("date-filter")?.classList.remove("hidden");
+    else if (selected === "quantity") document.getElementById("quantity-filter")?.classList.remove("hidden");
+    else if (selected === "distance") {
+      document.getElementById("distance-filter")?.classList.remove("hidden");
+      updateDistanceInputs();
+    }
+  }
 
-      function updateDistanceInputs() {
-        if (distanceOption.value === "enter_range") {
-          enterRangeInputs.classList.remove("hidden");
-        } else {
-          enterRangeInputs.classList.add("hidden");
-        }
-      }
+  function updateDistanceInputs() {
+    if (distanceOption?.value === "enter_range") {
+      enterRangeInputs?.classList.remove("hidden");
+    } else {
+      enterRangeInputs?.classList.add("hidden");
+    }
+  }
 
-      filterTypeSelect.addEventListener("change", updateFilterInputs);
-      distanceOption.addEventListener("change", updateDistanceInputs);
+  // Initialize
+  resetFilterUI();
+  if (filterTypeSelect) filterTypeSelect.addEventListener("change", updateFilterInputs);
+  if (distanceOption) distanceOption.addEventListener("change", updateDistanceInputs);
 
-      updateFilterInputs();
+  // Toggle dropdown
+  filterToggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    filterDropdown.classList.toggle("hidden");
+  });
 
-      filterToggleBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        filterDropdown.classList.toggle("hidden");
-      });
+  // Close dropdown on outside click
+  document.addEventListener("click", function(e) {
+    if (!filterDropdown.contains(e.target) && e.target !== filterToggleBtn) {
+      filterDropdown.classList.add("hidden");
+    }
+  });
 
-      document.addEventListener("click", function(e) {
-        if (!filterDropdown.contains(e.target) && e.target !== filterToggleBtn) {
-          filterDropdown.classList.add("hidden");
-        }
-      });
+  // ✅ Clear Filters: works AND doesn’t break anything
+  const clearBtn = document.getElementById("clear-filters");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", function() {
+      resetFilterUI();
+      window.location.href = window.location.pathname;
     });
+  }
+});
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const sidebarToggle = document.getElementById("sidebar-toggle");
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("sidebar-overlay");
-
-      sidebarToggle.addEventListener("click", () => {
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("active");
-      });
-
-      overlay.addEventListener("click", () => {
-        sidebar.classList.remove("open");
-        overlay.classList.remove("active");
-      });
-    });
+    
     
   </script>
 

@@ -6,15 +6,12 @@
 
 {% block content %}
 <style>
-  /* Prevent horizontal overflow globally */
   html, body {
-    overflow-x: hidden;
     margin: 0;
     padding: 0;
     width: 100%;
   }
 
-  /* Fixed footer at bottom */
   footer,
   .footer,
   #footer {
@@ -31,24 +28,19 @@
     color: #4b5563;
   }
 
-  /* Main scrollable area (full height minus footer) */
   .main-content {
-    padding: 1rem;
-    box-sizing: border-box;
-    height: calc(100vh - 70px); /* Adjust if footer height changes */
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: visible; /* allow full content to expand */
+}
 
   @media (min-width: 1024px) {
     .main-content {
-      margin-left: 14rem;
+      margin-left: 16rem;
       padding: 1.5rem 2rem;
     }
   }
 
-  /* Filter form */
   .filter-form {
     background: #fff;
     padding: 1rem;
@@ -83,7 +75,6 @@
     white-space: nowrap;
   }
 
-  /* Summary cards */
   .summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -111,19 +102,29 @@
     color: #059669;
   }
 
-  /* Table: NO internal scroll, NO horizontal overflow */
-  .table-container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    overflow-x: hidden;
-    width: 100%;
+ .table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 400px;
+}
+  /* Optional: Custom Scrollbar for Chrome */
+  .table-container::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  .table-container::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+    border-radius: 6px;
+  }
+  .table-container::-webkit-scrollbar-track {
+    background-color: #f3f4f6;
   }
 
   .transaction-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* Critical for responsive columns */
+    table-layout: fixed;
+    min-width: 700px;
   }
 
   .transaction-table th,
@@ -132,7 +133,6 @@
     border-bottom: 1px solid #f1f1f1;
     text-align: left;
     font-size: 0.92rem;
-    /* ALLOW TEXT TO WRAP */
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -144,7 +144,6 @@
     color: #374151;
   }
 
-  /* Align numeric columns right */
   .transaction-table td:nth-child(4),
   .transaction-table td:nth-child(5),
   .transaction-table td:nth-child(6),
@@ -154,21 +153,6 @@
     text-align: right;
   }
 
-  /* Balanced column widths (no gaps) */
-  .transaction-table th:nth-child(1),
-  .transaction-table td:nth-child(1) { width: 15%; }
-  .transaction-table th:nth-child(2),
-  .transaction-table td:nth-child(2) { width: 25%; }
-  .transaction-table th:nth-child(3),
-  .transaction-table td:nth-child(3) { width: 25%; }
-  .transaction-table th:nth-child(4),
-  .transaction-table td:nth-child(4) { width: 10%; }
-  .transaction-table th:nth-child(5),
-  .transaction-table td:nth-child(5) { width: 12%; }
-  .transaction-table th:nth-child(6),
-  .transaction-table td:nth-child(6) { width: 13%; }
-
-  /* No data */
   .no-data {
     text-align: center;
     padding: 1.5rem;
@@ -179,8 +163,11 @@
   }
 </style>
 
-<div class="main-content">
-  <h1 class="text-2xl font-bold text-gray-800 mb-5">{% trans "Income Summary" %}</h1>
+
+<!-- Dashboard Wrapper -->
+<div class="max-w-6xl mx-auto p-4 sm:p-8 lg:ml-64 main-content">
+
+  <h1 class="text-2xl font-bold text-gray-800 mb-5 mt-16">{% trans "Income Summary" %}</h1>
 
   <!-- Date Filter -->
   <form method="get" class="filter-form">
