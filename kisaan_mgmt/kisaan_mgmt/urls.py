@@ -56,6 +56,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('products/', include('products.urls')),
+    path('report/', include('report.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
     path('payments/', include('payments.urls')),
     path('chat/', include('chat.urls', namespace='chat')),

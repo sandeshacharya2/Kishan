@@ -1,0 +1,160 @@
+<!-- templates/reports/customer_report_form.html -->
+{% extends "accounts/customer_base.html" %}  <!-- Changed to use customer base -->
+
+{% block title %}Submit a Customer Report{% endblock %}
+
+{% block content %}
+<div class="flex-1 p-6">
+  <!-- ✅ Centered floating success message -->
+  {% if show_success and messages %}
+    {% for message in messages %}
+      <div id="success-message"
+           class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+        <div class="bg-white shadow-2xl rounded-xl p-6 max-w-md w-full mx-4 border border-blue-200 transform animate-fade-in-up">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg class="w-6 h-6 text-blue-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-3 w-0 flex-1">
+              <p class="text-sm font-medium text-gray-900">Report Submitted Successfully!</p>
+              <p class="mt-1 text-sm text-gray-500">{{ message }}</p>
+            </div>
+            <button type="button" 
+                    onclick="document.getElementById('success-message').remove()"
+                    class="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="mt-4 bg-gray-200 rounded-full h-1">
+            <div class="bg-blue-500 h-1 rounded-full animate-progress-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Auto-dismiss script -->
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(function() {
+            const msg = document.getElementById('success-message');
+            if (msg) {
+              msg.remove();
+            }
+          }, 5000); // Auto-dismiss after 5 seconds
+        });
+      </script>
+    {% endfor %}
+  {% endif %}
+
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-white shadow-xl rounded-2xl p-8 border border-gray-200">
+      <div class="flex items-center mb-6">
+        <div class="bg-blue-100 p-3 rounded-full mr-4">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">👥 Submit a Customer Report</h2>
+          <p class="text-gray-600 mt-1">Let us know about any issues you're experiencing. We'll address them promptly.</p>
+        </div>
+      </div>
+
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <div class="space-y-4">
+          <div>
+            <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+              🏷️ Category
+            </label>
+            <div class="relative">
+              <select name="category" id="{{ form.category.id_for_label }}" required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white">
+                <option value="">Select a category...</option>
+                {% for value, label in form.category.field.choices %}
+                  {% if value %}  <!-- Skip empty choice -->
+                    <option value="{{ value }}">{{ label }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label for="{{ form.subject.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+              📝 Subject
+            </label>
+            <input type="text" name="subject" id="{{ form.subject.id_for_label }}" 
+                   placeholder="Brief description of your issue..."
+                   required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+          </div>
+
+          <div>
+            <label for="{{ form.message.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+              💬 Description
+            </label>
+            <textarea name="message" id="{{ form.message.id_for_label }}" 
+                      rows="5" 
+                      placeholder="Describe your issue in detail..."
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"></textarea>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+          <button type="submit" 
+                  class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            Submit Report
+          </button>
+          
+          <a href="{% url 'customer-dashboard' %}" 
+             class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg shadow transition-all duration-200 flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Dashboard
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Add styles for animation -->
+<style>
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.4s ease-out;
+  }
+
+  @keyframes progress-bar {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+  .animate-progress-bar {
+    animation: progress-bar 5s linear forwards;
+  }
+</style>
+{% endblock %}

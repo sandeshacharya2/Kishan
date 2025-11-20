@@ -140,35 +140,44 @@ def signup_view(request):
     return render(request, 'accounts/signup.html', {'form': form})
 
 
-# ✅ OTP Verification View
+# ✅ OTP Verification View - FIXED for Expired OTP Resend
 def verify_otp_view(request):
-    EmailOTP.cleanup_expired()  #delete expired OTPs before processing
+    EmailOTP.cleanup_expired()  # Delete expired OTPs before processing
 
-    signup_data = request.session.get('signup_data') #retrieves the signup data from session
+    signup_data = request.session.get('signup_data')  # Retrieves the signup data from session
     if not signup_data:
+        messages.error(request, "Session expired. Please sign up again.")
         return redirect('signup')
 
-    email = signup_data.get('email') #gets the email from signup data
-    try:
-        otp_obj = EmailOTP.objects.get(email=email)
-    except EmailOTP.DoesNotExist:
-        return redirect('signup')
+    email = signup_data.get('email')  # Gets the email from signup data
+    
+    # Check if OTP exists, if not create a new one
+    otp_obj, created = EmailOTP.objects.get_or_create(email=email)
+    
+    # If it's a new OTP or the existing one is expired, generate a new OTP
+    if created or not otp_obj.is_valid():
+        otp_obj.generate_otp()
+        otp_obj.save()
+        send_otp(email, otp_obj.otp)
+        messages.success(request, "A new OTP has been sent to your email.")
 
-    now = timezone.now()        #This gets the current date and time
-    expiry_time = otp_obj.created_at + timedelta(minutes=3) # This calculates the expiry time of the OTP
+    now = timezone.now()        # This gets the current date and time
+    expiry_time = otp_obj.created_at + timedelta(minutes=3)  # This calculates the expiry time of the OTP
     seconds_left = max(0, (expiry_time - now).total_seconds())
     can_resend = seconds_left == 0
 
     # Resend OTP
-    if request.method == 'POST' and 'resend_otp' in request.POST:   #post method and user clicks resend OTP button
+    if request.method == 'POST' and 'resend_otp' in request.POST:   # Post method and user clicks resend OTP button
         if not can_resend:
-            messages.warning(request, f"wait, to resend otp {int(seconds_left)} is left")
+            messages.warning(request, f"Please wait, {int(seconds_left)} seconds remaining to resend OTP")
         else:
-            otp_obj.generate_otp()
+            otp_obj.generate_otp()  # Generate new OTP
             otp_obj.save()
             send_otp(email, otp_obj.otp)
-            messages.success(request, "the new otp has been sent to your email. ")
-            seconds_left = 180
+            messages.success(request, "A new OTP has been sent to your email.")
+            # Recalculate time after sending new OTP
+            now = timezone.now()
+            seconds_left = 180  # 3 minutes = 180 seconds
             can_resend = False
 
         return render(request, 'accounts/verify_otp.html', {
@@ -179,13 +188,14 @@ def verify_otp_view(request):
 
     # Submit OTP
     if request.method == 'POST' and 'otp' in request.POST:
-        entered_otp = request.POST.get('otp', '').strip()       #Gets the OTP the user entered from the form data.
+        entered_otp = request.POST.get('otp', '').strip()       # Gets the OTP the user entered from the form data.
 
+        # Check if OTP is still valid and matches
         if otp_obj.is_valid() and otp_obj.otp == entered_otp:
             if User.objects.filter(email=email).exists():
                 del request.session['signup_data']
                 EmailOTP.objects.filter(email=email).delete()
-                messages.success(request, "you are already registered. Please log in.")
+                messages.success(request, "You are already registered. Please log in.")
                 return redirect('login')
 
             user = User.objects.create_user(
@@ -224,7 +234,7 @@ def verify_otp_view(request):
 
             del request.session['signup_data']
             EmailOTP.objects.filter(email=email).delete()
-            messages.success(request, "regestration successful. You can now log in.")
+            messages.success(request, "Registration successful. You can now log in.")
 
             if role == 'farmer':
                 return redirect('farmer-login')
@@ -234,7 +244,7 @@ def verify_otp_view(request):
         else:
             return render(request, 'accounts/verify_otp.html', {
                 'email': email,
-                'error': 'invalid or expired OTP. Please try again.',
+                'error': 'Invalid or expired OTP. Please try again.',
                 'seconds_left': int(seconds_left),
                 'can_resend': can_resend,
             })
@@ -244,7 +254,6 @@ def verify_otp_view(request):
         'seconds_left': int(seconds_left),
         'can_resend': can_resend,
     })
-
 
 from django.db.models import Avg
 from accounts.models import FarmerReview

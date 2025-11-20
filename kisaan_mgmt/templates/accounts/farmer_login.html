@@ -245,15 +245,18 @@
       <h2>{% trans "Farmer Login" %}</h2>
     </div>
 
+    <!-- ✅ Only show login-specific error messages -->
+    {% if form.errors %}
+      <p class="message error" role="alert">{% trans "Email or password do not match" %}</p>
+    {% endif %}
+
+    <!-- ❌ REMOVED: This was showing report messages on login page
     {% if messages %}
       {% for message in messages %}
         <p class="message error" role="alert">{{ message }}</p>
       {% endfor %}
     {% endif %}
-
-    {% if form.errors %}
-      <p class="message error" role="alert">{% trans "Email or password do not match" %}</p>
-    {% endif %}
+    -->
 
     <form method="post" novalidate autocomplete="off" aria-describedby="loginInstructions">
       {% csrf_token %}
