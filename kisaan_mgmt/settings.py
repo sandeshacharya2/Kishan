@@ -1,30 +1,22 @@
 """
 Django settings for kisaan_mgmt project.
 
-Updated for Railway deployment with MySQL and production readiness.
+Updated for Railway deployment with MySQL.
 """
 
 from pathlib import Path
 import os
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
-# DEBUG
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-# ALLOWED HOSTS
-RAILWAY_URL = os.environ.get('RAILWAY_STATIC_URL')  # optional
-ALLOWED_HOSTS = [RAILWAY_URL, 'kishan-production.up.railway.app', 'localhost', '127.0.0.1']
-
-# CSRF Trusted Origins (for Railway HTTPS)
-CSRF_TRUSTED_ORIGINS = [
-    f"https://{host}" for host in ALLOWED_HOSTS if host not in ['localhost', '127.0.0.1']
-]
+ALLOWED_HOSTS = ['*']  # For production, replace with your Railway URL
 
 # Application definition
 INSTALLED_APPS = [
@@ -50,7 +42,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # For translations
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -79,10 +71,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kisaan_mgmt.wsgi.application'
 ASGI_APPLICATION = 'kisaan_mgmt.asgi.application'
 
-# Database configuration using Railway MySQL URL
+# Database configuration for Railway MySQL
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('MYSQL_URL'), conn_max_age=600)
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get("MYSQLDATABASE"),
+        'USER': os.environ.get("MYSQLUSER"),
+        'PASSWORD': os.environ.get("MYSQLPASSWORD"),
+        'HOST': os.environ.get("MYSQLHOST"),
+        'PORT': os.environ.get("MYSQLPORT"),
+    }
 }
+
+# PyMySQL setup (in __init__.py)
+# import pymysql
+# pymysql.install_as_MySQLdb()
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -97,7 +100,8 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 TIME_ZONE = 'UTC'
-LANGUAGE_CODE = 'ne'
+
+LANGUAGE_CODE = 'ne'  # Default Nepali
 LANGUAGES = [
     ('ne', 'Nepali'),
     ('en', 'English'),
@@ -112,19 +116,14 @@ NPM_BIN_PATH = 'npm.cmd'
 
 # Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# Serve media files in production (optional, for development only)
-if DEBUG:
-    from django.conf.urls.static import static
-    urlpatterns = []  # make sure this is included in urls.py
-    urlpatterns += static(STATIC_URL, document_root=STATIC_ROOT)
-    urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -133,22 +132,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/accounts/redirect/'
 LOGOUT_REDIRECT_URL = '/accounts/farmer/login/'
 LOGIN_URL = '/accounts/customer/login/'
-AUTHENTICATION_BACKENDS = ['accounts.auth_backend.EmailBackend']
 
-# Django Channels
+AUTHENTICATION_BACKENDS = [
+    'accounts.auth_backend.EmailBackend',
+]
+
+# Django Channels (for WebSocket)
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
 
-# Email configuration (Gmail SMTP)
+# Email configuration (for sending emails)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'kisaan.helps@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Railway secret variable
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Use Railway Secret Variable
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'kisaan.helps@gmail.com')
-ADMINS = [("Admin", ADMIN_EMAIL)]
+ADMINS = [
+    ("Admin", ADMIN_EMAIL),
+]
