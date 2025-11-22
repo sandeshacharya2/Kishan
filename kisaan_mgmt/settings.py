@@ -1,7 +1,7 @@
 """
 Django settings for kisaan_mgmt project.
 
-Updated for Railway deployment with MySQL.
+Updated for Railway deployment with MySQL and static files.
 """
 
 from pathlib import Path
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- added for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # For translations
     'django.middleware.common.CommonMiddleware',
@@ -120,6 +121,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"  # <-- added for production
 
 # Media files
 MEDIA_URL = '/media/'
