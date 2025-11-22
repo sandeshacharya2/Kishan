@@ -1,12 +1,11 @@
 """
 Django settings for kisaan_mgmt project.
 
-Updated for Railway deployment with MySQL using DATABASE_URL.
+Updated for Railway deployment with MySQL.
 """
 
 from pathlib import Path
 import os
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,9 +16,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-# Allow your Railway domain
-RAILWAY_DOMAIN = os.environ.get('RAILWAY_PUBLIC_URL', '')
-ALLOWED_HOSTS = [RAILWAY_DOMAIN, 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']  # For production, replace with your Railway URL
 
 # Application definition
 INSTALLED_APPS = [
@@ -45,7 +42,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # For translations
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -74,12 +71,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kisaan_mgmt.wsgi.application'
 ASGI_APPLICATION = 'kisaan_mgmt.asgi.application'
 
-# Database configuration using DATABASE_URL from Railway
+# Database configuration for Railway MySQL
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('MYSQL_URL')
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get("MYSQLDATABASE"),
+        'USER': os.environ.get("MYSQLUSER"),
+        'PASSWORD': os.environ.get("MYSQLPASSWORD"),
+        'HOST': os.environ.get("MYSQLHOST"),
+        'PORT': os.environ.get("MYSQLPORT"),
+    }
 }
+
+# PyMySQL setup (in __init__.py)
+# import pymysql
+# pymysql.install_as_MySQLdb()
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -95,7 +101,7 @@ USE_L10N = True
 USE_TZ = True
 TIME_ZONE = 'UTC'
 
-LANGUAGE_CODE = 'ne'
+LANGUAGE_CODE = 'ne'  # Default Nepali
 LANGUAGES = [
     ('ne', 'Nepali'),
     ('en', 'English'),
@@ -110,7 +116,9 @@ NPM_BIN_PATH = 'npm.cmd'
 
 # Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files
@@ -129,29 +137,23 @@ AUTHENTICATION_BACKENDS = [
     'accounts.auth_backend.EmailBackend',
 ]
 
-# Django Channels
+# Django Channels (for WebSocket)
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
 
-# Email configuration
+# Email configuration (for sending emails)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'kisaan.helps@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Railway Secret Variable
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Use Railway Secret Variable
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'kisaan.helps@gmail.com')
-ADMINS = [("Admin", ADMIN_EMAIL)]
-
-# CSRF settings for deployment
-CSRF_TRUSTED_ORIGINS = [f"https://{RAILWAY_DOMAIN}"]
-
-# Security headers (optional but recommended)
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
+ADMINS = [
+    ("Admin", ADMIN_EMAIL),
+]
