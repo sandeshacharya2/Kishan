@@ -73,12 +73,16 @@ WSGI_APPLICATION = 'kisaan_mgmt.wsgi.application'
 ASGI_APPLICATION = 'kisaan_mgmt.asgi.application'
 
 # Database configuration for Railway MySQL
-import dj_database_url
-
 DATABASES = {
-    'default': dj_database_url.config(default='mysql://root:password@host:port/dbname')
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get("MYSQLDATABASE"),
+        'USER': os.environ.get("MYSQLUSER"),
+        'PASSWORD': os.environ.get("MYSQLPASSWORD"),
+        'HOST': os.environ.get("MYSQLHOST"),
+        'PORT': os.environ.get("MYSQLPORT"),
+    }
 }
-
 
 # PyMySQL setup (in __init__.py)
 # import pymysql
