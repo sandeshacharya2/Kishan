@@ -13,11 +13,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']  # For production, replace with your Railway URL
+# Get Railway domain (Railway sets RAILWAY_PUBLIC_DOMAIN automatically)
+RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = []
+
+if RAILWAY_PUBLIC_DOMAIN:
+    ALLOWED_HOSTS += [RAILWAY_PUBLIC_DOMAIN, '.railway.app']
+    CSRF_TRUSTED_ORIGINS = [
+        f'https://{RAILWAY_PUBLIC_DOMAIN}',
+        'https://*.up.railway.app',
+    ]
+else:
+    ALLOWED_HOSTS.append('*')
 # Application definition
 INSTALLED_APPS = [
     'daphne',
