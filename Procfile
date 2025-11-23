@@ -1,1 +1,1 @@
-web: gunicorn kisaan_mgmt.wsgi
+web: python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn kisaan_mgmt.wsgi

@@ -77,35 +77,16 @@ ASGI_APPLICATION = 'kisaan_mgmt.asgi.application'
 
 import os
 import dj_database_url
+from pathlib import Path
 
-# DATABASE CONFIGURATION
-MYSQL_URL = os.environ.get('MYSQL_URL')
+# ... keep your other settings (SECRET_KEY, DEBUG, etc.) ...
 
-if MYSQL_URL:
-    # Parse Railway-provided MySQL URL
-    DATABASES = {
-        'default': dj_database_url.parse(
-            MYSQL_URL,
-            engine='django.db.backends.mysql',
-            conn_max_age=600,
-        )
-    }
-else:
-    # Local development fallback
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('MYSQLDATABASE', 'kisaan_local'),
-            'USER': os.environ.get('MYSQLUSER', 'root'),
-            'PASSWORD': os.environ.get('MYSQLPASSWORD', 'rootpassword'),
-            'HOST': os.environ.get('MYSQLHOST', '127.0.0.1'),
-            'PORT': os.environ.get('MYSQLPORT', '3306'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            }
-        }
-    }
-
+# DATABASE CONFIGURATION — works on Railway + local fallback
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR}/db.sqlite3')
+    )
+}
 
 # Optional: Fallback if MYSQL_URL is not set
 
