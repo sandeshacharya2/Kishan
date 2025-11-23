@@ -79,26 +79,18 @@ import os
 import dj_database_url
 
 # DATABASE CONFIGURATION
+import dj_database_url
+import os
+
 DATABASES = {
     'default': dj_database_url.parse(
-        os.environ.get('MYSQL_URL'),  # Railway automatically provides this
-        conn_max_age=600,             # Optional: keep connection alive
-        ssl_require=True              # Optional: enforce SSL for security
+        os.environ.get('MYSQL_URL'),  # Railway provides full URL
+        conn_max_age=600,
     )
 }
 
 # Optional: Fallback if MYSQL_URL is not set
-if not DATABASES['default']:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('MYSQLDATABASE', 'railway'),
-            'USER': os.environ.get('MYSQLUSER', 'root'),
-            'PASSWORD': os.environ.get('MYSQLPASSWORD', ''),
-            'HOST': os.environ.get('MYSQLHOST', '127.0.0.1'),
-            'PORT': os.environ.get('MYSQLPORT', '3306'),
-        }
-    }
+
 
 # Other settings below...
 
