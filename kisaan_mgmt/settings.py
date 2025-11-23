@@ -1,7 +1,7 @@
 """
 Django settings for kisaan_mgmt project.
 
-Updated for Railway deployment with PostgreSQL, CSRF, static files, and Linux compatibility.
+Updated for Railway deployment with MySQL and static files.
 """
 
 from pathlib import Path
@@ -14,21 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-# Railway domain handling
-RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-if RAILWAY_PUBLIC_DOMAIN:
-    ALLOWED_HOSTS += [RAILWAY_PUBLIC_DOMAIN, '.railway.app']
-
-# CSRF Trusted Origins (required for Django 4.0+ on HTTPS)
-CSRF_TRUSTED_ORIGINS = []
-if RAILWAY_PUBLIC_DOMAIN:
-    CSRF_TRUSTED_ORIGINS = [
-        f'https://{RAILWAY_PUBLIC_DOMAIN}',
-        'https://*.up.railway.app',
-    ]
+ALLOWED_HOSTS = ['*']  # For production, replace with your Railway URL
 
 # Application definition
 INSTALLED_APPS = [
@@ -53,9 +41,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- added for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # For translations
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -84,21 +72,40 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kisaan_mgmt.wsgi.application'
 ASGI_APPLICATION = 'kisaan_mgmt.asgi.application'
 
-# Database: PostgreSQL on Railway
-import dj_database_url
+# Database configuration for Railway MySQL
+# settings.py
 
+import os
+import dj_database_url
+from pathlib import Path
+
+# ... keep your other settings (SECRET_KEY, DEBUG, etc.) ...
+
+# DATABASE CONFIGURATION — works on Railway + local fallback
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR}/db.sqlite3')
     )
 }
 
+# Optional: Fallback if MYSQL_URL is not set
+
+
+# Other settings below...
+
+
+
+
+# PyMySQL setup (in __init__.py)
+# import pymysql
+# pymysql.install_as_MySQLdb()
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 # Internationalization
@@ -116,9 +123,9 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-# Tailwind (removed npm.cmd — Railway uses Linux)
+# Tailwind
 TAILWIND_APP_NAME = 'theme'
-# NPM_BIN_PATH is auto-detected on Linux; only set if needed and tested
+NPM_BIN_PATH = 'npm.cmd'
 
 # Static files
 STATIC_URL = '/static/'
@@ -126,7 +133,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"  # <-- added for production
 
 # Media files
 MEDIA_URL = '/media/'
@@ -151,13 +158,13 @@ CHANNEL_LAYERS = {
     }
 }
 
-# Email configuration
+# Email configuration (for sending emails)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'kisaan.helps@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Use Railway Secret Variable
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'kisaan.helps@gmail.com')
