@@ -18,6 +18,11 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']  # For production, replace with your Railway URL
 
+# Add this for CSRF protection
+CSRF_TRUSTED_ORIGINS = [
+    'https://kishan-production.up.railway.app',
+]
+
 # Application definition
 INSTALLED_APPS = [
     'daphne',
