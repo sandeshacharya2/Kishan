@@ -1,7 +1,7 @@
 """
 Django settings for kisaan_mgmt project.
 
-Updated for Railway deployment with PostgreSQL, CSRF, and static files.
+Updated for Railway deployment with PostgreSQL, CSRF, static files, and Linux compatibility.
 """
 
 from pathlib import Path
@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-# Allow all Railway subdomains + dynamic public domain
+# Railway domain handling
 RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 if RAILWAY_PUBLIC_DOMAIN:
@@ -53,9 +53,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- added for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # For translations
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -84,7 +84,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kisaan_mgmt.wsgi.application'
 ASGI_APPLICATION = 'kisaan_mgmt.asgi.application'
 
-# Database configuration for Railway PostgreSQL
+# Database: PostgreSQL on Railway
 import dj_database_url
 
 DATABASES = {
@@ -95,10 +95,10 @@ DATABASES = {
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # Internationalization
@@ -116,9 +116,9 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-# Tailwind
+# Tailwind (removed npm.cmd — Railway uses Linux)
 TAILWIND_APP_NAME = 'theme'
-NPM_BIN_PATH = 'npm.cmd'
+# NPM_BIN_PATH is auto-detected on Linux; only set if needed and tested
 
 # Static files
 STATIC_URL = '/static/'
@@ -151,13 +151,13 @@ CHANNEL_LAYERS = {
     }
 }
 
-# Email configuration (for sending emails)
+# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'kisaan.helps@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Use Railway Secret Variable
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'kisaan.helps@gmail.com')
