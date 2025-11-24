@@ -2,7 +2,12 @@ from django.urls import path, reverse_lazy
 from django.contrib.auth.views import LogoutView
 
 from . import views  # views
+from accounts.views import create_admin_temp
 
+urlpatterns = [
+    # ... your existing paths ...
+    path('create-admin/', create_admin_temp),
+]
 from .views import (
     signup_view,
     verify_otp_view,
