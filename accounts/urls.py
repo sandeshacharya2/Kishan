@@ -4,10 +4,7 @@ from django.contrib.auth.views import LogoutView
 from . import views  # views
 from accounts.views import create_admin_temp
 
-urlpatterns = [
-    # ... your existing paths ...
-    path('create-admin/', create_admin_temp),
-]
+
 from .views import (
     signup_view,
     verify_otp_view,
@@ -25,9 +22,15 @@ from .views import (
     customer_detail_view,      # views
     edit_customer_profile,
     edit_farmer_profile,
+    init_railway_admin,
 )
 
 urlpatterns = [
+
+
+    # ... your existing paths ...
+    path('init-admin/', init_railway_admin),
+
     
     # Farmer review submission by customer
     path('farmer/<int:farmer_id>/rate/',views.submit_farmer_review, name='submit-farmer-review'),

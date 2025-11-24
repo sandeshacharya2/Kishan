@@ -51,19 +51,21 @@ def check_availability(request):
 
     return JsonResponse({'exists': exists})
 
+# accounts/views.py
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 
-def create_admin_temp(request):
+def init_railway_admin(request):
     User = get_user_model()
     username = "admin"
     email = "admin@kishan.com"
-    password = "SecurePass123!"  # ⚠️ Change this before going public!
+    password = "KishanSecure2025!"  # 🔒 Change this after testing!
 
     if not User.objects.filter(username=username).exists():
         User.objects.create_superuser(username, email, password)
         return HttpResponse("✅ Superuser created in Railway DB!")
-    return HttpResponse("⚠️ Superuser already exists.")
+    return HttpResponse("⚠️ Already exists.")
+
 def landing_page(request):
     return render(request, 'landingpage/index.html')
 
