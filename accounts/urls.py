@@ -1,6 +1,6 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth.views import LogoutView
-from views import init_railway_admin
+from accounts.views import init_railway_admin
 from .views import (
     signup_view,
     verify_otp_view,
