@@ -25,22 +25,20 @@
       transition: all 1s ease-in-out;
     }
 
-    /* Header assumed height variable, you can adjust this or calculate dynamically */
     header {
       z-index: 50;
       position: relative;
     }
 
-    /* Hero Section with background */
+    /* Hero section base styles */
     #hero-section {
       flex-grow: 1;
       background-repeat: no-repeat;
       background-position: center center;
       background-size: cover;
       background-attachment: scroll;
-      min-height: calc(100vh - 80px); /* 80px header height fallback */
+      min-height: calc(100vh - 80px);
       width: 100%;
-      padding: 3rem 1rem;
       background-color: rgba(0, 0, 0, 0.4);
       display: flex;
       align-items: flex-start;
@@ -52,11 +50,6 @@
         min-height: calc(100vh - 120px);
       }
     }
-
-    /* Text container max width */
-    #hero-content {
-      max-width: 40rem;
-    }
   </style>
 </head>
 
@@ -66,36 +59,36 @@
   {% include 'landingpage/header.html' %}
 
   <!-- Hero Section -->
-<section id="hero-section" style="background-image: url('{% static 'slider1.jpg' %}'); padding: 7rem 1rem 7rem 7rem;">
-  <div id="hero-content" style="max-width: 40rem; margin-left: 0;">
-    <p class="font-bold mb-2 text-[#d4e157] text-base sm:text-xl uppercase tracking-wider" style="text-shadow: 0 0 6px #94c20bff;">
-      {% trans "Original and Natural" %}
-    </p>
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#f4c058] mb-4 sm:mb-5 leading-tight" style="text-shadow: 2px 2px 8px #9c7e00;">
-      {% trans "Farming is our life." %}<br />
-      <span class="text-white font-bold block mt-2" style="text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);">
-        {% trans "Good crops, bright future" %}
-      </span>
-    </h1>
-    <p class="text-sm sm:text-base text-gray-100 leading-relaxed mb-6" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+  <section id="hero-section"
+           class="px-4 sm:px-8 md:px-16 lg:px-28 pt-28 pb-28"
+           style="background-image: url('{% static 'slider1.jpg' %}');">
+    <div id="hero-content" class="max-w-2xl">
+      <p class="font-bold mb-2 text-[#d4e157] text-base sm:text-xl uppercase tracking-wider" style="text-shadow: 0 0 6px #94c20bff;">
+        {% trans "Original and Natural" %}
+      </p>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#f4c058] mb-4 sm:mb-5 leading-tight" style="text-shadow: 2px 2px 8px #9c7e00;">
+        {% trans "Farming is our life." %}<br />
+        <span class="text-white font-bold block mt-2" style="text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);">
+          {% trans "Good crops, bright future" %}
+        </span>
+      </h1>
+     <p class="text-sm sm:text-base text-gray-100 leading-relaxed mb-6" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
       {% blocktrans trimmed %}
         We are committed to empowering Nepali farmers.With honesty, <br>
         transparency, and technology, we bring a new era to farming.
       {% endblocktrans %}
     </p>
 
-    <div class="flex flex-wrap gap-4 mt-6">
-      <a href="{% url 'about' %}" class="px-5 sm:px-6 py-2 bg-cyan-700 text-white font-semibold rounded-lg shadow hover:bg-green-800 transition duration-300 text-sm sm:text-base">
-        {% trans "Learn More" %}
-      </a>
-      <a href="{% url 'signup' %}" class="px-5 sm:px-6 py-2 bg-cyan-700 text-white font-semibold rounded-lg shadow hover:bg-yellow-500 transition duration-300 text-sm sm:text-base">
-        {% trans "Get Started Now" %}
-      </a>
+      <div class="flex flex-wrap gap-4 mt-6">
+        <a href="{% url 'about' %}" class="px-5 sm:px-6 py-2 bg-cyan-700 text-white font-semibold rounded-lg shadow hover:bg-green-800 transition duration-300 text-sm sm:text-base">
+          {% trans "Learn More" %}
+        </a>
+        <a href="{% url 'signup' %}" class="px-5 sm:px-6 py-2 bg-cyan-700 text-white font-semibold rounded-lg shadow hover:bg-yellow-500 transition duration-300 text-sm sm:text-base">
+          {% trans "Get Started Now" %}
+        </a>
+      </div>
     </div>
-  </div>
-</section>
-
-
+  </section>
 
   <!-- Footer Include -->
   {% include 'landingpage/footer.html' %}
@@ -116,9 +109,7 @@
       heroSection.style.backgroundImage = `url('${images[current]}')`;
     }
 
-    // Set initial background image
     heroSection.style.backgroundImage = `url('${images[0]}')`;
-
     setInterval(slideBackground, 5000);
   </script>
 
